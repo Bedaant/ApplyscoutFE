@@ -15,12 +15,20 @@ module.exports = {
         sm: 'calc(var(--radius) - 4px)'
       },
       fontFamily: {
-        display: ['"Cabinet Grotesk"', 'sans-serif'],
-        serif: ['"Instrument Serif"', 'serif'],
-        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+        display: ['"Plus Jakarta Sans"', 'sans-serif'],
+        sans: ['"DM Sans"', 'sans-serif'],
         mono: ['"JetBrains Mono"', 'monospace']
       },
       colors: {
+        navy: '#0B1320',
+        brand: '#FF5A1F',
+        mute: '#6B7280',
+        blush: '#FFF7F0',
+        ok: '#12B76A',
+        void: '#0A0A0B',
+        panel: '#111113',
+        raised: '#17171A',
+        volt: '#3DDC97',
         canvas: '#F4F3F0',
         ink: '#1C1917',
         soft: 'rgba(28,25,23,0.62)',

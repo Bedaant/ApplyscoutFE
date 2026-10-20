@@ -1,0 +1,70 @@
+:root {
+  --brand: #FF5A1F;
+  --brand-a: #FF6A00;
+  --brand-b: #FF4500;
+  --navy: #0B1320;
+  --grey: #6B7280;
+  --blush: #FFF7F0;
+  --ok: #12B76A;
+}
+
+html, body { background: #FFFFFF; color: var(--navy); overflow-x: clip; }
+body { font-family: "DM Sans", sans-serif; -webkit-font-smoothing: antialiased; }
+::selection { background: #FFD3BF; color: var(--navy); }
+
+.font-display { font-family: "Plus Jakarta Sans", sans-serif; letter-spacing: -0.04em; }
+.label { font-family: "JetBrains Mono", monospace; font-size: 12px; letter-spacing: 0.05em; text-transform: uppercase; }
+
+.card {
+  background: #FFFFFF;
+  border: 1px solid rgba(11,19,32,0.07);
+  box-shadow: 0 1px 2px rgba(11,19,32,0.04), 0 18px 40px -22px rgba(11,19,32,0.20);
+}
+.lift { transition: transform 0.45s cubic-bezier(.22,1,.36,1), box-shadow 0.45s ease; }
+.lift:hover { transform: translateY(-4px); box-shadow: 0 1px 2px rgba(11,19,32,0.04), 0 30px 50px -24px rgba(11,19,32,0.30); }
+
+.btn-brand {
+  background: linear-gradient(180deg, #FF6A00, #FF4500);
+  color: #FFFFFF;
+  box-shadow: 0 10px 24px -10px rgba(255,69,0,0.7), inset 0 1px 0 rgba(255,255,255,0.25);
+  transition: transform 0.3s cubic-bezier(.22,1,.36,1), box-shadow 0.3s ease, filter 0.3s ease;
+}
+.btn-brand:hover { transform: translateY(-2px); filter: brightness(1.05); box-shadow: 0 16px 32px -10px rgba(255,69,0,0.8), inset 0 1px 0 rgba(255,255,255,0.25); }
+
+.text-brand-grad { background: linear-gradient(90deg, #FF6A00, #FF4500); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.glow-brand { background: radial-gradient(closest-side, rgba(255,106,0,0.20), rgba(255,106,0,0.07) 55%, transparent); }
+.dots-bg { background-image: radial-gradient(rgba(11,19,32,0.08) 1px, transparent 1px); background-size: 22px 22px; }
+
+.dot-live { position: relative; }
+.dot-live::after { content: ""; position: absolute; inset: 0; border-radius: 9999px; background: inherit; animation: ping 1.8s cubic-bezier(0,0,.2,1) infinite; }
+@keyframes ping { 75%, 100% { transform: scale(2.4); opacity: 0; } }
+
+.marquee-track { display: flex; width: max-content; animation: marquee 70s linear infinite; }
+.marquee:hover .marquee-track { animation-play-state: paused; }
+@keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+.caret { display: inline-block; width: 2px; height: 1.05em; margin: 0 1px -2px; background: var(--brand); animation: caret 1s steps(1) infinite; }
+@keyframes caret { 50% { opacity: 0; } }
+
+.check-in { opacity: 0; animation: checkIn 0.5s cubic-bezier(.22,1,.36,1) forwards; }
+@keyframes checkIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+
+.maggie-blink { transform-origin: center 60px; animation: blink 4s infinite; }
+@keyframes blink { 0%, 92%, 100% { transform: scaleY(1); } 95% { transform: scaleY(0.1); } }
+
+kbd.key {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11px;
+  min-width: 20px;
+  padding: 1px 5px;
+  border-radius: 5px;
+  border: 1px solid rgba(11,19,32,0.15);
+  border-bottom-width: 2px;
+  background: #FFFFFF;
+  color: var(--navy);
+  text-align: center;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .marquee-track, .maggie-blink, .dot-live::after, .caret { animation: none; }
+}

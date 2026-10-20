@@ -19,6 +19,14 @@ User choices: "Try it" opens a mock preview flow; generate a minimal Maggie; no 
 - Mock "Try it" preview dialog: upload/sample resume → Maggie scouting → matches + editable draft → approve (nothing sent)
 - Original SVG logo + favicon
 
+## Redesign: Clean Orange "Jobs find you now" (2026-10-20)
+- Replaced the peach and dark versions with a white, single-orange (#FF5A1F), navy (#0B1320) design based on the user's reference and brand sheet
+- New SVG fox logo, favicon and loader (the fox draws itself in); Maggie redrawn in orange; she appears in the loader, the hero headline, the preview, the Gmail bubble and the final CTA
+- Hero: "Jobs find you now." + orange line reveal; 4 numbered app cards (find, tailor, draft typing, review with working Edit/Approve/Undo) with animated curved arrows and a 3D mouse tilt
+- New sections: honest product strip + marquee, "Built for" audience cards, horizontal 5-step row with scroll progress, phone scene with floating cards, dashed lines and parallax
+- Restyled: comparison, truth bento, control queue (keyboard shortcuts), Gmail, FAQ with phone mockup, final CTA, footer, mock preview
+- Components now in src/components/as/, styles in src/orange.css
+
 ## Backlog
 - P0: Decide real post-"Try it" flow (real resume parsing, sign-in after value)
 - P1: Waitlist/email capture at end of preview; analytics on CTA funnel
