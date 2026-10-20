@@ -119,14 +119,16 @@ async def root():
 async def create_signup(req: SignupRequest):
     email = req.email.strip().lower()
     existing = await db.signups.find_one({"email": email})
-    if existing is None:
-        await db.signups.insert_one({
-            "email": email,
-            "source": req.source,
-            "created_at": datetime.now(timezone.utc).isoformat(),
-        })
-    position = await db.signups.count_documents({})
-    return SignupResponse(email=email, already_on_list=existing is not None, position=position)
+    if existing is not None:
+        return SignupResponse(email=email, already_on_list=True, position=existing.get("position", 1))
+    position = await db.signups.count_documents({}) + 1
+    await db.signups.insert_one({
+        "email": email,
+        "source": req.source,
+        "position": position,
+        "created_at": datetime.now(timezone.utc).isoformat(),
+    })
+    return SignupResponse(email=email, already_on_list=False, position=position)
 
 
 @api_router.post("/preview", response_model=PreviewSession)
