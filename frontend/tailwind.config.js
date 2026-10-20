@@ -15,11 +15,26 @@ module.exports = {
         sm: 'calc(var(--radius) - 4px)'
       },
       fontFamily: {
-        display: ['"Plus Jakarta Sans"', 'sans-serif'],
-        sans: ['"DM Sans"', 'sans-serif'],
+        display: ['"Figtree"', 'sans-serif'],
+        sans: ['"Figtree"', 'sans-serif'],
         mono: ['"JetBrains Mono"', 'monospace']
       },
       colors: {
+        ink: '#16213A',
+        slate: '#5A6B8C',
+        bubble: '#FFC2D6',
+        lilac: '#DCC9F7',
+        peach2: '#FFD5A8',
+        mint: '#BEEBC5',
+        rose: '#FFB7B0',
+        aqua: '#A9E4F2',
+        lemon: '#FFE59B',
+        fox: '#FF6A2E',
+        paper: '#F7F6F3',
+        sheet: '#FFFFFF',
+        coal: '#111110',
+        ash: '#6B6A66',
+        line: '#E3E1DB',
         navy: '#0B1320',
         brand: '#FF5A1F',
         mute: '#6B7280',

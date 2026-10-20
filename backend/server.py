@@ -6,7 +6,7 @@ from bson import ObjectId
 import os
 import logging
 from pathlib import Path
-from pydantic import BaseModel, Field, ConfigDict, BeforeValidator, AliasChoices
+from pydantic import BaseModel, Field, ConfigDict, BeforeValidator, AliasChoices, EmailStr
 from typing import List, Optional, Annotated
 from datetime import datetime, timezone
 
@@ -99,9 +99,34 @@ def build_matches(role: str) -> List[Match]:
     return out
 
 
+class SignupRequest(BaseModel):
+    email: EmailStr
+    source: str = Field(default="hero", max_length=40)
+
+
+class SignupResponse(BaseModel):
+    email: str
+    already_on_list: bool
+    position: int
+
+
 @api_router.get("/")
 async def root():
     return {"message": "ApplyScout API"}
+
+
+@api_router.post("/signups", response_model=SignupResponse)
+async def create_signup(req: SignupRequest):
+    email = req.email.strip().lower()
+    existing = await db.signups.find_one({"email": email})
+    if existing is None:
+        await db.signups.insert_one({
+            "email": email,
+            "source": req.source,
+            "created_at": datetime.now(timezone.utc).isoformat(),
+        })
+    position = await db.signups.count_documents({})
+    return SignupResponse(email=email, already_on_list=existing is not None, position=position)
 
 
 @api_router.post("/preview", response_model=PreviewSession)

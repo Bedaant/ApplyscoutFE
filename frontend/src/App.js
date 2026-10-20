@@ -2,21 +2,20 @@ import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, MotionConfig } from "framer-motion";
 import Lenis from "lenis";
 import "lenis/dist/lenis.css";
-import "@/orange.css";
-import { Loader } from "@/components/as/Loader";
-import { Nav } from "@/components/as/Nav";
-import { Hero } from "@/components/as/Hero";
-import { ProductStrip } from "@/components/as/ProductStrip";
-import { BuiltFor } from "@/components/as/BuiltFor";
-import { Steps } from "@/components/as/Steps";
-import { PhoneScene } from "@/components/as/PhoneScene";
-import { Compare } from "@/components/as/Compare";
-import { Truth } from "@/components/as/Truth";
-import { Control } from "@/components/as/Control";
-import { Gmail } from "@/components/as/Gmail";
-import { Faq } from "@/components/as/Faq";
-import { FinalCta, Footer } from "@/components/as/FinalCta";
-import { PreviewDialog } from "@/components/as/PreviewDialog";
+import "@/sky.css";
+import { Loader } from "@/components/sky/Loader";
+import { Nav } from "@/components/sky/Nav";
+import { Hero } from "@/components/sky/Hero";
+import { JobCards } from "@/components/sky/JobCards";
+import { Sources } from "@/components/sky/Sources";
+import { Statement } from "@/components/sky/Statement";
+import { Features } from "@/components/sky/Features";
+import { Steps } from "@/components/sky/Steps";
+import { Truth } from "@/components/sky/Truth";
+import { Voices } from "@/components/sky/Voices";
+import { Faq } from "@/components/sky/Faq";
+import { FinalCta, Footer } from "@/components/sky/FinalCta";
+import { PreviewDialog } from "@/components/sky/PreviewDialog";
 
 function App() {
   const [loading, setLoading] = useState(true);
@@ -24,7 +23,7 @@ function App() {
   const lenisRef = useRef(null);
 
   useEffect(() => {
-    const t = setTimeout(() => setLoading(false), 1400);
+    const t = setTimeout(() => setLoading(false), 1200);
     return () => clearTimeout(t);
   }, []);
 
@@ -43,30 +42,32 @@ function App() {
     if (open) lenis.stop(); else lenis.start();
   }, [open]);
 
-  const onTry = () => setOpen(true);
-  const ready = !loading;
+  const onSample = () => setOpen(true);
+  const onStart = () => {
+    lenisRef.current?.scrollTo("#start", { offset: -140 });
+    setTimeout(() => document.getElementById("footer-email")?.focus(), 900);
+  };
 
   return (
     <MotionConfig reducedMotion="user">
-    <div className="min-h-screen bg-white text-navy" data-testid="landing-page">
-      <AnimatePresence>{loading && <Loader key="loader" />}</AnimatePresence>
-      <Nav onTry={onTry} ready={ready} />
-      <main>
-        <Hero onTry={onTry} ready={ready} />
-        <ProductStrip />
-        <BuiltFor />
-        <Steps />
-        <PhoneScene />
-        <Compare />
-        <Truth />
-        <Control />
-        <Gmail />
-        <Faq />
-        <FinalCta onTry={onTry} />
-      </main>
-      <Footer />
-      <PreviewDialog open={open} onOpenChange={setOpen} />
-    </div>
+      <div className="min-h-screen bg-[#F2F7FF] text-ink" data-testid="landing-page">
+        <AnimatePresence>{loading && <Loader key="loader" />}</AnimatePresence>
+        <Nav onStart={onStart} />
+        <main>
+          <Hero onStart={onStart} onSample={onSample} />
+          <JobCards />
+          <Sources />
+          <Statement />
+          <Features />
+          <Steps />
+          <Truth />
+          <Voices />
+          <Faq />
+          <FinalCta onSample={onSample} />
+        </main>
+        <Footer />
+        <PreviewDialog open={open} onOpenChange={setOpen} />
+      </div>
     </MotionConfig>
   );
 }
