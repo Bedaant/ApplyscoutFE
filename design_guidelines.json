@@ -1,0 +1,177 @@
+{
+  "project_name": "ApplyScout Landing Page",
+  "archetype": "Organic & Earthy meets Architectural Precision (Controlled Automation Premium)",
+  "color_palette": {
+    "canvas": "#F4F3F0",
+    "cards": "#FFFFFF",
+    "ink": "#1C1917",
+    "secondary_text": "rgba(28, 25, 23, 0.62)",
+    "peach": "#F8C9AE",
+    "soft_tint_1": "#FDF6F1",
+    "soft_tint_2": "#FFFBF2",
+    "dark_warm_card": "#2A2421",
+    "green": "#4FB286",
+    "amber": "#E8B04A",
+    "red": "#D9534F",
+    "border_subtle": "rgba(28, 25, 23, 0.08)",
+    "border_card": "rgba(28, 25, 23, 0.12)"
+  },
+  "typography": {
+    "font_family_heading": "Cabinet Grotesk, Outfit, Playfair Display, serif, sans-serif",
+    "font_family_body": "Plus Jakarta Sans, Inter, sans-serif",
+    "font_family_mono": "JetBrains Mono, monospace",
+    "scale": {
+      "h1": "text-4xl sm:text-5xl lg:text-6xl font-semibold tracking-tight leading-[1.08]",
+      "h2": "text-2xl sm:text-3xl lg:text-4xl font-semibold tracking-tight leading-tight",
+      "h3": "text-xl sm:text-2xl font-medium tracking-tight",
+      "h4": "text-lg sm:text-xl font-medium",
+      "body": "text-base sm:text-lg leading-relaxed text-[#1C1917]/80",
+      "caption": "text-xs uppercase tracking-[0.2em] font-mono text-[#1C1917]/60"
+    }
+  },
+  "visual_enhancers": {
+    "grain_overlay": "Subtle SVG noise texture on canvas with 0.035 opacity to prevent digital flatness",
+    "crystal_glass_nav": "backdrop-blur-xl bg-[#F4F3F0]/85 border-b border-[#1C1917]/10 sticky top-0 z-50",
+    "maggie_mascot": {
+      "character": "Maggie the Fox",
+      "style": "Minimalist geometric warm fox linework in terracotta/peach/dark-warm with curious scout eyes and folded origami ear styling",
+      "placement": "Custom loader initial screen (1.2s exit), mock preview modal analyzing step, and 1 subtle helper tooltip badge"
+    },
+    "card_surfaces": {
+      "light_card": "bg-white border border-[#1C1917]/10 rounded-2xl shadow-[0_4px_24px_rgba(28,25,23,0.04)] hover:shadow-[0_12px_32px_rgba(28,25,23,0.08)] transition-all duration-300",
+      "dark_feature_card": "bg-[#2A2421] text-[#FFFBF2] rounded-3xl p-8 md:p-12 border border-[#F8C9AE]/20 shadow-[0_20px_50px_rgba(42,36,33,0.25)] relative overflow-hidden"
+    }
+  },
+  "sections_in_order": [
+    {
+      "step": 1,
+      "id": "hero",
+      "name": "Kinetic Hero with Product Card Stack",
+      "headline": "Apply to better-fit jobs without spending hours every day",
+      "subheadline": "The smarter way to job hunt without blind auto-apply. ApplyScout finds fresh high-signal roles, drafts tailored answers strictly from your verified facts, and queues everything for your 1-click review.",
+      "primary_cta": "Try it",
+      "hero_interactive_stack": "Layered 3D tilt cards: [Job Match Card, Tailored Draft Card, Approval Confirmation Card with Live Toggle]"
+    },
+    {
+      "step": 2,
+      "id": "trust-bar",
+      "name": "Zero-Compromise Trust Bar",
+      "pillars": [
+        {"title": "Tailored for you", "desc": "Role-specific answers crafted around your verified projects"},
+        {"title": "Review before sending", "desc": "Zero automatic firing into the void. You retain final signoff"},
+        {"title": "No made-up facts", "desc": "Strict truth engine prevents AI hallucinations on your resume"}
+      ]
+    },
+    {
+      "step": 3,
+      "id": "editorial-marquee",
+      "name": "Slow Editorial Ribbon",
+      "items": [
+        "CURATED JOB MATCHING", "TRUTH-CHECKED PROFILES", "STAGED FOR REVIEW",
+        "GMAIL THREAD TRACKING", "ONE-TAP APPROVE / PAUSE", "NO BLIND AUTO-SPAM"
+      ]
+    },
+    {
+      "step": 4,
+      "id": "workflow",
+      "name": "5-Step 'What ApplyScout Does'",
+      "steps": [
+        {"num": "01", "name": "Resume Ingestion & Fact Extraction", "detail": "Parse past achievements into verified truthful datapoints without padding."},
+        {"num": "02", "name": "Deep Search & Signal Filtering", "detail": "Scrapes fresh openings directly from company career portals (bypassing stale aggregator spam)."},
+        {"num": "03", "name": "Tailored Application Staging", "detail": "Maps your verified experience to specific role requirements with concise, impactful answers."},
+        {"num": "04", "name": "One-Tap Review & Decision", "detail": "Preview complete answers side-by-side with job context. Approve, edit, or reject in 3 seconds."},
+        {"num": "05", "name": "Submission & Interview Tracking", "detail": "Direct dispatch with real-time sync into your clean application timeline."}
+      ]
+    },
+    {
+      "step": 5,
+      "id": "comparison",
+      "name": "Comparison Matrix: Manual vs Blind Auto-Apply vs ApplyScout",
+      "columns": ["Manual Grinding", "Blind Auto-Apply Bots", "ApplyScout (Controlled)"]
+    },
+    {
+      "step": 6,
+      "id": "truth-engine",
+      "name": "Resume + Tailored Answers (Truth-Only Bento)",
+      "highlight": "Strict Guardrail: If you haven't done it, ApplyScout won't invent it."
+    },
+    {
+      "step": 7,
+      "id": "control-room",
+      "name": "Approval & Control Section (Dark Warm Card Contrast)",
+      "actions": ["Approve in 1 Click", "Pause Stream Anytime", "Instant Undo Staged Submission", "Inspect Every Line"],
+      "background": "#2A2421"
+    },
+    {
+      "step": 8,
+      "id": "gmail-followup",
+      "name": "Gmail & Follow-up Intelligence",
+      "description": "Never lose track of a reply. ApplyScout monitors interview requests, drafts polite follow-ups, and surfaces prompt deadlines."
+    },
+    {
+      "step": 9,
+      "id": "faq",
+      "name": "Light FAQ Accordion",
+      "questions": [
+        "How is this different from tools like LazyApply or Sonara?",
+        "Will ApplyScout ever submit without my explicit confirmation?",
+        "How do you ensure the AI doesn't hallucinate skills or achievements?",
+        "Can I edit the generated cover letters and application answers?",
+        "Which platforms and ATS systems are supported?"
+      ]
+    },
+    {
+      "step": 10,
+      "id": "final-cta",
+      "name": "Final Action & Footer",
+      "headline": "Stop dreading the application queue.",
+      "cta": "Try it"
+    }
+  ],
+  "mock_preview_flow": {
+    "trigger_id": "try-it-cta",
+    "steps": [
+      {
+        "step": 1,
+        "title": "Drop in your resume",
+        "description": "Upload a PDF or paste LinkedIn profile text to extract your verified career facts."
+      },
+      {
+        "step": 2,
+        "title": "Maggie indexing facts",
+        "description": "Maggie verifies your core stack, impact metrics, and project history."
+      },
+      {
+        "step": 3,
+        "title": "Fresh matched roles & drafted answers",
+        "description": "Inspect sample matches: Lead Product Designer at Linear, Senior Frontend Engineer at Stripe."
+      },
+      {
+        "step": 4,
+        "title": "One-click approval preview",
+        "description": "Test the approve, edit, and pause controls in real time."
+      }
+    ]
+  },
+  "image_urls": {
+    "hero_workspace_accent": {
+      "url": "https://images.unsplash.com/photo-1487017159836-4e23ece2e4cf?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NTYxNzV8MHwxfHNlYXJjaHwxfHxtaW5pbWFsJTIwbW9kZXJuJTIwam9iJTIwYXBwbGljYXRpb24lMjB3b3JrJTIwZGVza3xlbnwwfHx8fDE3OTI1MDU5NjR8MA&ixlib=rb-4.1.0&q=85",
+      "description": "Minimal clean desk with laptop and gentle warm lighting",
+      "category": "Hero aesthetic accent"
+    },
+    "truth_engine_desk": {
+      "url": "https://images.unsplash.com/photo-1575318634028-6a0cfcb60c59?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NTYxNzV8MHwxfHNlYXJjaHwzfHxtaW5pbWFsJTIwbW9kZXJuJTIwam9iJTIwYXBwbGljYXRpb24lMjB3b3JrJTIwZGVza3xlbnwwfHx8fDE3OTI1MDU5NjR8MA&ixlib=rb-4.1.0&q=85",
+      "description": "Organized workspace illustrating clarity of focus",
+      "category": "Section 5 Truth Bento card"
+    }
+  },
+  "instructions_to_main_agent": [
+    "Strictly follow the user's color constants (#F4F3F0 Canvas, #FFFFFF Cards, #1C1917 Ink, rgba(28,25,23,0.62) Secondary text, #F8C9AE Peach, #FDF6F1 Soft tint 1, #FFFBF2 Soft tint 2, #2A2421 Dark warm card, #4FB286 Green, #E8B04A Amber, #D9534F Red).",
+    "All interactive elements MUST have data-testid attributes (e.g. data-testid='nav-try-it-btn', data-testid='hero-try-it-btn', data-testid='mock-preview-upload-input', data-testid='approve-job-btn', etc.).",
+    "Install and integrate lenis smooth scrolling for high-end Awwwards weight feel.",
+    "Implement Maggie custom mascot: clean SVG vector with warm peach/amber accents for the 1.2s loader and helper badge.",
+    "The 'Try it' button across the page must trigger the interactive 4-step Mock Preview Modal with realistic job cards, draft review, and interactive approve/pause triggers.",
+    "Ensure the hero has kinetic masked line reveals, dynamic tilt on the product card stack, and clean responsive bento layout.",
+    "No fake testimonials, no fake user quotes, no pricing plans. Maintain the clean 'Controlled Automation Premium' positioning."
+  ]
+}

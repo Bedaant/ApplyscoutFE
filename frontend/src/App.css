@@ -1,0 +1,80 @@
+:root {
+  --canvas: #F4F3F0;
+  --card: #FFFFFF;
+  --ink: #1C1917;
+  --secondary-text: rgba(28,25,23,0.62);
+  --peach: #F8C9AE;
+  --tint-1: #FDF6F1;
+  --tint-2: #FFFBF2;
+  --cocoa: #2A2421;
+  --green: #4FB286;
+  --amber: #E8B04A;
+  --red: #D9534F;
+}
+
+html, body { background: var(--canvas); color: var(--ink); }
+body { font-family: "Plus Jakarta Sans", sans-serif; }
+::selection { background: var(--peach); color: var(--ink); }
+
+.font-display { font-family: "Cabinet Grotesk", sans-serif; letter-spacing: -0.035em; }
+.font-serif { font-family: "Instrument Serif", serif; letter-spacing: -0.01em; }
+
+.grain::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 60;
+  opacity: 0.05;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+.card-surface {
+  background: var(--card);
+  border: 1px solid rgba(28,25,23,0.08);
+  box-shadow: 0 1px 0 rgba(28,25,23,0.03), 0 18px 40px -24px rgba(28,25,23,0.18);
+}
+
+.eyebrow {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 12px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.peach-glow {
+  background: radial-gradient(closest-side, rgba(248,201,174,0.85), rgba(248,201,174,0.35) 55%, rgba(248,201,174,0) 100%);
+}
+
+.marquee-track { display: flex; width: max-content; animation: marquee 60s linear infinite; }
+.marquee:hover .marquee-track { animation-play-state: paused; }
+@keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+.btn-ink {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  transition: transform 0.35s cubic-bezier(.22,1,.36,1), box-shadow 0.35s ease;
+}
+.btn-ink::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: var(--peach);
+  transform: translateY(101%);
+  transition: transform 0.5s cubic-bezier(.22,1,.36,1);
+  border-radius: inherit;
+}
+.btn-ink:hover::before { transform: translateY(0); }
+.btn-ink:hover { color: var(--ink); transform: translateY(-2px); box-shadow: 0 14px 30px -12px rgba(28,25,23,0.35); }
+
+.check-in { opacity: 0; animation: checkIn 0.5s cubic-bezier(.22,1,.36,1) forwards; }
+@keyframes checkIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+
+.maggie-blink { transform-origin: center 60px; animation: blink 4s infinite; }
+@keyframes blink { 0%, 92%, 100% { transform: scaleY(1); } 95% { transform: scaleY(0.1); } }
+
+@media (prefers-reduced-motion: reduce) {
+  .marquee-track, .maggie-blink { animation: none; }
+}
