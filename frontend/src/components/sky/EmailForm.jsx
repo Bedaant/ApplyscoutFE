@@ -1,6 +1,8 @@
 import { useState } from "react";
 import axios from "axios";
 import { ArrowRight, Check, Loader2 } from "lucide-react";
+import { motion } from "framer-motion";
+import { Celebrate } from "./Celebrate";
 
 const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
 
@@ -8,6 +10,7 @@ export const EmailForm = ({ source = "hero", id = "hero", label = "Join the list
   const [email, setEmail] = useState("");
   const [state, setState] = useState("idle");
   const [msg, setMsg] = useState("");
+  const [fresh, setFresh] = useState(false);
 
   const submit = async (e) => {
     e.preventDefault();
@@ -20,6 +23,7 @@ export const EmailForm = ({ source = "hero", id = "hero", label = "Join the list
     setState("sending");
     try {
       const res = await axios.post(`${API}/signups`, { email: value, source });
+      setFresh(!res.data?.already_on_list);
       setState("done");
       setMsg(res.data?.already_on_list
         ? `${value} is already on the list — you keep place #${res.data.position}.`
@@ -32,9 +36,25 @@ export const EmailForm = ({ source = "hero", id = "hero", label = "Join the list
 
   if (state === "done") {
     return (
-      <div className="tick-in flex items-start gap-3 rounded-3xl bg-mint/70 px-5 py-4" data-testid={`${id}-signup-success`}>
-        <span className="mt-0.5 grid h-6 w-6 shrink-0 place-items-center rounded-full bg-white text-[#1F7A52]"><Check size={14} /></span>
-        <p className="text-[0.95rem] font-medium leading-relaxed text-ink">{msg}</p>
+      <div className="flex flex-col items-center" data-testid={`${id}-signup-success`}>
+        {fresh && (
+          <>
+            <Celebrate />
+            <motion.p
+              initial={{ opacity: 0, y: 10, scale: 0.9 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              transition={{ type: "spring", stiffness: 260, damping: 16, delay: 0.5 }}
+              className="font-display mt-1 text-[1.5rem] leading-tight text-ink"
+              data-testid={`${id}-signup-cheer`}
+            >
+              You're in! 🎉
+            </motion.p>
+          </>
+        )}
+        <div className="tick-in mt-3 flex items-start gap-3 rounded-3xl bg-mint/70 px-5 py-4 text-left">
+          <span className="mt-0.5 grid h-6 w-6 shrink-0 place-items-center rounded-full bg-white text-[#1F7A52]"><Check size={14} /></span>
+          <p className="text-[0.95rem] font-medium leading-relaxed text-ink">{msg}</p>
+        </div>
       </div>
     );
   }

@@ -1,18 +1,61 @@
 import { useRef, useState } from "react";
 import { motion, useInView } from "framer-motion";
-import { CalendarCheck, Check, Clock, Mail, MousePointerClick, RotateCw, X } from "lucide-react";
+import { ArrowDown, CalendarCheck, Check, Clock, Heart, Mail, MousePointerClick, RotateCw, Sparkles, Star, X } from "lucide-react";
 import { EASE, Reveal } from "./Bits";
 
 const ROWS = [
-  { tool: "Auto-apply bots", pain: "Blank fields. Forms that never submit.", fix: "You see every field before it goes.", bg: "var(--card-1)", art: "/art/ill-form.webp", artFix: "/art/fix-form.webp" },
-  { tool: "AI resume writers", pain: "Made-up titles and experience.", fix: "Only facts you confirmed. Each one cited.", bg: "var(--card-2)", art: "/art/ill-fake.webp", artFix: "/art/fix-fake.webp" },
-  { tool: "Mass-apply tools", pain: "“1,000 applications, 0 callbacks.”", fix: "Fewer, high-fit applications. Aimed at interviews.", bg: "var(--card-3)", art: "/art/ill-pile.webp", artFix: "/art/fix-pile.webp" },
-  { tool: "Most of them", pain: "Support that never answers.", fix: "A named person replies to early users.", bg: "var(--card-4)", art: "/art/ill-support.webp", artFix: "/art/fix-support.webp" },
-  { tool: "Shut-down apps", pain: "Locked out. Accounts banned.", fix: "Export anytime. We never log into LinkedIn for you.", bg: "var(--card-5)", art: "/art/ill-locked.webp", artFix: "/art/fix-locked.webp" },
-  { tool: "Paid portal boosts", pain: "“Priority applicant” — still no calls.", fix: "No paid boosts. No fake badges.", bg: "var(--card-1)", art: "/art/ill-boost.webp", artFix: "/art/fix-boost.webp" },
-  { tool: "Cover-letter AI", pain: "Reads robotic.", fix: "Written from your own words and tone.", bg: "var(--card-2)", art: "/art/ill-robot.webp", artFix: "/art/fix-robot.webp" },
-  { tool: "Recruiters say", pain: "Buried in AI-written spam.", fix: "Every application is one worth reading.", bg: "var(--card-3)", art: "/art/ill-buried.webp", artFix: "/art/fix-buried.webp" },
+  { tool: "Auto-apply bots", pain: "Blank fields. Forms that never submit.", fix: "You see every field before it goes.", bg: "var(--card-1)", art: "/art/ill-form.webp", artFix: "/art/fix-form.webp", loop: "pop" },
+  { tool: "AI resume writers", pain: "Made-up titles and experience.", fix: "Only facts you confirmed. Each one cited.", bg: "var(--card-2)", art: "/art/ill-fake.webp", artFix: "/art/fix-fake.webp", loop: "checks" },
+  { tool: "Mass-apply tools", pain: "“1,000 applications, 0 callbacks.”", fix: "Fewer, high-fit applications. Aimed at interviews.", bg: "var(--card-3)", art: "/art/ill-pile.webp", artFix: "/art/fix-pile.webp", loop: "hearts" },
+  { tool: "Most of them", pain: "Support that never answers.", fix: "A named person replies to early users.", bg: "var(--card-4)", art: "/art/ill-support.webp", artFix: "/art/fix-support.webp", loop: "typing" },
+  { tool: "Shut-down apps", pain: "Locked out. Accounts banned.", fix: "Export anytime. We never log into LinkedIn for you.", bg: "var(--card-5)", art: "/art/ill-locked.webp", artFix: "/art/fix-locked.webp", loop: "download" },
+  { tool: "Paid portal boosts", pain: "“Priority applicant” — still no calls.", fix: "No paid boosts. No fake badges.", bg: "var(--card-1)", art: "/art/ill-boost.webp", artFix: "/art/fix-boost.webp", loop: "sparkle" },
+  { tool: "Cover-letter AI", pain: "Reads robotic.", fix: "Written from your own words and tone.", bg: "var(--card-2)", art: "/art/ill-robot.webp", artFix: "/art/fix-robot.webp", loop: "write" },
+  { tool: "Recruiters say", pain: "Buried in AI-written spam.", fix: "Every application is one worth reading.", bg: "var(--card-3)", art: "/art/ill-buried.webp", artFix: "/art/fix-buried.webp", loop: "star" },
 ];
+
+/* Short looping motion layered on each "fixed" drawing. Pure CSS, so it pauses off-screen. */
+const IMG_LOOP = { pop: "loop-float", checks: "loop-float", hearts: "loop-sway", typing: "loop-float", download: "loop-float", sparkle: "loop-sway", write: "loop-write", buried: "loop-float", star: "loop-float" };
+const Dot = ({ cls, style, children }) => (
+  <span className={`absolute grid place-items-center rounded-full ${cls}`} style={style}>{children}</span>
+);
+const LoopFx = ({ kind }) => {
+  switch (kind) {
+    case "pop":
+      return <Dot cls="loop-pop right-[10%] top-[8%] h-6 w-6 bg-[#2C8F6B] text-white"><Check size={13} strokeWidth={3} /></Dot>;
+    case "checks":
+      return [0, 1, 2].map((k) => (
+        <Dot key={k} cls="loop-pop right-[8%] h-4 w-4 bg-[#2C8F6B] text-white" style={{ top: `${18 + k * 24}%`, animationDelay: `${k * 0.35}s` }}><Check size={9} strokeWidth={3.5} /></Dot>
+      ));
+    case "hearts":
+      return [0, 1].map((k) => (
+        <span key={k} className="loop-rise absolute text-[#FF6E4F]" style={{ right: `${18 + k * 14}%`, top: "30%", animationDelay: `${k * 1.1}s` }}><Heart size={14} fill="currentColor" /></span>
+      ));
+    case "typing":
+      return (
+        <span className="absolute right-[8%] top-[10%] flex gap-[3px] rounded-full bg-white px-2 py-1.5 shadow-sm">
+          {[0, 1, 2].map((k) => <span key={k} className="loop-dot h-1.5 w-1.5 rounded-full bg-[#FF6E4F]" style={{ animationDelay: `${k * 0.15}s` }} />)}
+        </span>
+      );
+    case "download":
+      return <span className="loop-drop absolute right-[14%] top-[10%] text-[#2C8F6B]"><ArrowDown size={18} strokeWidth={3} /></span>;
+    case "sparkle":
+      return [0, 1].map((k) => (
+        <span key={k} className="loop-twinkle absolute text-[#FFB020]" style={{ left: k ? "12%" : "auto", right: k ? "auto" : "12%", top: k ? "58%" : "12%", animationDelay: `${k * 0.8}s` }}><Sparkles size={15} /></span>
+      ));
+    case "write":
+      return <span className="loop-rise absolute right-[14%] top-[22%] text-[#FF6E4F]"><Heart size={13} fill="currentColor" /></span>;
+    case "star":
+      return (
+        <>
+          <span className="loop-twinkle absolute right-[12%] top-[8%] text-[#FFB020]"><Star size={15} fill="currentColor" /></span>
+          <span className="loop-twinkle absolute left-[12%] top-[20%] text-[#FFB020]" style={{ animationDelay: "0.9s" }}><Sparkles size={12} /></span>
+        </>
+      );
+    default:
+      return null;
+  }
+};
 
 const FlipCard = ({ r, i }) => {
   const [flipped, setFlipped] = useState(false);
@@ -44,7 +87,8 @@ const FlipCard = ({ r, i }) => {
             </span>
             <span className="pointer-events-none absolute -right-6 -top-6 h-28 w-28 rounded-full bg-white/15" />
             <span className="pointer-events-none absolute -bottom-10 -left-8 h-32 w-32 rounded-full bg-white/10" />
-            <span className="relative mx-auto mt-2.5 grid h-[96px] w-[78%] place-items-center rounded-[20px] bg-[#FFF6EE]/95">
+            <span className="relative mx-auto mt-2.5 grid h-[96px] w-[78%] place-items-center overflow-hidden rounded-[20px] bg-[#FFF6EE]/95" data-testid={`compare-fix-plate-${i}`}>
+              <span className={`grid h-full w-full place-items-center ${flipped ? IMG_LOOP[r.loop] : ""}`}>
               <motion.img
                 src={r.artFix}
                 alt=""
@@ -57,6 +101,8 @@ const FlipCard = ({ r, i }) => {
                 className="pointer-events-none h-[80px] w-auto max-w-[86%] object-contain"
                 data-testid={`compare-fix-art-${i}`}
               />
+              </span>
+              {flipped && <span className="loop-in pointer-events-none absolute inset-0" data-testid={`compare-fix-loop-${i}`}><LoopFx kind={r.loop} /></span>}
             </span>
             <span className="relative mt-auto flex items-start gap-2.5">
               <span className="mt-0.5 grid h-6 w-6 shrink-0 place-items-center rounded-full bg-white text-[#2C8F6B]"><Check size={14} strokeWidth={3} /></span>

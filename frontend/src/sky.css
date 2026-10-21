@@ -23,9 +23,9 @@ body { font-family: "Figtree", sans-serif; -webkit-font-smoothing: antialiased; 
 
 .sky {
   background:
-    radial-gradient(120% 80% at 50% 0%, #BCD4FF 0%, #D4E3FF 38%, #E9F1FF 68%, #F7FAFF 100%);
+    radial-gradient(120% 80% at 50% 0%, #FFCDB4 0%, #FFDCC8 36%, #FFEDE0 66%, #FFF8F1 100%);
 }
-.sky-soft { background: linear-gradient(180deg, #F7FAFF 0%, #E9F1FF 60%, #DCE8FF 100%); }
+.sky-soft { background: linear-gradient(180deg, #FFF8F1 0%, #FFEDE0 60%, #FFDCC8 100%); }
 
 .cloud { position: absolute; border-radius: 999px; background: #fff; filter: blur(0.5px); opacity: 0.95; }
 
@@ -187,3 +187,26 @@ html.native-scroll { scroll-behavior: smooth; }
 .fox-blink { animation: foxBlinkLoop 5.5s ease-in-out 3.2s infinite; }
 @keyframes foxBlink { 0%, 100% { transform: scaleY(1); } 50% { transform: scaleY(.1); } }
 @keyframes foxBlinkLoop { 0%, 94%, 100% { transform: scaleY(1); } 97% { transform: scaleY(.1); } }
+
+/* looping "fixed drawing" animations on comparison card backs */
+.loop-in { animation: loopIn .4s ease .55s both; }
+@keyframes loopIn { from { opacity: 0; } to { opacity: 1; } }
+.loop-float { animation: loopFloat 2.6s ease-in-out .5s infinite; }
+@keyframes loopFloat { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
+.loop-sway { animation: loopSway 2.8s ease-in-out .5s infinite; transform-origin: 50% 90%; }
+@keyframes loopSway { 0%, 100% { transform: rotate(0); } 25% { transform: rotate(-3deg); } 75% { transform: rotate(3deg); } }
+.loop-write { animation: loopWrite 1.6s ease-in-out .5s infinite; }
+@keyframes loopWrite { 0%, 100% { transform: translate(0, 0) rotate(0); } 25% { transform: translate(3px, -1px) rotate(1.5deg); } 50% { transform: translate(-2px, 1px) rotate(-1deg); } 75% { transform: translate(2px, 0) rotate(1deg); } }
+.loop-pop { animation: loopPop 2.4s cubic-bezier(.34,1.56,.64,1) infinite; }
+@keyframes loopPop { 0%, 15% { transform: scale(0); opacity: 0; } 30%, 80% { transform: scale(1); opacity: 1; } 100% { transform: scale(0); opacity: 0; } }
+.loop-rise { animation: loopRise 2.2s ease-out infinite; }
+@keyframes loopRise { 0% { transform: translateY(10px) scale(.5); opacity: 0; } 25% { opacity: 1; } 100% { transform: translateY(-26px) scale(1.1); opacity: 0; } }
+.loop-drop { animation: loopDrop 1.6s ease-in infinite; }
+@keyframes loopDrop { 0% { transform: translateY(-8px); opacity: 0; } 30% { opacity: 1; } 100% { transform: translateY(22px); opacity: 0; } }
+.loop-twinkle { animation: loopTwinkle 1.8s ease-in-out infinite; }
+@keyframes loopTwinkle { 0%, 100% { transform: scale(.4) rotate(0); opacity: .2; } 50% { transform: scale(1.15) rotate(20deg); opacity: 1; } }
+.loop-dot { animation: loopDot 1s ease-in-out infinite; }
+@keyframes loopDot { 0%, 100% { transform: translateY(0); opacity: .5; } 40% { transform: translateY(-4px); opacity: 1; } }
+@media (prefers-reduced-motion: reduce) {
+  .loop-in, .loop-float, .loop-sway, .loop-write, .loop-pop, .loop-rise, .loop-drop, .loop-twinkle, .loop-dot { animation: none !important; opacity: 1; }
+}
