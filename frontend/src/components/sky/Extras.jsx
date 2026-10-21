@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { motion, useMotionValue, useScroll, useSpring, useTransform } from "framer-motion";
 import { logoUrl } from "./live";
 
-const TINTS = ["#3B6FE0", "#E1457B", "#2C8F6B", "#6C4BC4", "#B26A00", "#0F7FA3"];
+const TINTS = ["#D9603A", "#E1457B", "#2C8F6B", "#6C4BC4", "#B26A00", "#0F7FA3"];
 
 export const CompanyLogo = ({ name = "?", domain, size = 36, className = "" }) => {
   const [failed, setFailed] = useState(!domain);
@@ -47,17 +47,17 @@ export const Magnetic = ({ children, strength = 0.28, className = "" }) => {
 };
 
 const PALETTES = [
-  { id: "sky", label: "Sky", swatch: "linear-gradient(135deg,#BCD4FF,#EDF3FF)" },
-  { id: "peach", label: "Peach", swatch: "linear-gradient(135deg,#FFCDB4,#FFF3E8)" },
+  { id: "peach", label: "Peach", swatch: "linear-gradient(135deg,#FFB59A,#FFE3D3)" },
+  { id: "sky", label: "Sky", swatch: "linear-gradient(135deg,#9CC0FF,#DCE8FF)" },
 ];
 
 export const PaletteToggle = () => {
   const [palette, setPalette] = useState(() => {
-    try { return localStorage.getItem("as-palette") || "sky"; } catch { return "sky"; }
+    try { return localStorage.getItem("as-palette-v2") || "peach"; } catch { return "peach"; }
   });
   useEffect(() => {
     document.documentElement.dataset.palette = palette;
-    try { localStorage.setItem("as-palette", palette); } catch { /* private mode */ }
+    try { localStorage.setItem("as-palette-v2", palette); } catch { /* private mode */ }
   }, [palette]);
 
   return (

@@ -1,6 +1,6 @@
 import { useRef, useState } from "react";
 import { motion, useInView } from "framer-motion";
-import { ArrowRight, Check, Mail, MousePointerClick, RotateCw, X } from "lucide-react";
+import { CalendarCheck, Check, Clock, Mail, MousePointerClick, RotateCw, X } from "lucide-react";
 import { EASE, Reveal } from "./Bits";
 
 const ROWS = [
@@ -49,61 +49,101 @@ const FlipCard = ({ r, i }) => {
   );
 };
 
-/* illustrative "volume vs fit" visual */
+/* illustrative "volume vs fit" visual: same job hunt, two approaches */
+const OURS = [
+  { role: "Product Ops Lead", out: "Interview invite", tone: "win" },
+  { role: "Operations Analyst", out: "Recruiter replied", tone: "win" },
+  { role: "Programme Manager", out: "Interview invite", tone: "win" },
+  { role: "Strategy Associate", out: "In review", tone: "wait" },
+  { role: "BizOps Manager", out: "In review", tone: "wait" },
+];
+
 const VolumeVsFit = () => {
   const ref = useRef(null);
-  const go = useInView(ref, { once: true, amount: 0.4 });
+  const go = useInView(ref, { once: true, amount: 0.35 });
   return (
-    <div ref={ref} className="grid gap-4 md:grid-cols-2" data-testid="volume-vs-fit">
-      <div className="white-card p-6">
-        <p className="text-[0.8rem] font-bold uppercase tracking-[0.14em] text-slate">Spray 100</p>
-        <div className="mx-auto mt-4 grid h-[230px] w-[230px] grid-cols-10 gap-[3px]">
-          {Array.from({ length: 100 }, (_, k) => (
-            <motion.span
-              key={k}
-              initial={{ opacity: 0, y: -12 }}
-              animate={go ? { opacity: k === 63 ? 1 : 0.5, y: 0 } : {}}
-              transition={{ delay: k * 0.012, duration: 0.3 }}
-              className={`grid place-items-center rounded-[4px] ${k === 63 ? "bg-[#2C8F6B] text-white ring-4 ring-[#BEEBC5]" : "bg-[#AEB8CC] text-white/70"}`}
-            >
-              <Mail size={10} />
-            </motion.span>
-          ))}
-        </div>
-        <motion.p initial={{ opacity: 0 }} animate={go ? { opacity: 1 } : {}} transition={{ delay: 1.6 }}
-          className="font-display mt-5 flex items-center justify-center gap-2 text-[1.3rem] text-ink">
-          100 sent <ArrowRight size={18} className="text-slate" /> <span className="text-[#2C8F6B]">1 reply</span>
-        </motion.p>
-      </div>
+    <div ref={ref} data-testid="volume-vs-fit">
+      <Reveal className="mx-auto max-w-[36rem] text-center">
+        <h3 className="font-display text-[1.7rem] leading-[1.1] text-ink sm:text-[2.2rem]">More applications ≠ more interviews.</h3>
+        <p className="mt-2 text-[0.95rem] font-medium text-slate">Same job hunt. Two ways to do it.</p>
+      </Reveal>
 
-      <div className="white-card p-6">
-        <p className="text-[0.8rem] font-bold uppercase tracking-[0.14em] text-accent">Choose 5</p>
-        <div className="mt-4 flex h-[230px] items-center justify-center gap-3">
-          {[0, 1, 2, 3, 4].map((k) => (
-            <motion.span
-              key={k}
-              initial={{ opacity: 0, y: 40, rotate: 0 }}
-              animate={go ? { opacity: 1, y: 0, rotate: (k - 2) * 5 } : {}}
-              transition={{ type: "spring", stiffness: 140, damping: 14, delay: 0.3 + k * 0.12 }}
-              className="pcard relative h-[130px] w-[22%] max-w-[84px] rounded-[16px] shadow-[0_12px_24px_-16px_rgba(22,33,58,0.6)]"
-              style={{ backgroundColor: `var(--card-${k + 1})` }}
-            >
-              {k % 2 === 0 && (
-                <motion.span initial={{ scale: 0 }} animate={go ? { scale: 1 } : {}} transition={{ delay: 1.3 + k * 0.15, type: "spring", stiffness: 400, damping: 12 }}
-                  className="absolute -right-2 -top-2 grid h-7 w-7 place-items-center rounded-full bg-[#2C8F6B] text-white">
-                  <Check size={14} strokeWidth={3} />
-                </motion.span>
-              )}
-            </motion.span>
-          ))}
+      <div className="mt-8 grid gap-4 md:grid-cols-2">
+        {/* the usual way */}
+        <div className="white-card flex flex-col p-6 hover:translate-y-0" data-testid="vvf-others">
+          <div className="flex items-center justify-between gap-3">
+            <div>
+              <p className="text-[0.74rem] font-bold uppercase tracking-[0.14em] text-[#B1305F]">Mass-apply bots</p>
+              <p className="font-display mt-1 text-[1.25rem] leading-tight text-ink">100 copy-paste applications</p>
+            </div>
+            <span className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-[#FFE3EC] text-[#B1305F]"><X size={20} strokeWidth={3} /></span>
+          </div>
+          <div className="mx-auto mt-5 grid h-[210px] w-[210px] grid-cols-10 gap-[3px]">
+            {Array.from({ length: 100 }, (_, k) => (
+              <motion.span
+                key={k}
+                initial={{ opacity: 0, scale: 0.4 }}
+                animate={go ? { opacity: 1, scale: 1, backgroundColor: k === 63 ? "#2C8F6B" : "#C3CADB" } : {}}
+                transition={{ delay: 0.2 + k * 0.01, duration: 0.25 }}
+                className={`grid place-items-center rounded-[4px] text-white ${k === 63 ? "ring-4 ring-[#BEEBC5]" : ""}`}
+                style={{ backgroundColor: "#8FA0C2" }}
+              >
+                <Mail size={10} />
+              </motion.span>
+            ))}
+          </div>
+          <div className="mt-4 flex items-center justify-center gap-4 text-[0.78rem] font-semibold text-slate">
+            <span className="flex items-center gap-1.5"><span className="h-3 w-3 rounded-[3px] bg-[#C3CADB]" /> Ignored</span>
+            <span className="flex items-center gap-1.5"><span className="h-3 w-3 rounded-[3px] bg-[#2C8F6B]" /> Got a reply</span>
+          </div>
+          <motion.div initial={{ opacity: 0, y: 10 }} animate={go ? { opacity: 1, y: 0 } : {}} transition={{ delay: 1.5 }}
+            className="mt-auto pt-5 text-center">
+            <p className="font-display text-[1.5rem] text-ink"><span className="text-[#B1305F]">99 ignored</span> · 1 reply</p>
+            <p className="text-[0.84rem] font-medium text-slate">Recruiters skim past generic, auto-filled applications.</p>
+          </motion.div>
         </div>
-        <motion.p initial={{ opacity: 0 }} animate={go ? { opacity: 1 } : {}} transition={{ delay: 1.8 }}
-          className="font-display mt-5 flex items-center justify-center gap-2 text-[1.3rem] text-ink">
-          5 chosen <ArrowRight size={18} className="text-slate" /> <span className="text-[#2C8F6B]">real conversations</span>
-        </motion.p>
+
+        {/* applyscout */}
+        <div className="white-card flex flex-col p-6 ring-2 ring-[var(--accent)] hover:translate-y-0" data-testid="vvf-ours">
+          <div className="flex items-center justify-between gap-3">
+            <div>
+              <p className="text-[0.74rem] font-bold uppercase tracking-[0.14em] text-accent">ApplyScout</p>
+              <p className="font-display mt-1 text-[1.25rem] leading-tight text-ink">5 tailored applications you approved</p>
+            </div>
+            <span className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-[#E2F6E6] text-[#2C8F6B]"><Check size={20} strokeWidth={3} /></span>
+          </div>
+          <ul className="mt-5 space-y-2">
+            {OURS.map((o, k) => (
+              <motion.li
+                key={o.role}
+                initial={{ opacity: 0, x: 30 }}
+                animate={go ? { opacity: 1, x: 0 } : {}}
+                transition={{ type: "spring", stiffness: 150, damping: 18, delay: 0.3 + k * 0.12 }}
+                className="pcard flex items-center gap-3 rounded-[14px] px-3 py-2.5"
+                style={{ backgroundColor: `var(--card-${k + 1})` }}
+              >
+                <Mail size={15} className="shrink-0 text-ink/60" />
+                <span className="min-w-0 flex-1 truncate text-[0.86rem] font-bold text-ink">{o.role}</span>
+                <motion.span
+                  initial={{ opacity: 0, scale: 0.6 }}
+                  animate={go ? { opacity: 1, scale: 1 } : {}}
+                  transition={{ delay: 1.1 + k * 0.15, type: "spring", stiffness: 380, damping: 16 }}
+                  className={`flex shrink-0 items-center gap-1 rounded-full px-2.5 py-1 text-[0.72rem] font-bold ${o.tone === "win" ? "bg-[#2C8F6B] text-white" : "bg-white/80 text-ink/60"}`}
+                >
+                  {o.tone === "win" ? <CalendarCheck size={12} /> : <Clock size={12} />} {o.out}
+                </motion.span>
+              </motion.li>
+            ))}
+          </ul>
+          <motion.div initial={{ opacity: 0, y: 10 }} animate={go ? { opacity: 1, y: 0 } : {}} transition={{ delay: 2 }}
+            className="mt-auto pt-5 text-center">
+            <p className="font-display text-[1.5rem] text-ink">Fewer sent. <span className="text-[#2C8F6B]">More conversations.</span></p>
+            <p className="text-[0.84rem] font-medium text-slate">Each one matched to you and written from your real facts.</p>
+          </motion.div>
+        </div>
       </div>
-      <p className="text-center text-[0.74rem] font-semibold uppercase tracking-[0.14em] text-slate/70 md:col-span-2" data-testid="illustrative-label">
-        Illustrative, not measured data
+      <p className="mt-4 text-center text-[0.74rem] font-semibold uppercase tracking-[0.14em] text-slate/70" data-testid="illustrative-label">
+        Illustrative example, not measured data
       </p>
     </div>
   );

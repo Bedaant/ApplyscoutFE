@@ -25,7 +25,7 @@ const FOX_PATHS = [
 export const Logo = ({ size = 38 }) => (
   <span className="flex items-center gap-2.5" data-testid="brand-logo">
     <span
-      className="grid place-items-center rounded-[13px] bg-gradient-to-br from-[#5B9BFF] to-[#3B6FE0] shadow-[0_8px_18px_-8px_rgba(59,111,224,0.9)]"
+      className="brand-mark grid place-items-center rounded-[13px]"
       style={{ width: size, height: size }}
     >
       <svg width={size * 0.56} height={size * 0.56} viewBox="0 0 100 100" aria-hidden="true">
@@ -94,6 +94,6 @@ export const FoxChip = ({ w = 92, className = "" }) => (
   </span>
 );
 
-export const Eyebrow = ({ children, tone = "text-[#3B6FE0]" }) => (
+export const Eyebrow = ({ children, tone = "text-accent" }) => (
   <p className={`text-[0.82rem] font-bold uppercase tracking-[0.16em] ${tone}`}>{children}</p>
 );

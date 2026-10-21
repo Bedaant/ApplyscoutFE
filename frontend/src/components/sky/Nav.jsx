@@ -43,7 +43,7 @@ export const Nav = ({ onStart }) => {
         </nav>
 
         <div className="ml-auto flex items-center gap-2">
-          <button data-testid="nav-login-btn" className="hidden rounded-full px-4 py-2 text-[0.9rem] font-semibold text-slate transition-colors hover:bg-[#EEF3FF] hover:text-ink sm:block">
+          <button data-testid="nav-login-btn" className="hidden rounded-full px-4 py-2 text-[0.9rem] font-semibold text-slate transition-colors hover:bg-accent-soft hover:text-ink sm:block">
             Log in
           </button>
           <button onClick={onStart} data-testid="nav-cta-btn" className="pill-ink rounded-full px-5 py-2.5 text-[0.9rem] font-bold">

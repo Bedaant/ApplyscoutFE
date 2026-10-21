@@ -14,7 +14,7 @@ export const Hero = ({ onStart, onSample }) => (
       <Clouds />
 
       <FloatBadge className="left-[6%] top-[26%] hidden sm:grid" float="float-a" tint="#E1457B"><Briefcase size={22} /></FloatBadge>
-      <FloatBadge className="left-[12%] top-[52%] hidden md:grid" float="float-c" tint="#3B6FE0"><Mail size={22} /></FloatBadge>
+      <FloatBadge className="left-[12%] top-[52%] hidden md:grid" float="float-c" tint="var(--accent)"><Mail size={22} /></FloatBadge>
       <FloatBadge className="right-[7%] top-[22%] hidden sm:grid" float="float-b" tint="#2C8F6B"><FileText size={22} /></FloatBadge>
       <FloatBadge className="right-[13%] top-[54%] hidden md:grid" float="float-a" tint="#B26A00"><Bell size={22} /></FloatBadge>
       <FloatBadge className="left-[22%] top-[14%] hidden lg:grid" float="float-b" size={46} tint="#6C4BC4"><Search size={18} /></FloatBadge>

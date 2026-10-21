@@ -37,7 +37,7 @@ export const PreviewDialog = ({ open, onOpenChange }) => {
         className="max-h-[92vh] w-[calc(100%-1.5rem)] max-w-3xl overflow-y-auto rounded-[1.75rem] border-0 bg-white p-0 text-ink sm:rounded-[1.75rem]">
         <DialogTitle className="sr-only">ApplyScout sample run</DialogTitle>
         <DialogDescription className="sr-only">A sample run of ApplyScout. Nothing is sent.</DialogDescription>
-        <div className="flex flex-wrap items-center gap-4 bg-[#F2F7FF] px-5 py-3.5 pr-12">
+        <div className="flex flex-wrap items-center gap-4 bg-page px-5 py-3.5 pr-12">
           <Logo size={30} />
           <div className="flex items-center gap-3">
             {STEPS.map((l, i) => (

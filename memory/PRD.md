@@ -115,3 +115,12 @@ Tests: iteration_2 + iteration_3 — backend and frontend passing; `backend/test
 ## Backlog
 - P1: add Adzuna keys; swap SAMPLE quotes for real ones; pick one palette and remove toggle
 - P2: "trusted by" only once real customers exist; region-specific pages; measured interview rate
+
+## v2.1 — visual edits (21 Oct 2026)
+- Peach is now the default palette (index.html sets it before paint; key `as-palette-v2`); Sky still on the toggle.
+  Brand logo, accents, FAQ phone and dialog follow the palette (no hard-coded blue).
+- Compare: "volume vs fit" redesigned — "More applications ≠ more interviews": mass-apply bots (100 copy-paste
+  → 99 ignored · 1 reply, with legend) vs ApplyScout (5 tailored, labelled outcomes). Marked illustrative.
+- Quotes section: negative competitor quotes removed. Now a side-by-side table (#table, `problem-table`):
+  what you need × tool types (✓/~/✗, typical by type, not named) × ApplyScout fix; stacked cards on mobile.
+  Below it, the SAMPLE early-user carousel only.

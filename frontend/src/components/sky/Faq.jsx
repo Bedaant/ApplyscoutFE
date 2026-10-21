@@ -19,13 +19,13 @@ const QA = [
 
 const PhoneMock = () => (
   <div className="w-[236px] rounded-[2rem] border-[7px] border-ink bg-white shadow-[0_30px_60px_-30px_rgba(22,33,58,0.6)]" data-testid="faq-phone">
-    <div className="rounded-t-[1.5rem] bg-gradient-to-b from-[#DCE8FF] to-white px-4 pb-3 pt-4">
+    <div className="rounded-t-[1.5rem] bg-gradient-to-b from-[var(--accent-soft)] to-white px-4 pb-3 pt-4">
       <div className="flex items-center justify-between">
         <img src={AVATARS[0]} alt="" className="h-8 w-8 rounded-full border-2 border-white object-cover" />
         <Bell size={15} className="text-slate" />
       </div>
       <p className="font-display mt-3 text-[1.05rem] leading-tight text-ink">Morning, Priya</p>
-      <p className="text-[0.78rem] font-semibold text-[#3B6FE0]">1 interview, 2 drafts ready</p>
+      <p className="text-[0.78rem] font-semibold text-accent">1 interview, 2 drafts ready</p>
       <div className="mt-3 flex h-8 items-center gap-2 rounded-full bg-white px-3 text-[10.5px] text-slate shadow-sm">
         <Search size={11} /> product ops · remote
       </div>
@@ -57,7 +57,7 @@ export const Faq = () => {
 
           <ul className="mt-8 space-y-3">
             {QA.map(([q, a], i) => (
-              <li key={q} className={`white-card overflow-hidden ${open === i ? "ring-1 ring-[#BFD6FF]" : ""}`}>
+              <li key={q} className={`white-card overflow-hidden ${open === i ? "ring-1 ring-[var(--accent-soft)]" : ""}`}>
                 <button
                   onClick={() => setOpen(open === i ? -1 : i)}
                   aria-expanded={open === i}
@@ -65,7 +65,7 @@ export const Faq = () => {
                   className="flex w-full items-center justify-between gap-5 px-5 py-4 text-left"
                 >
                   <span className="font-display text-[1.02rem] leading-snug text-ink md:text-[1.1rem]">{q}</span>
-                  <span className={`grid h-8 w-8 shrink-0 place-items-center rounded-full transition-all duration-300 ${open === i ? "rotate-45 bg-bubble text-[#8A2F52]" : "bg-[#F2F7FF] text-slate"}`}>
+                  <span className={`grid h-8 w-8 shrink-0 place-items-center rounded-full transition-all duration-300 ${open === i ? "rotate-45 bg-bubble text-[#8A2F52]" : "bg-page text-slate"}`}>
                     <Plus size={16} />
                   </span>
                 </button>
