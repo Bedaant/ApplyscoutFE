@@ -83,7 +83,7 @@ export const PaletteToggle = () => {
           {palette === p.id && (
             <motion.span layoutId="palette-pill" className="absolute inset-0 rounded-full bg-[#16213A]" transition={{ type: "spring", stiffness: 380, damping: 30 }} />
           )}
-          <span className="relative h-4 w-4 rounded-full border border-white" style={{ background: p.swatch }} />
+          <span className="relative h-4 w-4 rounded-full border border-white ring-1 ring-ink/25" style={{ background: p.swatch }} />
           <span className={`relative hidden sm:inline ${palette === p.id ? "text-white" : ""}`}>{p.label}</span>
         </button>
       ))}

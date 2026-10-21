@@ -86,3 +86,32 @@ mobile 390x844 with no horizontal overflow.
 - Frontend calls the API via `REACT_APP_BACKEND_URL`; backend routes are all `/api`-prefixed.
 - Unused earlier designs remain in `components/as`, `components/v2`, `components/landing`,
   `components/site` and are not imported.
+
+
+## v2 — 21 Oct 2026: "Interviews, not applications"
+Hero look/motion unchanged; headline now "Get interviews 🦊 not just 👥 applications sent." + one-line sub.
+New section order: Nav → Hero → JobCards (live) → LogoMarquee → MotionStory (#how) → Compare (#compare) →
+Quotes → Faq → FinalCta → Footer, plus floating PaletteToggle (Sky / Peach, saved in localStorage).
+Sources/Statement/Features/Steps/Truth/Voices files remain but are no longer rendered.
+
+New components (`components/sky/`): `live.js` (API hooks), `Extras.jsx` (CompanyLogo, Magnetic,
+PaletteToggle, ParallaxArt), `LogoMarquee.jsx`, `MotionStory.jsx` (scroll-pinned 5 beats desktop, in-view
+beats mobile), `Compare.jsx` (8 flip cards, competitor types never named + illustrative volume-vs-fit),
+`Quotes.jsx` (two tracks; competitor complaints are paraphrased summaries; early-user quotes are SAMPLE).
+Clay fox art (generated, background removed): `/frontend/public/art/*.webp`.
+Palette: CSS vars in `sky.css` (`--page`, `--accent`, `--card-1..5`); `html[data-palette=peach]`.
+
+Backend `jobs.py`:
+- 28 real companies via public Greenhouse / Ashby / Lever boards; postings ≤14 days; cached in Mongo
+  `job_cache` (+ `job_cache_meta`), refreshed hourly (stale-while-revalidate); failing board keeps last data.
+- `GET /api/jobs/live?region=all|india|remote|us|europe&limit=1..12` → one posting per company.
+- `GET /api/jobs/companies`, `GET /api/jobs/logo/{domain}` (allow-listed; logo fetched from the company's
+  own site, Google favicon fallback, cached in `logo_cache`).
+- Adzuna wired but OFF until `ADZUNA_APP_ID` + `ADZUNA_APP_KEY` are added to backend/.env; then the
+  "Jobs by Adzuna" credit shows automatically.
+
+Tests: iteration_2 + iteration_3 — backend and frontend passing; `backend/tests/test_jobs_api.py`.
+
+## Backlog
+- P1: add Adzuna keys; swap SAMPLE quotes for real ones; pick one palette and remove toggle
+- P2: "trusted by" only once real customers exist; region-specific pages; measured interview rate

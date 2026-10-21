@@ -109,3 +109,24 @@ def test_preview(s):
     assert r.status_code == 200
     d = r.json()
     assert len(d["matches"]) == 3 and "_id" not in d
+
+
+# ---- iteration 3: remote deck labels + classifier fixes ----
+def test_remote_deck_locations_say_remote(s):
+    d = s.get(f"{API}/jobs/live", params={"region": "remote", "limit": 12}, timeout=60).json()
+    words = ["remote", "anywhere", "distributed", "work from home"]
+    bad = [f"{j['company']}: {j['location']}" for j in d["jobs"]
+           if not (any(w in j["location"].lower() for w in words) or j["location"].startswith("Remote · "))]
+    assert not bad, f"non-remote locations in remote deck: {bad}"
+
+
+def test_classify_unit():
+    import sys
+    sys.path.insert(0, "/app/backend")
+    from jobs import classify
+    assert "us" in classify("Remote - Texas")
+    assert "us" in classify("Remote - SF Bay Area")
+    assert "us" not in classify("Toronto, CA")
+    assert "us" not in classify("Remote or Hybrid, Toronto")
+    assert "us" in classify("San Francisco, CA")
+    assert "remote" in classify("Remote - Texas")

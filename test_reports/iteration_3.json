@@ -1,0 +1,24 @@
+{
+  "summary": "Retest of the iteration 2 fixes. All passed. Backend: 22/22 pytest pass, including 2 new tests. (1) Every card in the Remote deck (limit 12) has a location that says remote or starts with 'Remote · ', e.g. 'Remote · San Francisco', 'Remote · Singapore +1'. (2) classify() unit test: 'Remote - Texas' and 'Remote - SF Bay Area' are tagged us; 'Toronto, CA' and 'Remote or Hybrid, Toronto' are not; 'San Francisco, CA' still is. Desktop 1920: story beat 3 (story-scene-2) types all 3 sentences with 3 citation chips, then shows 'No fact behind it — cut'. No console errors or warnings at all, so the 'Cannot update a component' error is gone. Compare card on desktop: hover sets aria-pressed true, the first and second click while hovered keep it true, and mouse leave sets it false. Quotes carousel: active dot stays at 0 after 9.5s off-screen and moves to 2 after 9s in view. Mobile 390: the fox chip sits on the same line as 'Get interviews' (top 139 vs 138). The palette toggle is compact (66x36, swatches only), and peach/sky switching works. Mobile beat 2 shows 3 chips and the cut line. A touch tap on a compare card toggles it true, then false. No horizontal overflow (scrollWidth 390). Regression: India region shows Indian locations, Remote region shows remote locations, approve shows 'Queued, not sent' and undo restores it, an invalid email shows an error and a valid one shows success, FAQ item 1 opens and closes.",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": [
+      {"screen": "Mobile 390 story beat 03", "issues": ["Fact chips get truncated ('6 yrs produ…', 'Rebuilt onb…') because the column is 34% wide. Cosmetic."]},
+      {"screen": "Mobile palette toggle", "issues": ["The peach swatch is a pale gradient on a white pill when inactive, so it is hard to see. Consider a darker border or ring. Cosmetic."]}
+    ]
+  },
+  "test_report_links": ["/app/backend/tests/test_jobs_api.py", "/app/test_reports/pytest/pytest_results.xml"],
+  "action_items": ["None blocking. Optional cosmetic tweaks: mobile beat-3 chip truncation and the visibility of the inactive peach swatch."],
+  "critical_code_review_comments": [
+    "Typed and SceneDraft: the onDone effect plus stable handlers (useRef with useCallback) is correct. No setState happens during render.",
+    "FlipCard checks e.nativeEvent.pointerType !== 'mouse'. A keyboard Enter/Space click gives pointerType '' in Chrome, so keyboard toggling still works. Older Safari, where click is a MouseEvent with no pointerType, also toggles, which is fine."
+  ],
+  "updated_files": ["/app/backend/tests/test_jobs_api.py"],
+  "success_rate": {"backend": "100%", "frontend": "100%"},
+  "seed_data_creation": "None. The test_ signups and the TEST_PM preview session were deleted.",
+  "retest_needed": false,
+  "should_main_agent_self_test": false,
+  "context_for_next_testing_agent": "Run: REACT_APP_BACKEND_URL=<frontend/.env> pytest /app/backend/tests/test_jobs_api.py (22 tests, including test_remote_deck_locations_say_remote and test_classify_unit). Scroll with window.__lenis.scrollTo(y,{immediate:true}). The desktop story stage is the .md:block parent of [data-testid=story-captions]; the scene-2 midpoint is top + span*0.5. Simulate a touch flip by dispatching a PointerEvent('click',{pointerType:'touch'}). Signup testids are {id}-email-input / {id}-signup-submit / -error / -success."
+}

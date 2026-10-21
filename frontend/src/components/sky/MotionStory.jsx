@@ -202,11 +202,11 @@ const SceneDraft = () => {
             key={f.t}
             animate={all > i ? { scale: [1, 1.08, 1], boxShadow: `0 0 0 3px ${f.c}` } : { boxShadow: "0 0 0 0px transparent" }}
             transition={{ duration: 0.5 }}
-            className="flex items-center gap-1.5 rounded-full px-3 py-1.5 text-[0.76rem] font-bold"
+            className="flex items-center gap-1.5 rounded-[14px] px-2.5 py-1.5 text-[0.7rem] font-bold leading-tight sm:px-3 sm:text-[0.76rem]"
             style={{ backgroundColor: f.bg, color: f.c }}
           >
             <span className="grid h-4 w-4 shrink-0 place-items-center rounded-full bg-white text-[0.6rem]">{i + 1}</span>
-            <span className="truncate">{f.t}</span>
+            <span>{f.t}</span>
           </motion.span>
         ))}
       </div>
