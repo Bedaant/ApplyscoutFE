@@ -141,7 +141,7 @@ export const WavingFox = ({ w = 84, className = "" }) => (
     aria-hidden="true"
   >
     <span className="absolute inset-0 overflow-hidden rounded-[18px] bg-gradient-to-br from-[#FFD3C0] to-[#FFB59A] shadow-[0_10px_22px_-12px_rgba(232,110,70,0.9)]">
-      <img src="/art/fox-wave.webp" alt="" className="fox-wave absolute bottom-[-30%] left-1/2 h-[150%] w-auto max-w-none -translate-x-1/2" />
+      <img src="/art/fox-wave.webp" alt="" className="fox-wave absolute inset-x-0 bottom-0 mx-auto h-[94%] w-auto max-w-none" />
     </span>
     <span className="fox-hi pointer-events-none absolute -right-3 -top-5 rounded-full bg-white px-2 py-0.5 text-[0.7rem] font-extrabold leading-tight tracking-normal text-ink shadow-[0_6px_14px_-8px_rgba(22,33,58,0.6)]">Hi! 👋</span>
   </span>

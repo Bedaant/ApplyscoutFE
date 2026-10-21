@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Check, Copy, Download, Share2 } from "lucide-react";
+import { Check, Copy, Download, Share2, Users } from "lucide-react";
+import { inviteLink } from "./Invite";
 
 const FOX_SRC = "/art/fox-cheer.webp";
-const SITE = () => window.location.origin;
-const LINE = (n) => `I'm #${n} on the ApplyScout early-access list 🦊 — interviews, not just applications. Join me:`;
+const LINE = (n) => `I'm #${n} on the ApplyScout early-access list 🦊 — interviews, not just applications. Join with my link:`;
 
 const loadImg = (src) => new Promise((res, rej) => {
   const im = new Image();
@@ -24,7 +24,7 @@ const roundRect = (ctx, x, y, w, h, r) => {
 };
 
 /** Draws the share card (1080x1080) on a canvas and returns a PNG blob. */
-export const renderCard = async (n) => {
+export const renderCard = async (n, link) => {
   const S = 1080;
   const c = document.createElement("canvas");
   c.width = S; c.height = S;
@@ -69,8 +69,8 @@ export const renderCard = async (n) => {
   ctx.fillText("Interviews, not just applications.", S / 2, 850);
 
   // brand pill
-  const host = window.location.host.replace(/^www\./, "");
-  const label = host.length <= 28 ? `Join me at ${host}` : "Join early access · ApplyScout";
+  const short = (link || "").replace(/^https?:\/\/(www\.)?/, "");
+  const label = short.length <= 34 ? short : "Join early access · ApplyScout";
   ctx.font = "800 34px Figtree, sans-serif";
   const tw = ctx.measureText(label).width + 80;
   roundRect(ctx, (S - tw) / 2, 920, tw, 76, 38);
@@ -90,17 +90,17 @@ const IconBtn = ({ onClick, href, label, children, testid }) => {
   );
 };
 
-export const ShareCard = ({ position }) => {
+export const ShareCard = ({ position, code, referrals = 0 }) => {
   const [copied, setCopied] = useState(false);
   const [busy, setBusy] = useState(false);
   const text = LINE(position);
-  const url = SITE();
+  const url = inviteLink(code);
   const enc = encodeURIComponent;
 
   const download = async () => {
     setBusy(true);
     try {
-      const blob = await renderCard(position);
+      const blob = await renderCard(position, url);
       const a = document.createElement("a");
       a.href = URL.createObjectURL(blob);
       a.download = `applyscout-${position}.png`;
@@ -112,7 +112,7 @@ export const ShareCard = ({ position }) => {
   const share = async () => {
     setBusy(true);
     try {
-      const blob = await renderCard(position);
+      const blob = await renderCard(position, url);
       const file = new File([blob], `applyscout-${position}.png`, { type: "image/png" });
       if (navigator.canShare?.({ files: [file] })) {
         await navigator.share({ files: [file], text, url });
@@ -143,6 +143,13 @@ export const ShareCard = ({ position }) => {
         <p className="font-display mt-1 text-[3rem] leading-none text-ink" data-testid="share-card-position">#{position}</p>
         <p className="mt-1 text-[0.95rem] font-bold text-ink">on the ApplyScout early-access list</p>
         <p className="mt-1 text-[0.8rem] font-semibold text-slate">Interviews, not just applications.</p>
+      </div>
+      <div className="mt-3 rounded-[18px] bg-white p-3 text-left shadow-[0_8px_18px_-14px_rgba(22,33,58,0.5)]" data-testid="invite-box">
+        <div className="flex items-center justify-between gap-2">
+          <p className="flex items-center gap-1.5 text-[0.84rem] font-bold text-ink"><Users size={14} /> Friends joined: <span data-testid="invite-referrals">{referrals}</span></p>
+          <p className="text-[0.74rem] font-bold text-accent">Each friend moves you up 10 spots</p>
+        </div>
+        <p className="mt-2 truncate rounded-[10px] bg-page px-3 py-2 font-mono text-[0.76rem] text-ink" data-testid="invite-link">{url}</p>
       </div>
       <p className="mt-4 text-[0.84rem] font-bold text-slate">Share it with a friend who's job hunting</p>
       <div className="mt-2.5 flex flex-wrap justify-center gap-2">

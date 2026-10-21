@@ -50,7 +50,7 @@ export const Hero = ({ onStart, onSample }) => (
         <motion.div {...line(0.4)} className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
           <button onClick={onStart} data-testid="hero-primary-btn"
             className="pill-pink group inline-flex items-center gap-2 rounded-full py-3.5 pl-7 pr-3 text-[0.98rem] font-bold">
-            Let's get started
+            Find my jobs
             <span className="grid h-8 w-8 place-items-center rounded-full bg-white/70 transition-transform duration-300 group-hover:translate-x-0.5">
               <ArrowRight size={16} />
             </span>

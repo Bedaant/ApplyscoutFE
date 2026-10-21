@@ -164,3 +164,13 @@ Tests: iteration_6.
 - Share card (ShareCard.jsx) after signup: cheering fox + list #; Share (Web Share w/ PNG), Image download
   (canvas 1080²), Copy, WhatsApp, X, LinkedIn. No referral tracking.
 Tests: iteration_7.
+
+## v3 — "Find my jobs" flow + Invite Rewards (21 Oct 2026)
+- Route /find (App.js pathname switch; hero "Find my jobs" button). FindFlow.jsx + FlowParts.jsx.
+- REAL: resume reading (POST /api/flow/resume, Gemini gemini-3.1-pro-preview via EMERGENT_LLM_KEY; PDF/DOCX/TXT ≤5MB;
+  temp file deleted), live-job matching (POST /api/flow/match: real counts, auto-widen related→remote→any),
+  fact-tagged drafts (POST /api/flow/draft; lines without a valid fact/job/greet/close tag are dropped).
+- MOCKED (UI only, labelled "Demo"): sample people + masked emails, paywall (region price ₹499/$9/€9/£8),
+  Apple Pay/Google Pay/UPI/Card, magic-link email, Gmail consent, send proof, Pause/Undo (30s).
+- Invite Rewards (real): signups get `code`; POST /api/signups accepts `ref`; inviter +10 spots per new friend
+  (min #1); GET /api/signups/invite/{code}; share card shows personal link + friends joined; ?ref banner.

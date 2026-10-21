@@ -14,8 +14,10 @@ import { Quotes } from "@/components/sky/Quotes";
 import { Faq } from "@/components/sky/Faq";
 import { FinalCta, Footer } from "@/components/sky/FinalCta";
 import { PreviewDialog } from "@/components/sky/PreviewDialog";
+import { FindFlow } from "@/components/sky/FindFlow";
+import { InviteBanner } from "@/components/sky/Invite";
 
-function App() {
+function Landing({ onFind }) {
   const [loading, setLoading] = useState(true);
   const [open, setOpen] = useState(false);
   const lenisRef = useRef(null);
@@ -71,8 +73,9 @@ function App() {
       <div className="min-h-screen bg-page text-ink" data-testid="landing-page">
         <AnimatePresence>{loading && <Loader key="loader" />}</AnimatePresence>
         <Nav onStart={onStart} />
+        <InviteBanner onJoin={onStart} />
         <main>
-          <Hero onStart={onStart} onSample={onSample} />
+          <Hero onStart={onFind} onSample={onSample} />
           <JobCards />
           <LogoMarquee />
           <MotionStory />
@@ -86,6 +89,20 @@ function App() {
       </div>
     </MotionConfig>
   );
+}
+
+function App() {
+  const [path, setPath] = useState(window.location.pathname);
+  useEffect(() => {
+    const on = () => setPath(window.location.pathname);
+    window.addEventListener("popstate", on);
+    return () => window.removeEventListener("popstate", on);
+  }, []);
+  const go = (p) => { window.history.pushState({}, "", p); setPath(p); window.scrollTo(0, 0); };
+  if (path.startsWith("/find")) {
+    return <MotionConfig reducedMotion="user"><FindFlow onExit={() => go("/")} /></MotionConfig>;
+  }
+  return <Landing onFind={() => go("/find")} />;
 }
 
 export default App;

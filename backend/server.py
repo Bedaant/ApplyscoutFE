@@ -1,3 +1,4 @@
+import uuid
 import asyncio
 from fastapi import FastAPI, APIRouter, Query, HTTPException
 from dotenv import load_dotenv
@@ -106,12 +107,32 @@ def build_matches(role: str) -> List[Match]:
 class SignupRequest(BaseModel):
     email: EmailStr
     source: str = Field(default="hero", max_length=40)
+    ref: Optional[str] = Field(default=None, max_length=16)
 
 
 class SignupResponse(BaseModel):
     email: str
     already_on_list: bool
     position: int
+    code: str
+    referrals: int = 0
+    spots_per_friend: int = 10
+
+
+SPOTS_PER_FRIEND = 10
+
+
+def _new_code():
+    return uuid.uuid4().hex[:8]
+
+
+async def _signup_view(doc, already):
+    if not doc.get("code"):
+        doc["code"] = _new_code()
+        await db.signups.update_one({"email": doc["email"]}, {"$set": {"code": doc["code"]}})
+    refs = int(doc.get("referrals", 0))
+    return SignupResponse(email=doc["email"], already_on_list=already, code=doc["code"], referrals=refs,
+                          position=max(1, int(doc.get("position", 1)) - SPOTS_PER_FRIEND * refs))
 
 
 @api_router.get("/")
@@ -122,17 +143,33 @@ async def root():
 @api_router.post("/signups", response_model=SignupResponse)
 async def create_signup(req: SignupRequest):
     email = req.email.strip().lower()
-    existing = await db.signups.find_one({"email": email})
-    if existing is not None:
-        return SignupResponse(email=email, already_on_list=True, position=existing.get("position", 1))
+    existing = await db.signups.find_one({"email": email}, {"_id": 0})
+    if existing is not None:  # repeat signups never count as referrals
+        return await _signup_view(existing, True)
     position = await db.signups.count_documents({}) + 1
-    await db.signups.insert_one({
+    inviter = await db.signups.find_one({"code": req.ref}, {"_id": 0, "email": 1}) if req.ref else None
+    doc = {
         "email": email,
         "source": req.source,
         "position": position,
+        "code": _new_code(),
+        "referrals": 0,
+        "referred_by": inviter["email"] if inviter and inviter["email"] != email else None,
         "created_at": datetime.now(timezone.utc).isoformat(),
-    })
-    return SignupResponse(email=email, already_on_list=False, position=position)
+    }
+    await db.signups.insert_one(dict(doc))
+    if doc["referred_by"]:
+        await db.signups.update_one({"email": doc["referred_by"]}, {"$inc": {"referrals": 1}})
+    return await _signup_view(doc, False)
+
+
+@api_router.get("/signups/invite/{code}")
+async def invite_status(code: str):
+    """Public view of an invite link: only says whether it is valid (no email shown)."""
+    doc = await db.signups.find_one({"code": code[:16]}, {"_id": 0, "email": 1})
+    return {"valid": bool(doc)}
+
+
 
 
 @api_router.post("/preview", response_model=PreviewSession)
@@ -197,6 +234,8 @@ async def job_companies():
     return {"companies": await feed.companies()}
 
 
+from flow import build_router as build_flow_router  # noqa: E402
+api_router.include_router(build_flow_router(feed))
 app.include_router(api_router)
 
 

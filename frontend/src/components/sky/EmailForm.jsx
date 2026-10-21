@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import { ArrowRight, Check, Loader2 } from "lucide-react";
 import { motion } from "framer-motion";
 import { Celebrate } from "./Celebrate";
 import { ShareCard } from "./ShareCard";
+import { getRef } from "./Invite";
 
 const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
 
@@ -13,6 +14,26 @@ export const EmailForm = ({ source = "hero", id = "hero", label = "Join the list
   const [msg, setMsg] = useState("");
   const [fresh, setFresh] = useState(false);
   const [position, setPosition] = useState(null);
+  const [invite, setInvite] = useState({ code: null, referrals: 0 });
+
+  const apply = (data, isNew) => {
+    setFresh(isNew);
+    setPosition(data.position ?? null);
+    setInvite({ code: data.code, referrals: data.referrals || 0 });
+    try { localStorage.setItem("as-signup", data.email); } catch { /* ignore */ }
+  };
+
+  // returning visitor: show their current place + friends joined
+  useEffect(() => {
+    let saved = null;
+    try { saved = localStorage.getItem("as-signup"); } catch { /* ignore */ }
+    if (!saved) return;
+    axios.post(`${API}/signups`, { email: saved, source }).then((res) => {
+      apply(res.data, false);
+      setMsg(`You're #${res.data.position} on the list.`);
+      setState("done");
+    }).catch(() => {});
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const submit = async (e) => {
     e.preventDefault();
@@ -24,9 +45,8 @@ export const EmailForm = ({ source = "hero", id = "hero", label = "Join the list
     }
     setState("sending");
     try {
-      const res = await axios.post(`${API}/signups`, { email: value, source });
-      setFresh(!res.data?.already_on_list);
-      setPosition(res.data?.position ?? null);
+      const res = await axios.post(`${API}/signups`, { email: value, source, ref: getRef() || undefined });
+      apply(res.data, !res.data?.already_on_list);
       setState("done");
       setMsg(res.data?.already_on_list
         ? `${value} is already on the list — you keep place #${res.data.position}.`
@@ -58,7 +78,7 @@ export const EmailForm = ({ source = "hero", id = "hero", label = "Join the list
           <span className="mt-0.5 grid h-6 w-6 shrink-0 place-items-center rounded-full bg-white text-[#1F7A52]"><Check size={14} /></span>
           <p className="text-[0.95rem] font-medium leading-relaxed text-ink">{msg}</p>
         </div>
-        {position != null && <ShareCard position={position} />}
+        {position != null && invite.code && <ShareCard position={position} code={invite.code} referrals={invite.referrals} />}
       </div>
     );
   }

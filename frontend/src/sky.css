@@ -215,16 +215,16 @@ html.native-scroll { scroll-behavior: smooth; }
 .fox-wave { transform-origin: 50% 100%; animation: foxWave 5s ease-in-out 1.6s infinite; }
 .fox-wave-chip:hover .fox-wave, .fox-wave-chip:active .fox-wave { animation: foxWaveNow .9s ease-in-out; }
 @keyframes foxWave {
-  0%, 62%, 100% { transform: translateX(-50%) rotate(0); }
-  68% { transform: translateX(-50%) rotate(-7deg); }
-  74% { transform: translateX(-50%) rotate(6deg); }
-  80% { transform: translateX(-50%) rotate(-5deg); }
-  86% { transform: translateX(-50%) rotate(3deg); }
+  0%, 62%, 100% { transform: rotate(0); }
+  68% { transform: rotate(-7deg); }
+  74% { transform: rotate(6deg); }
+  80% { transform: rotate(-5deg); }
+  86% { transform: rotate(3deg); }
 }
 @keyframes foxWaveNow {
-  0%, 100% { transform: translateX(-50%) rotate(0); }
-  20% { transform: translateX(-50%) rotate(-8deg); } 40% { transform: translateX(-50%) rotate(7deg); }
-  60% { transform: translateX(-50%) rotate(-5deg); } 80% { transform: translateX(-50%) rotate(3deg); }
+  0%, 100% { transform: rotate(0); }
+  20% { transform: rotate(-8deg); } 40% { transform: rotate(7deg); }
+  60% { transform: rotate(-5deg); } 80% { transform: rotate(3deg); }
 }
 .fox-hi { opacity: 0; transform-origin: 0% 100%; animation: foxHi 5s ease-in-out 1.6s infinite; }
 .fox-wave-chip:hover .fox-hi { animation: none; opacity: 1; transform: scale(1); }
@@ -238,5 +238,4 @@ html.native-scroll { scroll-behavior: smooth; }
 }
 @media (prefers-reduced-motion: reduce) {
   .fox-wave, .fox-hi { animation: none !important; }
-  .fox-wave { transform: translateX(-50%); }
 }
