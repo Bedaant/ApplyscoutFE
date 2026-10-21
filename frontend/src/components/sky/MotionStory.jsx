@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion, useInView, useMotionValueEvent, useReducedMotion, useScroll, useSpring, useTransform } from "framer-motion";
 import { CalendarCheck, Check, FileText, Send, Sparkles, X } from "lucide-react";
 import { EASE, Reveal } from "./Bits";
@@ -171,18 +171,20 @@ const Typed = ({ text, run, onDone }) => {
   const [n, setN] = useState(reduce ? text.length : 0);
   useEffect(() => {
     if (!run || reduce) return undefined;
-    const id = setInterval(() => setN((v) => {
-      if (v >= text.length) { clearInterval(id); onDone?.(); return v; }
-      return v + 1;
-    }), 26);
+    const id = setInterval(() => setN((v) => Math.min(text.length, v + 1)), 26);
     return () => clearInterval(id);
-  }, [run, text, reduce, onDone]);
+  }, [run, text, reduce]);
+  useEffect(() => {
+    if (run && n >= text.length) onDone?.();
+  }, [run, n, text.length, onDone]);
   return <>{text.slice(0, run ? n : 0)}</>;
 };
 
 const SceneDraft = () => {
   const [done, setDone] = useState(0);
   const reduce = useReducedMotion();
+  const finish = useCallback((i) => setDone((d) => Math.max(d, i + 1)), []);
+  const handlers = useRef(SENTENCES.map((_, i) => () => finish(i))).current;
   const all = reduce ? 4 : done;
   const fake = all >= 3;
   const [cutReady, setCutReady] = useState(false);
@@ -218,7 +220,7 @@ const SceneDraft = () => {
         <p className="mb-2 flex items-center gap-1.5 text-[0.7rem] font-bold uppercase tracking-[0.14em] text-ink/45"><Sparkles size={12} /> Draft</p>
         {SENTENCES.map((s, i) => (
           <span key={s.t}>
-            <Typed text={`${s.t} `} run={all >= i} onDone={i === all ? () => setDone((d) => Math.max(d, i + 1)) : undefined} />
+            <Typed text={`${s.t} `} run={all >= i} onDone={handlers[i]} />
             {all > i && (
               <motion.sup initial={{ scale: 0 }} animate={{ scale: 1 }} className="mr-1 rounded-full px-1.5 py-0.5 text-[0.62rem] font-extrabold"
                 style={{ backgroundColor: FACTS[s.f].bg, color: FACTS[s.f].c }}>{s.f + 1}</motion.sup>

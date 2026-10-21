@@ -26,7 +26,7 @@ export const Hero = ({ onStart, onSample }) => (
       <div className="relative mx-auto max-w-[1000px] text-center">
         <motion.h1 className="font-display text-ink" {...line(0.1)}>
           <span className="block text-[2.3rem] leading-[1.1] sm:text-[3.1rem] lg:text-[3.6rem]">
-            Get interviews <FoxChip className="mx-1 -mt-2" w={84} />
+            Get interviews <FoxChip className="fox-hero mx-1 -mt-2" w={84} />
           </span>
           <span className="mt-1.5 block text-[2.3rem] leading-[1.1] sm:text-[3.1rem] lg:text-[3.6rem]">
             not just <AvatarCluster className="mx-1 -mt-1" size={44} /> applications sent.

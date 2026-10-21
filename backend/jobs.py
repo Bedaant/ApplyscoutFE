@@ -56,14 +56,18 @@ EUROPE = (r"united kingdom|\buk\b|england|london|manchester|edinburgh|dublin|ire
           r"netherlands|paris|france|madrid|barcelona|spain|lisbon|portugal|warsaw|poland|stockholm|sweden|"
           r"copenhagen|denmark|oslo|norway|helsinki|finland|zurich|switzerland|vienna|austria|milan|rome|italy|"
           r"brussels|belgium|prague|czech|europe|emea|tallinn|bucharest|romania|athens|greece")
-US = (r"united states|\busa\b|\bus\b|u\.s\.|new york|san francisco|seattle|austin|boston|chicago|denver|"
+US = (r"united states|\busa\b|\bus\b|u\.s\.|new york|san francisco|bay area|seattle|austin|boston|chicago|denver|"
       r"los angeles|atlanta|miami|washington|portland|san jose|palo alto|mountain view|menlo park|"
-      r"\b(ca|ny|wa|tx|ma|il|co|ga|fl|or|nc|va|ut|az|nj|pa|mn|mi|oh|dc)\b|north america|americas")
+      r"california|texas|florida|illinois|massachusetts|colorado|georgia|oregon|virginia|utah|arizona|"
+      r"new jersey|pennsylvania|minnesota|michigan|ohio|north carolina|tennessee|missouri|maryland|"
+      r",\s*(ca|ny|wa|tx|ma|il|co|ga|fl|or|nc|va|ut|az|nj|pa|mn|mi|oh|dc)\b|north america")
 REMOTE = r"remote|anywhere|distributed|work from home"
 
 
 def classify(location: str, remote_flag: bool = False) -> list:
     loc = (location or "").lower()
+    if "canada" in loc or "toronto" in loc or "vancouver" in loc:
+        loc = loc.replace(", ca", "")
     regions = []
     if remote_flag or re.search(REMOTE, loc):
         regions.append("remote")
@@ -108,13 +112,15 @@ def _short_loc(loc: str, prefer: Optional[str] = None) -> str:
 
 
 def _job(company, domain, source, jid, title, location, posted, url, remote=False):
+    prefix = "Remote · " if remote and not re.search(REMOTE, (location or "").lower()) else ""
     return {
         "id": f"{source}:{jid}",
         "company": company,
         "domain": domain,
         "title": _title(title),
-        "location": _short_loc(location),
+        "location": prefix + _short_loc(location),
         "location_full": "; ".join(_parts(location)),
+        "remote_prefix": prefix,
         "regions": classify(location, remote),
         "posted_at": posted.isoformat() if posted else None,
         "url": url,
@@ -266,8 +272,9 @@ class JobFeed:
                 continue
             seen.add(d["company"])
             if region != "all" and d.get("location_full"):
-                d["location"] = _short_loc(d["location_full"], region)
+                d["location"] = d.get("remote_prefix", "") + _short_loc(d["location_full"], region)
             d.pop("location_full", None)
+            d.pop("remote_prefix", None)
             picked.append(d)
             if len(picked) >= limit:
                 break

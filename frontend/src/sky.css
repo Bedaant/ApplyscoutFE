@@ -154,3 +154,7 @@ html[data-palette="peach"] input.field:focus { border-color: #FFB59A; box-shadow
   .shimmer::after { animation: none; }
   .flip-inner { transition: none; }
 }
+
+@media (max-width: 480px) {
+  .fox-hero { width: 58px !important; height: 42px !important; border-radius: 14px; }
+}

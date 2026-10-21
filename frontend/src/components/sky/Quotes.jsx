@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
-import { motion } from "framer-motion";
+import { motion, useInView } from "framer-motion";
 import { ChevronLeft, ChevronRight, Quote } from "lucide-react";
 import { Reveal } from "./Bits";
 import { AVATARS } from "./assets";
@@ -46,6 +46,7 @@ const Carousel = ({ items, track }) => {
   const [step, setStep] = useState(0);
   const [maxIdx, setMaxIdx] = useState(items.length - 1);
   const [paused, setPaused] = useState(false);
+  const inView = useInView(wrap, { amount: 0.4 });
 
   const measure = useCallback(() => {
     const el = wrap.current;
@@ -68,10 +69,10 @@ const Carousel = ({ items, track }) => {
   useEffect(() => { if (idx > maxIdx) setIdx(maxIdx); }, [idx, maxIdx]);
 
   useEffect(() => {
-    if (paused) return undefined;
+    if (paused || !inView) return undefined;
     const id = setInterval(() => setIdx((i) => (i >= maxIdx ? 0 : i + 1)), 4200);
     return () => clearInterval(id);
-  }, [paused, maxIdx]);
+  }, [paused, inView, maxIdx]);
 
   const go = (d) => setIdx((i) => Math.min(maxIdx, Math.max(0, i + d)));
 

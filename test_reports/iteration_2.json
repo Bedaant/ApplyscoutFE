@@ -1,0 +1,44 @@
+{
+  "summary": "Tested ApplyScout landing v2 end-to-end. Backend: 20/20 pytest pass (jobs/live all 5 regions shape + 14-day freshness + one-per-company + region tagging, invalid region 400, limit 0/13 -> 422, 1/12 ok; companies = 28; logos 200 for all 28 allowed domains, 404 for evil.com; signups + preview still work; no _id leaks). Frontend desktop 1920: headline correct, 5 real live cards with logos (all naturalWidth>0), 'Open real posting' target=_blank to real Greenhouse/Ashby/Lever URLs, region switch re-deals (India shows only Indian locations), approve->'Queued, not sent'->undo works, adzuna-credit absent, marquee 56 logo chips (duplicated for loop), motion story active caption/scene 0..4 tracks scroll + caption click jumps, compare 8 flip cards hover flip/unflip, illustrative label present, quotes tracks/dots/prev/next/autoplay + SAMPLE tags, palette peach/sky + persists after reload, FAQ toggles, hero primary scrolls+focuses footer-email, invalid/valid email error/success, sample dialog opens/closes, nav #jobs/#how/#compare/#faq all land at the same offset. Mobile 390: no horizontal overflow, swipe deck + approve + region, mobile beats 0..4 render scenes on scroll, touch-tap flips compare cards.",
+  "backend_issues": {
+    "critical": [],
+    "minor": [
+      {"endpoint": "/api/jobs/live?region=remote", "issue": "Cards in the Remote deck can show a non-remote location, e.g. OpenAI 'San Francisco', Plaid 'San Francisco HQ +1', Linear 'Singapore +1', Ramp 'New York, NY (HQ) +1'. These come from the Ashby isRemote flag while the location text never says remote. _short_loc(prefer='remote') can't find a part that says remote, so it falls back to the first one. Fix: when region=='remote' and no part matches, show 'Remote · <first>' or similar."},
+      {"endpoint": "/api/jobs/live (classify)", "issue": "US regex misses common US strings, so they aren't tagged 'us': 'Remote - Texas', 'Remote - SF Bay Area'. Add state names / 'bay area'. The short state codes \\b(ca|co|or|in..)\\b can also give false positives: 'Toronto, CA' (Canada) and the word 'or' in a location string."},
+      {"endpoint": "/api/jobs/companies", "issue": "open_roles is capped at 60 (PER_COMPANY), so it doesn't reflect the true number of open roles. Fine if the UI doesn't show it as an exact count."}
+    ]
+  },
+  "frontend_issues": {
+    "ui_bugs": [
+      {"component": "MotionStory Typed / SceneDraft", "issue": "Console error 'Cannot update a component while rendering a different component ... SceneDraft Typed Typed'. Typed calls onDone() (a parent setState) inside the setN updater function. Fix: drop the side effect from the updater and add useEffect(() => { if (run && n >= text.length) onDone?.(); }, [n, run]). Also wrap onDone in useCallback in SceneDraft so the interval isn't re-created on every render.", "selector": "[data-testid=story-scene-2]", "priority": "MEDIUM"},
+      {"component": "Compare FlipCard (desktop)", "issue": "With a mouse, hover flips the card (pointerenter), then a click toggles it back to the front while the cursor is still on it. Clicking a hovered card un-flips it. Fix: ignore onClick when pointerType is 'mouse', or have click set flipped=true.", "selector": "[data-testid^=compare-card-]", "priority": "LOW"}
+    ],
+    "integration_issues": [],
+    "design_issues": [
+      {"screen": "Mobile 390 hero", "issues": ["The fox emoji chip wraps onto its own line between 'Get interviews' and 'not just', which makes the headline rhythm look broken."]},
+      {"screen": "Mobile 390 all sections", "issues": ["The fixed palette toggle (bottom-left) covers card content while scrolling, e.g. the job card location chip and the last compare card. Consider making it smaller or collapsing it on mobile."]},
+      {"screen": "Live job cards (All region)", "issues": ["The region tag can disagree with the location chip, e.g. a 'Remote' tag next to 'San Francisco HQ +1'."]},
+      {"screen": "Quotes carousel", "issues": ["Autoplay runs even when the section is off-screen, so users arrive at a random slide. Consider starting it with useInView."]}
+    ]
+  },
+  "test_report_links": ["/app/backend/tests/test_jobs_api.py", "/app/test_reports/pytest/pytest_results.xml"],
+  "action_items": [
+    "Fix setState-in-render in MotionStory Typed (move onDone into an effect)",
+    "Fix FlipCard click-while-hovered un-flip on desktop",
+    "Remote deck: show a remote-labelled location when the posting is flagged remote but the location text isn't",
+    "Improve the US classifier (state names, 'bay area') and review the 2-letter state-code false positives",
+    "Optional: palette toggle overlap on mobile; fox chip wrap in mobile hero"
+  ],
+  "critical_code_review_comments": [
+    "/app/backend/tests/test_backend.py hardcodes a stale default BASE_URL (interviewfirst.preview...). Remove the default. The new test_jobs_api.py covers the old tests plus the jobs APIs.",
+    "fetch_logo runs a fresh outbound HTTP fetch on every request when a domain has no cached logo yet and every source fails (no negative cache). An attacker can't abuse this because of the allow-list, but a failing domain re-fetches on each page view.",
+    "live_jobs: on the very first load with an empty cache, the request waits for all 28 boards (12s timeout each, run in parallel). Fine, but if every board fails the refresh still writes refreshed_at and the jobs list stays empty for an hour.",
+    "logo_cache stores binary data in Mongo with no size cap beyond 400KB per logo. Acceptable for 28 domains."
+  ],
+  "updated_files": ["/app/backend/tests/test_jobs_api.py", "/app/test_reports/iteration_2.json"],
+  "success_rate": {"backend": "100%", "frontend": "95%"},
+  "seed_data_creation": "None. The test_ signups and the TEST_PM preview session created during testing were deleted.",
+  "retest_needed": false,
+  "should_main_agent_self_test": true,
+  "context_for_next_testing_agent": "Run: REACT_APP_BACKEND_URL=<frontend/.env> pytest /app/backend/tests/test_jobs_api.py. For scrolling use window.__lenis.scrollTo(y,{immediate:true}). Desktop story stage: the container is the .md:block parent of [data-testid=story-captions], height ~4968px. The active caption has the class bg-white. Playwright click on a compare card in a non-touch context fires pointerenter (mouse) plus click, which cancel each other out. Simulate touch with a PointerEvent with pointerType 'touch' followed by click. FAQ item 0 is open by default."
+}

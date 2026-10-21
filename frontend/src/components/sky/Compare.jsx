@@ -20,7 +20,7 @@ const FlipCard = ({ r, i }) => {
     <Reveal delay={(i % 4) * 0.07}>
       <button
         type="button"
-        onClick={() => setFlipped((f) => !f)}
+        onClick={(e) => { if (e.nativeEvent.pointerType !== "mouse") setFlipped((f) => !f); }}
         onPointerEnter={(e) => e.pointerType === "mouse" && setFlipped(true)}
         onPointerLeave={(e) => e.pointerType === "mouse" && setFlipped(false)}
         aria-pressed={flipped}

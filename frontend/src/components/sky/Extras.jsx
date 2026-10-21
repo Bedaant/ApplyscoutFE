@@ -65,7 +65,7 @@ export const PaletteToggle = () => {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 1.6, duration: 0.6 }}
-      className="fixed bottom-4 left-4 z-50 flex items-center gap-1 rounded-full bg-white/95 p-1 shadow-[0_14px_34px_-14px_rgba(22,33,58,0.55)] backdrop-blur"
+      className="fixed bottom-3 left-3 z-50 flex items-center gap-0.5 rounded-full bg-white/95 p-1 sm:bottom-4 sm:left-4 sm:gap-1 shadow-[0_14px_34px_-14px_rgba(22,33,58,0.55)] backdrop-blur"
       data-testid="palette-toggle"
       role="radiogroup"
       aria-label="Colour palette"
@@ -77,13 +77,14 @@ export const PaletteToggle = () => {
           aria-checked={palette === p.id}
           onClick={() => setPalette(p.id)}
           data-testid={`palette-${p.id}-btn`}
-          className="relative flex items-center gap-2 rounded-full px-3 py-1.5 text-[0.8rem] font-bold text-ink"
+          aria-label={`${p.label} palette`}
+          className="relative flex items-center gap-2 rounded-full p-1.5 text-[0.8rem] font-bold text-ink sm:px-3 sm:py-1.5"
         >
           {palette === p.id && (
             <motion.span layoutId="palette-pill" className="absolute inset-0 rounded-full bg-[#16213A]" transition={{ type: "spring", stiffness: 380, damping: 30 }} />
           )}
           <span className="relative h-4 w-4 rounded-full border border-white" style={{ background: p.swatch }} />
-          <span className={`relative ${palette === p.id ? "text-white" : ""}`}>{p.label}</span>
+          <span className={`relative hidden sm:inline ${palette === p.id ? "text-white" : ""}`}>{p.label}</span>
         </button>
       ))}
     </motion.div>
