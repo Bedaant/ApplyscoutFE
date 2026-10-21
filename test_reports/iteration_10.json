@@ -1,0 +1,16 @@
+{
+  "summary": "Frontend-only retest of the InviteBanner fix from iteration_9, run on desktop at 1920x1080. All checks pass. (1) Fresh context, /?ref=<new inviter code>: the invite-banner appears and the ref param is removed from the URL. Without touching the banner, a signup through the footer form (#footer-email + footer-signup-submit) shows footer-signup-success, and the banner is removed about 0.31s later. The inviter's referrals went from 0 to 1. After a reload the banner does not come back. (2) The banner copy reads 'Your friend invited you. Join early access and they move up the list.' The invite-box copy reads 'Each friend moves you up to 10 spots'. (3) Join hides the banner in about 0.69s and focuses #footer-email. X hides it in about 0.58s. Both times include Playwright overhead. There were no console errors or page errors.",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {"ui_bugs": [], "integration_issues": [], "design_issues": []},
+  "test_report_links": [],
+  "action_items": [],
+  "critical_code_review_comments": [
+    "The InviteBanner fix uses a window 'as-signed-up' CustomEvent dispatched in EmailForm.apply. It is clean, and the listener is removed on every effect path. The same event is also dispatched on the returning-visitor auto-POST at mount. This is harmless."
+  ],
+  "updated_files": [],
+  "success_rate": {"backend": "N/A (skipped)", "frontend": "100%"},
+  "seed_data_creation": "Created signups test+inv10a<ts>, test+inv10b<ts> and test+inv10c<ts> @example.com",
+  "retest_needed": false,
+  "should_main_agent_self_test": false,
+  "context_for_next_testing_agent": "To reach the footer form, use the window.__lenis.scrollTo(y,{immediate:true}) scroll. Clear localStorage before each ?ref visit, because as-signup suppresses the banner."
+}
