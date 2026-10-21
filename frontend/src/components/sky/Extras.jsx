@@ -4,8 +4,8 @@ import { logoUrl } from "./live";
 
 const TINTS = ["#D9603A", "#E1457B", "#2C8F6B", "#6C4BC4", "#B26A00", "#0F7FA3"];
 
-export const CompanyLogo = ({ name = "?", domain, size = 36, className = "" }) => {
-  const [failed, setFailed] = useState(!domain);
+export const CompanyLogo = ({ name = "?", domain, src, size = 36, className = "" }) => {
+  const [failed, setFailed] = useState(!domain && !src);
   const tint = TINTS[(name.charCodeAt(0) || 0) % TINTS.length];
   return (
     <span
@@ -17,7 +17,7 @@ export const CompanyLogo = ({ name = "?", domain, size = 36, className = "" }) =
         <span className="text-[0.85em] font-extrabold" style={{ color: tint, fontSize: size * 0.42 }}>{name.charAt(0)}</span>
       ) : (
         <img
-          src={logoUrl(domain)}
+          src={src || logoUrl(domain)}
           alt={`${name} logo`}
           loading="lazy"
           onError={() => setFailed(true)}

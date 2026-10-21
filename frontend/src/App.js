@@ -11,7 +11,6 @@ import { LogoMarquee } from "@/components/sky/LogoMarquee";
 import { MotionStory } from "@/components/sky/MotionStory";
 import { Compare } from "@/components/sky/Compare";
 import { Quotes } from "@/components/sky/Quotes";
-import { PaletteToggle } from "@/components/sky/Extras";
 import { Faq } from "@/components/sky/Faq";
 import { FinalCta, Footer } from "@/components/sky/FinalCta";
 import { PreviewDialog } from "@/components/sky/PreviewDialog";
@@ -65,7 +64,6 @@ function App() {
         </main>
         <Footer />
         <PreviewDialog open={open} onOpenChange={setOpen} />
-        <PaletteToggle />
       </div>
     </MotionConfig>
   );

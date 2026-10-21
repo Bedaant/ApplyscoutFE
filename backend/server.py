@@ -161,7 +161,8 @@ async def _refresh_quietly(force=False):
 
 
 @api_router.get("/jobs/live")
-async def live_jobs(region: str = Query("all"), limit: int = Query(5, ge=1, le=12)):
+async def live_jobs(region: str = Query("all"), limit: int = Query(5, ge=1, le=12),
+                    q: str = Query("", max_length=60)):
     region = region.lower()
     if region not in REGIONS:
         raise HTTPException(400, "region must be one of: all, india, remote, us, europe")
@@ -171,9 +172,11 @@ async def live_jobs(region: str = Query("all"), limit: int = Query(5, ge=1, le=1
         refreshed = await feed.refreshed_at()
     else:
         asyncio.create_task(_refresh_quietly())  # stale-while-revalidate, hourly
-    jobs = await feed.pick(region, limit)
+    jobs = await feed.pick(region, limit, q)
     return {
         "region": region,
+        "q": q,
+        "sources": sorted({j["source"] for j in jobs}),
         "jobs": jobs,
         "refreshed_at": refreshed,
         "fresh_days": 14,

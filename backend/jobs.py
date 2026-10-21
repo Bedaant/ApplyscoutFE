@@ -17,7 +17,9 @@ log = logging.getLogger("jobs")
 
 FRESH_DAYS = 14
 REFRESH_SECONDS = 60 * 60
-PER_COMPANY = 60
+PER_COMPANY = 150
+AGG_REFRESH_SECONDS = 6 * 60 * 60  # Remotive asks for a few calls a day at most
+BOARDS = ["greenhouse", "ashby", "lever"]
 
 # (name, board, token, domain)
 COMPANIES = [
@@ -37,6 +39,17 @@ COMPANIES = [
     ("Grafana Labs", "greenhouse", "grafanalabs", "grafana.com"),
     ("Samsara", "greenhouse", "samsara", "samsara.com"),
     ("Groww", "greenhouse", "groww", "groww.in"),
+    ("Pinterest", "greenhouse", "pinterest", "pinterest.com"),
+    ("Lyft", "greenhouse", "lyft", "lyft.com"),
+    ("Asana", "greenhouse", "asana", "asana.com"),
+    ("Okta", "greenhouse", "okta", "okta.com"),
+    ("Instacart", "greenhouse", "instacart", "instacart.com"),
+    ("Roblox", "greenhouse", "roblox", "roblox.com"),
+    ("Toast", "greenhouse", "toast", "toasttab.com"),
+    ("Discord", "greenhouse", "discord", "discord.com"),
+    ("Rubrik", "greenhouse", "rubrik", "rubrik.com"),
+    ("Zscaler", "greenhouse", "zscaler", "zscaler.com"),
+    ("Druva", "greenhouse", "druva", "druva.com"),
     ("Notion", "ashby", "notion", "notion.so"),
     ("Linear", "ashby", "linear", "linear.app"),
     ("Ramp", "ashby", "ramp", "ramp.com"),
@@ -44,6 +57,10 @@ COMPANIES = [
     ("Supabase", "ashby", "supabase", "supabase.com"),
     ("Plaid", "ashby", "plaid", "plaid.com"),
     ("Sarvam AI", "ashby", "sarvam", "sarvam.ai"),
+    ("Vanta", "ashby", "vanta", "vanta.com"),
+    ("Cursor", "ashby", "cursor", "cursor.com"),
+    ("Perplexity", "ashby", "perplexity", "perplexity.ai"),
+    ("ElevenLabs", "ashby", "elevenlabs", "elevenlabs.io"),
     ("CRED", "lever", "cred", "cred.club"),
     ("Meesho", "lever", "meesho", "meesho.com"),
     ("Zeta", "lever", "zeta", "zeta.tech"),
@@ -125,6 +142,7 @@ def _job(company, domain, source, jid, title, location, posted, url, remote=Fals
         "posted_at": posted.isoformat() if posted else None,
         "url": url,
         "source": source,
+        "logo": None,
     }
 
 
@@ -207,6 +225,53 @@ async def _adzuna(c):
 FETCHERS = {"greenhouse": _greenhouse, "ashby": _ashby, "lever": _lever}
 
 
+# ---------- free job aggregators (widen cities and roles) ----------
+def _utc(ts):
+    return ts + "+00:00" if isinstance(ts, str) and ts and "+" not in ts and not ts.endswith("Z") else ts
+
+
+async def _remotive(c):
+    """Remote roles worldwide. Free API; jobs must link back to Remotive and be credited."""
+    r = await c.get("https://remotive.com/api/remote-jobs", params={"limit": 300})
+    r.raise_for_status()
+    out = []
+    for j in r.json().get("jobs", []):
+        loc = j.get("candidate_required_location") or "Worldwide"
+        job = _job(j.get("company_name") or "", None, "remotive", j.get("id"), j.get("title"),
+                   f"Remote · {loc}", _parse(_utc(j.get("publication_date"))),
+                   j.get("url"), True)
+        job["location"] = f"Remote · {_short_loc(loc)}"
+        job["remote_prefix"] = "Remote · "
+        job["location_full"] = loc
+        for reg in classify(loc):
+            if reg not in job["regions"]:
+                job["regions"].append(reg)
+        if re.search(r"worldwide|anywhere|global", loc.lower()):
+            job["regions"] = list(dict.fromkeys(job["regions"] + ["us", "europe", "india"]))
+        job["logo"] = j.get("company_logo")
+        out.append(job)
+    return out
+
+
+async def _arbeitnow(c):
+    """Mostly Europe (Germany-heavy). Free API, no key."""
+    out = []
+    for page in (1, 2, 3):
+        r = await c.get("https://www.arbeitnow.com/api/job-board-api", params={"page": page})
+        r.raise_for_status()
+        for j in r.json().get("data", []):
+            out.append(_job(j.get("company_name") or "", None, "arbeitnow", j.get("slug"), j.get("title"),
+                            j.get("location") or "", _parse(j.get("created_at") * 1000 if isinstance(j.get("created_at"), (int, float)) else j.get("created_at")),
+                            j.get("url"), bool(j.get("remote"))))
+    for job in out:
+        if "europe" not in job["regions"]:
+            job["regions"].append("europe")
+    return out
+
+
+AGGREGATORS = {"remotive": _remotive, "arbeitnow": _arbeitnow}
+
+
 class JobFeed:
     def __init__(self, db):
         self.col = db.job_cache
@@ -234,6 +299,16 @@ class JobFeed:
 
                 results = await asyncio.gather(*(one(*co) for co in COMPANIES))
                 adz = await _adzuna(c) if self.adzuna_on() else None
+                agg = {}
+                agg_meta = await self.meta.find_one({"_id": "aggregators"}) or {}
+                for name, fn in AGGREGATORS.items():
+                    last = agg_meta.get(name)
+                    if not force and last and (now - _parse(last)).total_seconds() < AGG_REFRESH_SECONDS:
+                        continue
+                    try:
+                        agg[name] = await fn(c)
+                    except Exception as e:  # noqa: BLE001
+                        log.warning("aggregator %s failed: %s", name, type(e).__name__)
 
             ok = 0
             for name, jobs in results:
@@ -242,7 +317,7 @@ class JobFeed:
                 ok += 1
                 fresh = [j for j in jobs if j["posted_at"] and _parse(j["posted_at"]) >= cutoff]
                 fresh.sort(key=lambda j: j["posted_at"], reverse=True)
-                await self.col.delete_many({"company": name, "source": {"$ne": "adzuna"}})
+                await self.col.delete_many({"company": name, "source": {"$in": BOARDS}})
                 if fresh:
                     await self.col.insert_many([dict(j, _id=k) for k, j in {x["id"]: x for x in fresh[:PER_COMPANY]}.items()])
             if adz is not None:
@@ -250,6 +325,13 @@ class JobFeed:
                 fresh = {j["id"]: j for j in adz if j["posted_at"] and _parse(j["posted_at"]) >= cutoff}
                 if fresh:
                     await self.col.insert_many([dict(j, _id=k) for k, j in fresh.items()])
+            for name, jobs in agg.items():
+                fresh = {j["id"]: j for j in jobs if j["company"] and j["posted_at"] and _parse(j["posted_at"]) >= cutoff}
+                await self.col.delete_many({"source": name})
+                if fresh:
+                    await self.col.insert_many([dict(j, _id=k) for k, j in fresh.items()])
+                await self.meta.update_one({"_id": "aggregators"}, {"$set": {name: now.isoformat()}}, upsert=True)
+                log.info("aggregator %s: %d fresh postings", name, len(fresh))
             # drop anything that aged past the freshness window
             await self.col.delete_many({"posted_at": {"$lt": cutoff.isoformat()}})
             await self.meta.update_one({"_id": "feed"}, {"$set": {"refreshed_at": now.isoformat(), "boards_ok": ok}},
@@ -260,12 +342,16 @@ class JobFeed:
         meta = await self.meta.find_one({"_id": "feed"}, {"_id": 0})
         return meta.get("refreshed_at") if meta else None
 
-    async def pick(self, region: str, limit: int):
+    async def pick(self, region: str, limit: int, query: str = ""):
         q = {} if region == "all" else {"regions": region}
         if not self.adzuna_on():
             q["source"] = {"$ne": "adzuna"}
-        docs = await self.col.find(q, {"_id": 0}).sort("posted_at", -1).to_list(1500)
-        # one posting per company, newest first, so the deck stays varied
+        words = [w for w in re.split(r"\s+", query.strip())[:6] if w]
+        if words:
+            q["$and"] = [{"title": {"$regex": re.escape(w), "$options": "i"}} for w in words]
+        docs = await self.col.find(q, {"_id": 0}).sort("posted_at", -1).to_list(3000)
+        # well-known company boards first, then the wider aggregators; one posting per company
+        docs.sort(key=lambda d: 0 if d.get("source") in BOARDS else 1)
         seen, picked = set(), []
         for d in docs:
             if d["company"] in seen:
@@ -282,7 +368,7 @@ class JobFeed:
 
     async def companies(self):
         counts = {r["_id"]: r["n"] for r in await self.col.aggregate(
-            [{"$match": {"source": {"$ne": "adzuna"}}}, {"$group": {"_id": "$company", "n": {"$sum": 1}}}]
+            [{"$match": {"source": {"$in": BOARDS}}}, {"$group": {"_id": "$company", "n": {"$sum": 1}}}]
         ).to_list(200)}
         return [{"name": n, "domain": d, "open_roles": counts.get(n, 0)} for n, _, _, d in COMPANIES]
 

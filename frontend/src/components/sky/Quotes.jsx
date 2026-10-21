@@ -2,26 +2,23 @@ import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react
 import { motion, useInView } from "framer-motion";
 import { Check, ChevronLeft, ChevronRight, Quote, X } from "lucide-react";
 import { Reveal } from "./Bits";
-import { AVATARS } from "./assets";
+import { REAL_QUOTES } from "./quotes";
 
-const OURS = [
-  { q: "I sent six applications in a week and every one sounded like me.", who: "Product ops, Bengaluru" },
-  { q: "Seeing which fact each sentence came from is what made me trust it.", who: "Analyst, London" },
-  { q: "It told me to skip a role I'd have wasted an evening on.", who: "Programme manager, remote" },
-  { q: "Nothing went out without my click. That's the whole point.", who: "Ops lead, Austin" },
-];
 
 const Slide = ({ item, track, i }) => (
   <div className="slide w-[86%] shrink-0 sm:w-[48%] lg:w-[32%]" data-testid={`quote-slide-${track}-${i}`}>
     <div className="white-card flex h-[240px] flex-col p-6 hover:translate-y-0">
       <div className="flex items-center justify-between">
         <Quote size={22} className="text-accent" />
-        <span className="rounded-full bg-lemon px-2.5 py-1 text-[0.66rem] font-extrabold uppercase tracking-[0.12em] text-[#7A5A00]">Sample</span>
       </div>
       <p className="font-display mt-4 text-[1.28rem] leading-[1.2] text-ink">{item.q}</p>
       <div className="mt-auto flex items-center gap-2.5 pt-4">
-        <img src={AVATARS[i % AVATARS.length]} alt="" className="h-8 w-8 rounded-full object-cover" />
-        <p className="text-[0.82rem] font-bold text-slate">Sample quote · {item.who}</p>
+        {item.photo ? (
+          <img src={item.photo} alt="" className="h-8 w-8 rounded-full object-cover" />
+        ) : (
+          <span className="grid h-8 w-8 place-items-center rounded-full bg-accent-soft text-[0.8rem] font-extrabold text-accent">{(item.name || "?").charAt(0)}</span>
+        )}
+        <p className="text-[0.82rem] font-bold text-slate"><span className="text-ink">{item.name}</span>{item.role ? ` · ${item.role}` : ""}</p>
       </div>
     </div>
   </div>
@@ -115,6 +112,7 @@ const TABLE = [
   { need: "Shows you every field before it's sent", fix: "You review each application first", cells: ["n", "p", "n"] },
   { need: "Uses only true facts about you", fix: "Only facts you confirmed, each one cited", cells: ["n", "n", "p"] },
   { need: "Picks fewer, better-fit roles", fix: "Filters out poor fits before drafting", cells: ["n", "n", "n"] },
+  { need: "Reaches the person who decides", fix: "Finds the hiring manager, sends a note you approved", cells: ["n", "n", "n"] },
   { need: "Sounds like you, not a robot", fix: "Written from your own words and tone", cells: ["n", "p", "n"] },
   { need: "A real person answers support", fix: "A named person replies to early users", cells: ["p", "p", "p"] },
   { need: "Your data stays yours", fix: "Export your history any time", cells: ["p", "p", "p"] },
@@ -200,13 +198,16 @@ export const Quotes = () => (
       </Reveal>
       <div className="mt-10"><ProblemTable /></div>
 
-      <Reveal className="mt-20 text-center">
-        <h3 className="font-display text-[1.7rem] leading-tight text-ink sm:text-[2.1rem]">What early users tell us.</h3>
-        <p className="mt-2 text-[0.84rem] font-semibold text-slate">Sample quotes until real ones are in.</p>
-      </Reveal>
-      <div className="mt-4">
-        <Carousel items={OURS} track="ours" />
-      </div>
+      {REAL_QUOTES.length > 0 && (
+        <>
+          <Reveal className="mt-20 text-center">
+            <h3 className="font-display text-[1.7rem] leading-tight text-ink sm:text-[2.1rem]">What early users tell us.</h3>
+          </Reveal>
+          <div className="mt-4" data-testid="early-user-quotes">
+            <Carousel items={REAL_QUOTES} track="ours" />
+          </div>
+        </>
+      )}
     </div>
   </section>
 );

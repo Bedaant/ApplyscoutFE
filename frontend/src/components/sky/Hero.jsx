@@ -1,6 +1,17 @@
 import { motion } from "framer-motion";
-import { ArrowRight, Bell, Briefcase, CalendarCheck, FileText, Mail, Search, Sparkles } from "lucide-react";
+import { ArrowRight, Sparkles } from "lucide-react";
+import { logoUrl } from "./live";
 import { AvatarCluster, Clouds, FloatBadge, FoxChip, EASE } from "./Bits";
+
+// real companies whose live postings appear below
+const HERO_LOGOS = [
+  ["Stripe", "stripe.com", "left-[6%] top-[26%] hidden sm:grid", "float-a", 58],
+  ["Notion", "notion.so", "left-[12%] top-[52%] hidden md:grid", "float-c", 58],
+  ["Figma", "figma.com", "right-[7%] top-[22%] hidden sm:grid", "float-b", 58],
+  ["OpenAI", "openai.com", "right-[13%] top-[54%] hidden md:grid", "float-a", 58],
+  ["Spotify", "spotify.com", "left-[22%] top-[14%] hidden lg:grid", "float-b", 48],
+  ["Airbnb", "airbnb.com", "right-[22%] top-[12%] hidden lg:grid", "float-c", 48],
+];
 
 const line = (delay) => ({
   initial: { opacity: 0, y: 24 },
@@ -13,12 +24,11 @@ export const Hero = ({ onStart, onSample }) => (
     <div className="sky relative overflow-hidden rounded-[2rem] px-5 pb-24 pt-32 sm:rounded-[2.5rem] sm:px-8 sm:pb-28 sm:pt-36">
       <Clouds />
 
-      <FloatBadge className="left-[6%] top-[26%] hidden sm:grid" float="float-a" tint="#E1457B"><Briefcase size={22} /></FloatBadge>
-      <FloatBadge className="left-[12%] top-[52%] hidden md:grid" float="float-c" tint="var(--accent)"><Mail size={22} /></FloatBadge>
-      <FloatBadge className="right-[7%] top-[22%] hidden sm:grid" float="float-b" tint="#2C8F6B"><FileText size={22} /></FloatBadge>
-      <FloatBadge className="right-[13%] top-[54%] hidden md:grid" float="float-a" tint="#B26A00"><Bell size={22} /></FloatBadge>
-      <FloatBadge className="left-[22%] top-[14%] hidden lg:grid" float="float-b" size={46} tint="#6C4BC4"><Search size={18} /></FloatBadge>
-      <FloatBadge className="right-[22%] top-[12%] hidden lg:grid" float="float-c" size={46} tint="#0F7FA3"><CalendarCheck size={18} /></FloatBadge>
+      {HERO_LOGOS.map(([name, domain, cls, float, size]) => (
+        <FloatBadge key={domain} className={cls} float={float} size={size}>
+          <img src={logoUrl(domain)} alt={`${name} logo`} title={`${name} is hiring`} className="h-[56%] w-[56%] object-contain" data-testid="hero-company-logo" />
+        </FloatBadge>
+      ))}
 
       <Sparkles size={18} className="sparkle absolute left-[32%] top-[30%] hidden text-white md:block" />
       <Sparkles size={14} className="sparkle absolute right-[30%] top-[62%] hidden text-white md:block" />

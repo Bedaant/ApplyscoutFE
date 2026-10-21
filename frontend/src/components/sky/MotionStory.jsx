@@ -1,16 +1,17 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion, useInView, useMotionValueEvent, useReducedMotion, useScroll, useSpring, useTransform } from "framer-motion";
-import { CalendarCheck, Check, FileText, Send, Sparkles, X } from "lucide-react";
+import { CalendarCheck, Check, FileText, Mail, MessageCircle, Send, Sparkles, X } from "lucide-react";
 import { EASE, Reveal } from "./Bits";
 import { CompanyLogo } from "./Extras";
 import { useLiveJobs } from "./live";
-import { FOX_CALENDAR, FOX_MAGNIFIER, FOX_SORTING } from "./assets";
+import { AVATARS, FOX_CALENDAR, FOX_MAGNIFIER, FOX_SORTING } from "./assets";
 
 export const BEATS = [
   "Your resume becomes facts you confirm.",
   "Poor fits get filtered out.",
   "Drafts cite your facts. Nothing invented.",
   "Nothing sends until you approve.",
+  "We reach the right person, with your OK.",
   "The goal: an interview invite.",
 ];
 
@@ -130,7 +131,7 @@ const SceneFilter = () => {
                 judged ? (FIT[i] ? "ring-[#2C8F6B]" : "opacity-60 ring-[#E1457B]") : "ring-transparent"
               }`}
             >
-              <CompanyLogo name={j.company} domain={j.domain} size={28} />
+              <CompanyLogo name={j.company} domain={j.domain} src={j.logo} size={28} />
               <div className="min-w-0 flex-1 leading-tight">
                 <p className="truncate text-[0.8rem] font-bold text-ink">{j.title}</p>
                 <p className="truncate text-[0.7rem] font-semibold text-slate">{j.company}</p>
@@ -303,7 +304,75 @@ const SceneApprove = () => {
   );
 };
 
-/* ---------- 5. interview invite ---------- */
+/* ---------- 5. find the right person, send a note ---------- */
+const PEOPLE = [
+  { role: "Recruiter", av: 1 },
+  { role: "Hiring manager", av: 2, pick: true },
+  { role: "Team engineer", av: 3 },
+];
+const SceneReach = () => {
+  const s = useSteps(6, 520, 200);
+  const { jobs } = useLiveJobs("all", 5);
+  const j = jobs[1] || jobs[0];
+  const scan = Math.min(s, 3) - 1; // 0,1,2 highlight sweep
+  const found = s >= 4;
+  return (
+    <div className="relative h-full w-full overflow-hidden" data-testid="story-scene-4">
+      <motion.div initial={{ opacity: 0, y: -12 }} animate={{ opacity: 1, y: 0 }}
+        className="absolute inset-x-0 top-[6%] mx-auto flex w-fit items-center gap-2 rounded-full bg-white py-1.5 pl-1.5 pr-4 shadow-[0_8px_18px_-12px_rgba(22,33,58,0.6)]">
+        <CompanyLogo name={j?.company || "Company"} domain={j?.domain} src={j?.logo} size={28} />
+        <span className="max-w-[220px] truncate text-[0.8rem] font-bold text-ink">Who decides at {j?.company || "the company"}?</span>
+      </motion.div>
+
+      <div className="absolute inset-x-0 top-[22%] flex justify-center gap-3 px-4">
+        {PEOPLE.map((p, i) => {
+          const lit = found ? p.pick : scan === i;
+          return (
+            <motion.div
+              key={p.role}
+              initial={{ opacity: 0, y: 24 }}
+              animate={{ opacity: found && !p.pick ? 0.4 : 1, y: 0, scale: found && p.pick ? 1.08 : 1 }}
+              transition={{ type: "spring", stiffness: 170, damping: 16, delay: i * 0.1 }}
+              className={`relative flex w-[30%] max-w-[120px] flex-col items-center rounded-[18px] bg-white px-2 pb-3 pt-4 shadow-[0_12px_24px_-16px_rgba(22,33,58,0.6)] ring-2 transition-colors duration-300 ${lit ? "ring-[var(--accent)]" : "ring-transparent"}`}
+            >
+              <img src={AVATARS[p.av % AVATARS.length]} alt="" className="h-11 w-11 rounded-full object-cover" />
+              <p className="mt-2 text-center text-[0.72rem] font-bold leading-tight text-ink">{p.role}</p>
+              {found && p.pick && (
+                <motion.span initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: "spring", stiffness: 400, damping: 14 }}
+                  className="absolute -right-2 -top-2 grid h-7 w-7 place-items-center rounded-full bg-[#2C8F6B] text-white">
+                  <Check size={14} strokeWidth={3} />
+                </motion.span>
+              )}
+            </motion.div>
+          );
+        })}
+      </div>
+
+      {s >= 5 && (
+        <motion.div
+          initial={{ opacity: 0, y: 50, scale: 0.9 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          transition={{ type: "spring", stiffness: 150, damping: 16 }}
+          className="absolute inset-x-0 bottom-[7%] mx-auto w-[84%] max-w-[380px] rounded-[20px] rounded-bl-[6px] bg-ink p-4 text-white shadow-[0_24px_40px_-20px_rgba(22,33,58,0.8)]"
+        >
+          <div className="flex items-center gap-1.5">
+            <span className="flex items-center gap-1 rounded-full bg-white/15 px-2.5 py-1 text-[0.68rem] font-bold"><Mail size={11} /> Email</span>
+            <span className="flex items-center gap-1 rounded-full bg-white/15 px-2.5 py-1 text-[0.68rem] font-bold"><MessageCircle size={11} /> Chat</span>
+            <span className="ml-auto text-[0.66rem] font-bold uppercase tracking-[0.12em] text-white/50">to hiring manager</span>
+          </div>
+          <p className="mt-2.5 text-[0.86rem] leading-snug">Hi — I just applied for {j?.title ? <b>{j.title}</b> : "the role"}. Two lines on why I fit…</p>
+          {s >= 6 && (
+            <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="mt-2 flex items-center gap-1.5 text-[0.74rem] font-bold text-[#BEEBC5]">
+              <Check size={13} strokeWidth={3} /> Sent after you said yes
+            </motion.p>
+          )}
+        </motion.div>
+      )}
+    </div>
+  );
+};
+
+/* ---------- 6. interview invite ---------- */
 const DOTS = Array.from({ length: 14 }, (_, i) => ({
   a: (i / 14) * Math.PI * 2, d: 90 + (i % 3) * 30,
   c: ["#FFC2D6", "#BEEBC5", "#FFE59B", "#A9E4F2", "#DCC9F7"][i % 5],
@@ -311,7 +380,7 @@ const DOTS = Array.from({ length: 14 }, (_, i) => ({
 const SceneInvite = () => {
   const s = useSteps(2, 500, 200);
   return (
-    <div className="relative h-full w-full" data-testid="story-scene-4">
+    <div className="relative h-full w-full" data-testid="story-scene-5">
       <motion.div
         initial={{ scale: 0.4, opacity: 0, rotate: -8 }}
         animate={{ scale: 1, opacity: 1, rotate: -2 }}
@@ -349,7 +418,7 @@ const SceneInvite = () => {
   );
 };
 
-const SCENES = [SceneFacts, SceneFilter, SceneDraft, SceneApprove, SceneInvite];
+const SCENES = [SceneFacts, SceneFilter, SceneDraft, SceneApprove, SceneReach, SceneInvite];
 
 const Stage = ({ beat, className = "" }) => {
   const Scene = SCENES[beat];
@@ -400,14 +469,14 @@ export const MotionStory = () => {
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end end"] });
   const smooth = useSpring(scrollYProgress, { stiffness: 120, damping: 24 });
   const fill = useTransform(smooth, [0, 1], ["0%", "100%"]);
-  useMotionValueEvent(scrollYProgress, "change", (p) => setBeat(Math.min(4, Math.max(0, Math.floor(p * 5)))));
+  useMotionValueEvent(scrollYProgress, "change", (p) => setBeat(Math.min(BEATS.length - 1, Math.max(0, Math.floor(p * BEATS.length)))));
 
   const jump = (i) => {
     const el = ref.current;
     if (!el) return;
     const top = el.getBoundingClientRect().top + window.scrollY;
     const span = el.offsetHeight - window.innerHeight;
-    const y = top + span * ((i + 0.5) / 5);
+    const y = top + span * ((i + 0.5) / BEATS.length);
     if (window.__lenis) window.__lenis.scrollTo(y, { duration: 1.1 });
     else window.scrollTo({ top: y, behavior: "smooth" });
   };
@@ -417,7 +486,7 @@ export const MotionStory = () => {
       <Header />
 
       {/* desktop: scroll-pinned stage */}
-      <div ref={ref} className="relative mx-auto hidden h-[460vh] max-w-[1100px] md:block">
+      <div ref={ref} className="relative mx-auto hidden h-[540vh] max-w-[1100px] md:block">
         <div className="sticky top-0 flex h-screen items-center">
           <div className="grid w-full grid-cols-12 items-center gap-8">
             <ol className="col-span-5 space-y-2" data-testid="story-captions">

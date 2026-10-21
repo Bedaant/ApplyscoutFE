@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { ArrowUpRight, Check, Clock, CornerUpLeft, MapPin, RefreshCw } from "lucide-react";
+import { ArrowUpRight, Check, Clock, CornerUpLeft, MapPin, RefreshCw, Search, X } from "lucide-react";
 import { EASE, Reveal } from "./Bits";
 import { CompanyLogo } from "./Extras";
 import { daysAgo, useLiveJobs } from "./live";
@@ -37,7 +37,7 @@ const Card = ({ job, slot, region, approved, onApprove, onUndo }) => {
       data-testid="live-job-card"
     >
       <div className="flex items-center gap-2.5">
-        <CompanyLogo name={job.company} domain={job.domain} size={38} />
+        <CompanyLogo name={job.company} domain={job.domain} src={job.logo} size={38} />
         <div className="min-w-0 leading-tight">
           <p className="truncate text-[0.9rem] font-extrabold" data-testid="live-job-company">{job.company}</p>
           <p className="flex items-center gap-1 text-[0.76rem] font-semibold text-ink/60">
@@ -113,14 +113,51 @@ export const RegionSwitch = ({ region, setRegion }) => (
   </div>
 );
 
+const SUGGEST = ["Product", "Engineer", "Design", "Sales", "Data", "Marketing"];
+
+export const RoleSearch = ({ value, onChange }) => (
+  <div className="mx-auto w-full max-w-[560px]" data-testid="role-search">
+    <label className="flex items-center gap-3 rounded-full bg-white py-2 pl-5 pr-2 shadow-[0_14px_34px_-20px_rgba(22,33,58,0.6)] ring-1 ring-ink/5 focus-within:ring-2 focus-within:ring-[var(--accent)]">
+      <Search size={18} className="shrink-0 text-slate" />
+      <input
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        placeholder="Try a job title — e.g. product designer"
+        maxLength={60}
+        data-testid="role-search-input"
+        className="min-w-0 flex-1 bg-transparent py-1.5 text-[0.98rem] font-semibold text-ink outline-none placeholder:font-medium placeholder:text-slate/70"
+      />
+      {value && (
+        <button onClick={() => onChange("")} aria-label="Clear search" data-testid="role-search-clear" className="grid h-9 w-9 place-items-center rounded-full bg-page text-slate hover:text-ink">
+          <X size={15} />
+        </button>
+      )}
+    </label>
+    <div className="mt-3 flex flex-wrap justify-center gap-2">
+      {SUGGEST.map((s) => (
+        <button key={s} onClick={() => onChange(s)} data-testid={`role-suggest-${s.toLowerCase()}`}
+          className={`rounded-full px-3.5 py-1.5 text-[0.8rem] font-bold transition-colors ${value.toLowerCase() === s.toLowerCase() ? "bg-ink text-white" : "bg-white/80 text-slate hover:bg-white hover:text-ink"}`}>
+          {s}
+        </button>
+      ))}
+    </div>
+  </div>
+);
+
 export const JobCards = () => {
   const [region, setRegion] = useState("all");
   const [approved, setApproved] = useState(false);
-  const { status, jobs, adzuna } = useLiveJobs(region, 5);
+  const [typed, setTyped] = useState("");
+  const [q, setQ] = useState("");
+  useEffect(() => {
+    const id = setTimeout(() => { setQ(typed); setApproved(false); }, 350);
+    return () => clearTimeout(id);
+  }, [typed]);
+  const { status, jobs, adzuna, sources = [] } = useLiveJobs(region, 5, q);
   const pick = (r) => { setApproved(false); setRegion(r); };
   const props = { region, approved, onApprove: () => setApproved(true), onUndo: () => setApproved(false) };
   const ready = status === "ready" && jobs.length > 0;
-  const deckKey = ready ? `${region}-${jobs.map((j) => j.id).join("|")}` : `sk-${status}`;
+  const deckKey = ready ? `${region}-${q}-${jobs.map((j) => j.id).join("|")}` : `sk-${status}`;
   // centre the hero slot on whatever count came back
   const slots = ready ? (jobs.length >= 5 ? FAN : FAN.slice(2 - Math.floor(jobs.length / 2), 2 - Math.floor(jobs.length / 2) + jobs.length)) : FAN;
 
@@ -175,15 +212,22 @@ export const JobCards = () => {
       )}
       {status === "ready" && jobs.length === 0 && (
         <p className="mx-auto mt-6 w-fit rounded-full bg-white px-5 py-3 text-[0.88rem] font-semibold text-slate" data-testid="jobs-empty">
-          No fresh postings here in the last 14 days. Try another region.
+          {q ? `No fresh "${q}" roles here in the last 14 days. Try another title or region.` : "No fresh postings here in the last 14 days. Try another region."}
         </p>
       )}
 
-      <Reveal delay={0.2} className="mx-auto mt-8 flex max-w-[1100px] flex-col items-center gap-3 md:mt-10">
+      <Reveal delay={0.2} className="mx-auto mt-8 flex max-w-[1100px] flex-col items-center gap-4 md:mt-10">
+        <RoleSearch value={typed} onChange={setTyped} />
         <RegionSwitch region={region} setRegion={pick} />
         <p className="flex flex-wrap items-center justify-center gap-x-2 text-center text-[0.8rem] font-semibold text-slate" data-testid="jobs-caption">
           <span className="relative flex h-2 w-2"><span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#2C8F6B] opacity-60" /><span className="relative inline-flex h-2 w-2 rounded-full bg-[#2C8F6B]" /></span>
-          Live from public career pages · last 14 days
+          Live from company career pages and open job boards · last 14 days
+          {sources.includes("remotive") && (
+            <a href="https://remotive.com" target="_blank" rel="noreferrer" className="underline" data-testid="remotive-credit">· Remote jobs via Remotive</a>
+          )}
+          {sources.includes("arbeitnow") && (
+            <a href="https://www.arbeitnow.com" target="_blank" rel="noreferrer" className="underline" data-testid="arbeitnow-credit">· Jobs via Arbeitnow</a>
+          )}
           {adzuna && (
             <a href="https://www.adzuna.com" target="_blank" rel="noreferrer" className="underline" data-testid="adzuna-credit">· Jobs by Adzuna</a>
           )}

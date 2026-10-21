@@ -13,8 +13,8 @@ export const daysAgo = (iso) => {
 
 const cache = {};
 
-export const useLiveJobs = (region, limit = 5) => {
-  const key = `${region}:${limit}`;
+export const useLiveJobs = (region, limit = 5, q = "") => {
+  const key = `${region}:${limit}:${q.trim().toLowerCase()}`;
   const [state, setState] = useState(() => cache[key] || { status: "loading", jobs: [], adzuna: false });
 
   useEffect(() => {
@@ -22,15 +22,15 @@ export const useLiveJobs = (region, limit = 5) => {
     if (cache[key]) { setState(cache[key]); return undefined; }
     setState((s) => ({ ...s, status: "loading" }));
     axios
-      .get(`${API}/jobs/live`, { params: { region, limit } })
+      .get(`${API}/jobs/live`, { params: { region, limit, q: q.trim() } })
       .then((r) => {
-        const next = { status: "ready", jobs: r.data.jobs, adzuna: r.data.adzuna, refreshedAt: r.data.refreshed_at };
+        const next = { status: "ready", jobs: r.data.jobs, adzuna: r.data.adzuna, sources: r.data.sources || [], refreshedAt: r.data.refreshed_at };
         cache[key] = next;
         if (alive) setState(next);
       })
       .catch(() => alive && setState({ status: "error", jobs: [], adzuna: false }));
     return () => { alive = false; };
-  }, [key, region, limit]);
+  }, [key, region, limit, q]);
 
   return state;
 };

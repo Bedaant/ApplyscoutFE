@@ -1,3 +1,4 @@
+import { useId } from "react";
 import { motion } from "framer-motion";
 import { AVATARS, FOX } from "./assets";
 
@@ -15,24 +16,41 @@ export const Reveal = ({ children, delay = 0, y = 26, className = "" }) => (
   </motion.div>
 );
 
-const FOX_PATHS = [
-  "M28 12 L54 36 L38 46 Z",
-  "M50 38 L80 6 L94 60 Q76 58 60 52 Z",
-  "M6 94 Q24 60 50 38 L60 52 Q36 70 6 94 Z",
-  "M36 76 Q64 58 86 68 Q93 82 96 96 Q68 82 36 76 Z",
-];
+// Fox inside a speech bubble: we find the job, then reach the right person.
+export const BrandMark = ({ size = 40 }) => {
+  const id = `bm${useId().replace(/[^a-zA-Z0-9]/g, "")}`;
+  return (
+  <svg width={size} height={size} viewBox="0 0 100 100" aria-hidden="true" className="drop-shadow-[0_8px_12px_rgba(224,102,61,0.45)]">
+    <defs>
+      <linearGradient id={`${id}-g`} x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" stopColor="#FFA57E" />
+        <stop offset="1" stopColor="#E0623A" />
+      </linearGradient>
+    </defs>
+    <path
+      d="M32 6 H68 A26 26 0 0 1 94 32 V52 A26 26 0 0 1 68 78 H46 L22 95 Q26 86 26.5 76 A26 26 0 0 1 6 52 V32 A26 26 0 0 1 32 6 Z"
+      fill={`url(#${id}-g)`}
+    />
+    <path d="M26 19 L43 32 L23 41 Z" fill="#fff" />
+    <path d="M74 19 L77 41 L57 32 Z" fill="#fff" />
+    <path d="M29 25 L38 32 L27 36 Z" fill="#FFC9B3" />
+    <path d="M71 25 L73 36 L62 32 Z" fill="#FFC9B3" />
+    <path d="M22 37 Q50 26 78 37 Q74 56 50 69 Q26 56 22 37 Z" fill="#fff" />
+    <circle cx="39.5" cy="45" r="3.6" fill="#16213A" />
+    <circle cx="60.5" cy="45" r="3.6" fill="#16213A" />
+    <circle cx="40.6" cy="43.8" r="1.1" fill="#fff" />
+    <circle cx="61.6" cy="43.8" r="1.1" fill="#fff" />
+    <path d="M45.5 54 Q50 51.5 54.5 54 Q52.5 58.5 50 58.5 Q47.5 58.5 45.5 54 Z" fill="#16213A" />
+  </svg>
+  );
+};
 
-export const Logo = ({ size = 38 }) => (
-  <span className="flex items-center gap-2.5" data-testid="brand-logo">
-    <span
-      className="brand-mark grid place-items-center rounded-[13px]"
-      style={{ width: size, height: size }}
-    >
-      <svg width={size * 0.56} height={size * 0.56} viewBox="0 0 100 100" aria-hidden="true">
-        {FOX_PATHS.map((d) => <path key={d} d={d} fill="#fff" />)}
-      </svg>
+export const Logo = ({ size = 40 }) => (
+  <span className="flex items-center gap-2" data-testid="brand-logo">
+    <BrandMark size={size} />
+    <span className="font-display text-[1.25rem] tracking-[-0.035em] text-ink">
+      Apply<span className="text-accent">Scout</span>
     </span>
-    <span className="font-display text-[1.22rem] text-ink">ApplyScout</span>
   </span>
 );
 
