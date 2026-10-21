@@ -1,0 +1,41 @@
+{
+  "summary": "Tested ApplyScout v3 end to end: the /find 'Find my jobs' flow (manual path and resume path, on desktop 1920 and mobile 390), the mock paywall, magic link, Gmail consent, review, sent, undo and pause screens, the invite rewards backend and UI, and the hero fox chip. Backend: 12 of 12 pytest checks pass, and a concurrency check on duplicate friend signups also passes. Frontend: every requested flow works. I found and fixed 3 small frontend bugs: (1) the Card component dropped data-testid, so facts-card was missing; (2) the sticky flow header was transparent because Tailwind does not generate bg-page/95 for this custom class, so content showed through it while scrolling; (3) the 'Pick another job' and 'Back to home' buttons collapsed to about 20px tall on mobile because of flex-1 in a flex-col.",
+  "backend_issues": {
+    "critical": [],
+    "minor": [
+      {"endpoint": "POST /api/flow/resume", "issue": "The LLM read years from 'Senior PM, Flipkart (2019-present), Swiggy (2017-2019)' as 7, but the correct figure in 2026 is about 9. The prompt does not give today's date. Consider passing the current year."},
+      {"endpoint": "POST /api/flow/match (sample_people)", "issue": "The department regex checks 'product' first, so 'Product Designer' roles get 'Hiring Manager, Product' instead of Design. The same surnames (Sharma, Iyer) also repeat a lot across companies."},
+      {"endpoint": "POST /api/signups", "issue": "position = count_documents+1, and the inviter's position is lowered by 10 per referral without moving anyone else down, so two users can show the same #N (for example, several users at #1). This is acceptable for a mockup but not a true queue."}
+    ]
+  },
+  "frontend_issues": {
+    "ui_bugs": [
+      {"component": "FindFlow header", "issue": "FIXED: bg-page/95 is not a generated class (.bg-page is custom CSS in sky.css), so the header was transparent (rgba(0,0,0,0)) and the job cards scrolled visibly under the logo and buttons on mobile. Changed to bg-page.", "selector": "[data-testid=find-flow] header", "priority": "MEDIUM"},
+      {"component": "Sent screen buttons (mobile)", "issue": "FIXED: flex-1 inside flex-col squashed pick-another-btn and back-home-btn to about 20px tall at 390px wide. Changed to sm:flex-1, and both are now 48px.", "selector": "[data-testid=pick-another-btn],[data-testid=back-home-btn]", "priority": "MEDIUM"},
+      {"component": "FindFlow Card", "issue": "FIXED: Card did not pass through props, so data-testid='facts-card' was never rendered.", "selector": "[data-testid=facts-card]", "priority": "LOW"}
+    ],
+    "integration_issues": [],
+    "design_issues": [
+      {"screen": "Invite banner", "issues": ["transition delay:1.4 also applies to the exit, so after the user clicks Join or X the banner stays for about 1.4s before it hides. Put the delay only on animate."]},
+      {"screen": "Routing", "issues": ["flow-exit-btn and back-home-btn use pushState('/'), so after exiting, the browser Back button goes back into /find. Consider history.back() when the previous entry was the landing page. ?ref= on /find is ignored because getRef only runs inside InviteBanner on the landing page."]}
+    ]
+  },
+  "test_report_links": ["/app/backend/tests/test_flow_invite.py", "/app/backend/tests/race_check.py", "/app/test_reports/pytest/pytest_flow_invite.xml"],
+  "action_items": [
+    "Optional: give the resume prompt the current date so it computes years correctly",
+    "Optional: apply the InviteBanner delay only on enter, not on exit",
+    "Optional: map 'designer' to the Design dept before 'product' in sample_people"
+  ],
+  "critical_code_review_comments": [
+    "FindFlow.jsx is 430 lines. Consider moving Draft, Pick and Facts into their own files.",
+    "Draft: useEffect(() => { if (!draft) gen(); }, []) is missing deps. It is harmless here, but lint will warn.",
+    "msgRef useMemo depends on sentAt, so Undo followed by re-approve creates a new Message-ID. That is fine.",
+    "The demo account is kept in sessionStorage with gmail:true, so after reload Send skips straight to review. This is intended, but no reset or sign-out exists for demos."
+  ],
+  "updated_files": ["/app/frontend/src/components/sky/FindFlow.jsx", "/app/backend/tests/test_flow_invite.py", "/app/backend/tests/race_check.py"],
+  "success_rate": {"backend": "100% (12/12)", "frontend": "100% after the 3 small fixes"},
+  "seed_data_creation": "Created signups test+inv*/fr*/floor*/f*_*/race*/uiinv*/uifr*@example.com",
+  "retest_needed": false,
+  "should_main_agent_self_test": false,
+  "context_for_next_testing_agent": "Verified: resume .txt returns readable:true (title 'Senior Product Manager', 2 facts) in about 20s. Tiny or non-resume text returns readable:false, .png returns 415 and >5MB returns 413. PM/Bengaluru match: count 37, 19 companies, ~75 people, 9 unique-company jobs with 2 masked people each. A nonsense title still returns jobs with the widened note. Draft tags are all in fact ids or greet/job/close. Invite: +1 referral moves the inviter #22 to #12, there is a floor at 1, there is no double count (also under 8 concurrent requests), and self-referral is ignored. UI: hero to /find, back and forward and exit work. In the manual flow the search takes about 17s, the pick shows 3 cards with 6 DEMO tags and Lever links, and the facts show 2 locked chips. The draft has 5 lines with GREET/POSTING/FACT 1/FACT 2/CLOSE, hovering a tag gives a ring on the matching draft-fact chip, and edit and redo work. The paywall title and price ($9, headless tz is not IN) are correct, there are 4 methods with sheets, and the errors (no email, short card, bad UPI) show. Paid then magic link, then avatar 'M', then Gmail Allow, then review where to-address unmasks to s.sharma@meesho.com, with editable subject and lines. Sent shows time, folder, Message-ID and confetti. Undo counts down 30 to 28 and returns to review with edits kept. Pause toggles paused-note. pick-another shows the next 3 jobs, and a 2nd send skips the paywall. In the resume path, unticked f2 is excluded from the /flow/draft payload and the edited f1 text is sent. /?ref=<code> shows the banner, the URL is cleaned, and Join focuses footer-email. The footer signup increments the inviter, and a returning visitor sees #12 and Friends joined: 1. The hero fox fits inside its chip. On mobile at 390, scrollWidth is 390 on every step and the sticky pick button is in the viewport."
+}

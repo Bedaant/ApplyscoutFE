@@ -9,6 +9,7 @@ import re
 import tempfile
 import uuid
 import hashlib
+from datetime import datetime, timezone
 
 from fastapi import APIRouter, File, HTTPException, UploadFile
 from pydantic import BaseModel, Field
@@ -80,6 +81,7 @@ def build_router(feed) -> APIRouter:
                 tmp_paths.append(t.name)
             raw = await _ask(
                 "You extract facts from resumes. Never invent anything. Use only what is written. Reply with JSON only.",
+                f'Today is {datetime.now(timezone.utc):%B %Y} ("present" means today). '
                 'Read this resume. Return JSON: {"title": most recent or target job title or null, '
                 '"years": total years of professional experience as an integer or null, '
                 '"locations": up to 3 cities/countries or "Remote" mentioned as where they live or want to work, '
@@ -263,8 +265,10 @@ def build_router(feed) -> APIRouter:
     return r
 
 
-FIRST = ["Priya", "Arjun", "Sara", "Daniel", "Meera", "Lukas", "Aisha", "Tom", "Neha", "Elena", "Rahul", "Chloe"]
-LAST = ["Sharma", "Mehta", "Okafor", "Fischer", "Iyer", "Novak", "Khan", "Bennett", "Rao", "Rossi", "Verma", "Martin"]
+FIRST = ["Priya", "Arjun", "Sara", "Daniel", "Meera", "Lukas", "Aisha", "Tom", "Neha", "Elena", "Rahul", "Chloe",
+         "Kavya", "Marco", "Ines", "Sam", "Tanvi", "Oliver", "Zara", "Jonas"]
+LAST = ["Sharma", "Mehta", "Okafor", "Fischer", "Iyer", "Novak", "Khan", "Bennett", "Rao", "Rossi", "Verma", "Martin",
+        "Kapoor", "Silva", "Nguyen", "Brennan", "Desai", "Larsen", "Haddad", "Moreau", "Pillai", "Weber", "Costa"]
 
 
 def sample_people(job):
@@ -272,11 +276,11 @@ def sample_people(job):
     h = int(hashlib.md5(job["id"].encode()).hexdigest(), 16)
     dom = job.get("domain") or re.sub(r"[^a-z0-9]", "", job["company"].lower())[:20] + ".com"
     title = job.get("title", "")
-    dept = "Product" if re.search(r"product", title, re.I) else "Engineering" if re.search(r"engineer|developer", title, re.I) \
-        else "Design" if re.search(r"design", title, re.I) else "Operations"
+    dept = "Design" if re.search(r"design|ux|ui\b", title, re.I) else "Engineering" if re.search(r"engineer|developer", title, re.I) \
+        else "Product" if re.search(r"product", title, re.I) else "Data" if re.search(r"data|analyst", title, re.I) else "Operations"
     out = []
     for k, role in enumerate([f"Hiring Manager, {dept}", "Talent Partner"]):
-        f, l = FIRST[(h >> (k * 4)) % len(FIRST)], LAST[(h >> (k * 4 + 2)) % len(LAST)]
+        f, l = FIRST[(h >> (k * 9)) % len(FIRST)], LAST[(h >> (k * 9 + 5)) % len(LAST)]
         local = f"{f[0].lower()}.{l.lower()}"
         out.append({"name": f"{f} {l}", "role": role, "email": f"{local}@{dom}",
                     "masked": f"{local[0]}{'•' * 6}@{dom}", "avatar": (h >> k) % 4 + 1})

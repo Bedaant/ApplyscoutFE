@@ -15,7 +15,7 @@ const YEARS = [["0–1", 1], ["1–3", 2], ["3–5", 4], ["5–8", 6], ["8+", 9]
 const TAG_COLORS = [["#6C4BC4", "#EEE6FB"], ["#2C8F6B", "#E2F6E6"], ["#B26A00", "#FFF0DA"], ["#0F7FA3", "#DFF4FA"], ["#C2365C", "#FFE3EC"]];
 const SEARCH_STEPS = ["Reading your resume", "Matching roles", "Finding people", "Ranking best fits"];
 
-const Card = ({ children, className = "" }) => <div className={`rounded-[26px] bg-white p-5 shadow-[0_18px_40px_-28px_rgba(22,33,58,0.55)] sm:p-6 ${className}`}>{children}</div>;
+const Card = ({ children, className = "", ...rest }) => <div {...rest} className={`rounded-[26px] bg-white p-5 shadow-[0_18px_40px_-28px_rgba(22,33,58,0.55)] sm:p-6 ${className}`}>{children}</div>;
 const Primary = ({ children, className = "", ...p }) => (
   <button {...p} className={`pill-pink inline-flex h-12 items-center justify-center gap-2 rounded-full px-7 text-[0.98rem] font-bold disabled:opacity-50 ${className}`}>{children}</button>
 );
@@ -331,7 +331,7 @@ export const FindFlow = ({ onExit }) => {
 
   return (
     <div className="min-h-screen bg-page pb-16" ref={top} data-testid="find-flow">
-      <header className="sticky top-0 z-40 bg-page/95 px-4 pb-3 pt-4">
+      <header className="sticky top-0 z-40 bg-page px-4 pb-3 pt-4">
         <div className="mx-auto flex max-w-[640px] items-center gap-3">
           <button onClick={back} aria-label="Back" data-testid="flow-back-btn" className="grid h-10 w-10 place-items-center rounded-full bg-white shadow-sm"><ArrowLeft size={17} /></button>
           <div className="flex-1"><Logo size={30} /></div>
@@ -412,8 +412,8 @@ export const FindFlow = ({ onExit }) => {
                   <DemoNote>Demo: nothing was actually sent.</DemoNote>
                 </Card>
                 <div className="flex flex-col gap-2 sm:flex-row">
-                  <Primary className="flex-1" disabled={offset + 3 >= results.jobs.length && results.jobs.length <= 3} onClick={() => { setOffset((o) => (o + 3 < results.jobs.length ? o + 3 : 0)); setDraft(null); setJob(null); setStep("pick"); }} data-testid="pick-another-btn">Pick another job</Primary>
-                  <button onClick={onExit} className="h-12 flex-1 rounded-full bg-white text-[0.95rem] font-bold text-ink shadow-sm" data-testid="back-home-btn">Back to home</button>
+                  <Primary className="sm:flex-1" disabled={offset + 3 >= results.jobs.length && results.jobs.length <= 3} onClick={() => { setOffset((o) => (o + 3 < results.jobs.length ? o + 3 : 0)); setDraft(null); setJob(null); setStep("pick"); }} data-testid="pick-another-btn">Pick another job</Primary>
+                  <button onClick={onExit} className="h-12 rounded-full bg-white sm:flex-1 text-[0.95rem] font-bold text-ink shadow-sm" data-testid="back-home-btn">Back to home</button>
                 </div>
               </div>
             )}

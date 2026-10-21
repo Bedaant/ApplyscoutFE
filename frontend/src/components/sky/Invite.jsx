@@ -40,8 +40,9 @@ export const InviteBanner = ({ onJoin }) => {
     <AnimatePresence>
       {show && (
         <motion.div
-          initial={{ y: 80, opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ y: 80, opacity: 0 }}
-          transition={{ type: "spring", stiffness: 200, damping: 22, delay: 1.4 }}
+          initial={{ y: 80, opacity: 0 }}
+          animate={{ y: 0, opacity: 1, transition: { type: "spring", stiffness: 200, damping: 22, delay: 1.4 } }}
+          exit={{ y: 80, opacity: 0, transition: { duration: 0.25 } }}
           className="fixed inset-x-3 bottom-4 z-[60] mx-auto flex max-w-[560px] items-center gap-3 rounded-[22px] bg-ink py-3 pl-3 pr-2 text-white shadow-[0_20px_40px_-20px_rgba(22,33,58,0.9)]"
           data-testid="invite-banner"
         >

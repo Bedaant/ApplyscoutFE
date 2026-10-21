@@ -131,8 +131,14 @@ async def _signup_view(doc, already):
         doc["code"] = _new_code()
         await db.signups.update_one({"email": doc["email"]}, {"$set": {"code": doc["code"]}})
     refs = int(doc.get("referrals", 0))
-    return SignupResponse(email=doc["email"], already_on_list=already, code=doc["code"], referrals=refs,
-                          position=max(1, int(doc.get("position", 1)) - SPOTS_PER_FRIEND * refs))
+    # true queue: rank everyone by (joined position - 10 per friend), ties go to whoever joined first
+    mine = (int(doc.get("position", 1)) - SPOTS_PER_FRIEND * refs, int(doc.get("position", 1)))
+    ahead = 0
+    async for o in db.signups.find({}, {"_id": 0, "position": 1, "referrals": 1}):
+        theirs = (int(o.get("position", 1)) - SPOTS_PER_FRIEND * int(o.get("referrals", 0)), int(o.get("position", 1)))
+        if theirs < mine:
+            ahead += 1
+    return SignupResponse(email=doc["email"], already_on_list=already, code=doc["code"], referrals=refs, position=ahead + 1)
 
 
 @api_router.get("/")

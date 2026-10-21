@@ -15,7 +15,7 @@ import { Faq } from "@/components/sky/Faq";
 import { FinalCta, Footer } from "@/components/sky/FinalCta";
 import { PreviewDialog } from "@/components/sky/PreviewDialog";
 import { FindFlow } from "@/components/sky/FindFlow";
-import { InviteBanner } from "@/components/sky/Invite";
+import { InviteBanner, getRef } from "@/components/sky/Invite";
 
 function Landing({ onFind }) {
   const [loading, setLoading] = useState(true);
@@ -98,11 +98,16 @@ function App() {
     window.addEventListener("popstate", on);
     return () => window.removeEventListener("popstate", on);
   }, []);
+  useEffect(() => { getRef(); }, []);
+  const fromLanding = useRef(false);
   const go = (p) => { window.history.pushState({}, "", p); setPath(p); window.scrollTo(0, 0); };
+  const exitFlow = () => {
+    if (fromLanding.current) { fromLanding.current = false; window.history.back(); } else go("/");
+  };
   if (path.startsWith("/find")) {
-    return <MotionConfig reducedMotion="user"><FindFlow onExit={() => go("/")} /></MotionConfig>;
+    return <MotionConfig reducedMotion="user"><FindFlow onExit={exitFlow} /></MotionConfig>;
   }
-  return <Landing onFind={() => go("/find")} />;
+  return <Landing onFind={() => { fromLanding.current = true; go("/find"); }} />;
 }
 
 export default App;
