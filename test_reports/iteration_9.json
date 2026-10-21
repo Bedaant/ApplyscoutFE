@@ -1,0 +1,34 @@
+{
+  "summary": "Retested the fixes made after iteration_8. Backend: 16 of 16 pytest checks pass (4 new in test_iter9_queue.py plus 12 regression checks). The queue is a true queue: join positions are unique, the ranks are consistent and unique, and a referral moves the inviter up. Resume years = 9 for 2017-present. 'Product Designer' jobs get 'Hiring Manager, Design', and the names vary. Frontend: every requested item works. The invite banner hides about 0.5s after Join or X (this time includes Playwright overhead). Landing -> hero -> /find -> exit returns to '/', and Back does not reopen /find. A direct /find then exit goes to '/'. /find?ref=<code> stores as-ref and cleans the URL, and a later footer signup moved the inviter to referrals=1. The iteration_8 fixes still hold: the header is opaque, pick-another and back-home are 48px on mobile 390, facts-card is rendered, and there is no horizontal overflow.",
+  "backend_issues": {
+    "critical": [],
+    "minor": [
+      {"endpoint": "/api/signups (_signup_view)", "issue": "One referral does not always move the inviter up exactly 10 spots. Examples: #25 -> #19 (6 spots), #30 -> #23 (7 spots), #32 -> #25. The score is position - 10*refs. People inside that 10-slot window who already have referrals are already ahead, and ties go to the earlier joiner, so the jump is between 0 and 10 spots, never more. The ranking matches the stated algorithm, but the UI copy 'they move up 10 spots' is not literally true. Either change the copy to 'up to 10 spots', or accept this behaviour."},
+      {"endpoint": "/api/signups (_signup_view)", "issue": "Every signup call scans the whole signups collection (O(N)). This is fine for the MVP. At scale, use count_documents with an $expr score, or store the score and index it."}
+    ]
+  },
+  "frontend_issues": {
+    "ui_bugs": [
+      {"component": "InviteBanner", "issue": "If a referred visitor signs up through the footer form without using the banner's Join button, the banner stays on screen and still says 'Join early access...' after the success message. It only checks as-signup when it mounts. Seen after /find?ref -> exit -> footer signup. Hide the banner on signup success, for example with a storage or custom event.", "selector": "[data-testid=invite-banner]", "priority": "LOW"}
+    ],
+    "integration_issues": [],
+    "design_issues": [
+      {"screen": "Sent screen (mobile)", "issues": ["pause-btn and undo-btn are 44px (h-11), while the primary buttons are 48px. This is acceptable (44px is the minimum touch target) and is only noted for consistency."]}
+    ]
+  },
+  "test_report_links": ["/app/backend/tests/test_iter9_queue.py", "/app/backend/tests/test_flow_invite.py", "/app/test_reports/pytest/iter9.xml"],
+  "action_items": [
+    "Optional: change the invite copy to 'up to 10 spots', or accept that the queue jump can be less than 10",
+    "Hide InviteBanner after any successful signup, not only after the banner's Join button"
+  ],
+  "critical_code_review_comments": [
+    "server.py create_signup: position = count_documents + 1 can race. Two signups at the same moment can get the same join position, and then the tie-break (equal tuples) can show two users the same rank. Use an atomic counter with find_one_and_update $inc.",
+    "_signup_view does a full collection scan on every call (see minor issues)."
+  ],
+  "updated_files": ["/app/backend/tests/test_iter9_queue.py", "/app/backend/tests/test_flow_invite.py (changed the exact pos-10 assertion to the queue range: max(1, pos-10) <= new < pos)"],
+  "success_rate": {"backend": "100%", "frontend": "100% of requested checks (1 low-priority banner UX bug found)"},
+  "seed_data_creation": "Test signups with the prefix test+ (including test+uiinv9a/b@example.com, test+q*, test+t10*, test+uifr9*).",
+  "retest_needed": false,
+  "should_main_agent_self_test": true,
+  "context_for_next_testing_agent": "Run pytest with: export REACT_APP_BACKEND_URL from frontend/.env, then add -p no:xdist -o addopts=\"\" (pytest.ini uses xdist, and env is not set). To skip the paywall in the UI, set sessionStorage 'as-demo-account' = {email, paid:true, signedIn:true, gmail:true}, then click about-manual-tab before manual-title-input. Resume AI takes about 20s and draft about 10s."
+}

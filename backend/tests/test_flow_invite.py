@@ -132,7 +132,8 @@ class TestInvite:
         again = requests.post(f"{API}/signups", json={"email": inviter}).json()
         assert again["already_on_list"] is True
         assert again["referrals"] == 1
-        assert again["position"] == max(1, pos0 - 10)
+        # true queue: moves up by up to 10 spots (fewer if people in that window already moved ahead)
+        assert max(1, pos0 - 10) <= again["position"] < pos0
 
         # same friend again shouldn't double count
         requests.post(f"{API}/signups", json={"email": friend, "ref": code})

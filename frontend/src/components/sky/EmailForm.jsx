@@ -21,6 +21,7 @@ export const EmailForm = ({ source = "hero", id = "hero", label = "Join the list
     setPosition(data.position ?? null);
     setInvite({ code: data.code, referrals: data.referrals || 0 });
     try { localStorage.setItem("as-signup", data.email); } catch { /* ignore */ }
+    window.dispatchEvent(new Event("as-signed-up"));
   };
 
   // returning visitor: show their current place + friends joined

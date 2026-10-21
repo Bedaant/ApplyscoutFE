@@ -147,7 +147,7 @@ export const ShareCard = ({ position, code, referrals = 0 }) => {
       <div className="mt-3 rounded-[18px] bg-white p-3 text-left shadow-[0_8px_18px_-14px_rgba(22,33,58,0.5)]" data-testid="invite-box">
         <div className="flex items-center justify-between gap-2">
           <p className="flex items-center gap-1.5 text-[0.84rem] font-bold text-ink"><Users size={14} /> Friends joined: <span data-testid="invite-referrals">{referrals}</span></p>
-          <p className="text-[0.74rem] font-bold text-accent">Each friend moves you up 10 spots</p>
+          <p className="text-[0.74rem] font-bold text-accent">Each friend moves you up to 10 spots</p>
         </div>
         <p className="mt-2 truncate rounded-[10px] bg-page px-3 py-2 font-mono text-[0.76rem] text-ink" data-testid="invite-link">{url}</p>
       </div>

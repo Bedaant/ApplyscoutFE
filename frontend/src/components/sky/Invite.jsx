@@ -30,11 +30,14 @@ export const InviteBanner = ({ onJoin }) => {
     const code = getRef();
     let joined = false;
     try { joined = !!localStorage.getItem("as-signup"); } catch { /* ignore */ }
-    if (!code || joined) return;
+    const hide = () => setShow(false);
+    window.addEventListener("as-signed-up", hide);
+    if (!code || joined) return () => window.removeEventListener("as-signed-up", hide);
     axios.get(`${API}/signups/invite/${code}`).then((r) => {
       if (r.data.valid) setShow(true);
       else localStorage.removeItem(REF_KEY);
     }).catch(() => {});
+    return () => window.removeEventListener("as-signed-up", hide);
   }, []);
   return (
     <AnimatePresence>
@@ -48,7 +51,7 @@ export const InviteBanner = ({ onJoin }) => {
         >
           <img src="/art/fox-wave.webp" alt="" className="h-11 w-11 shrink-0 object-contain" />
           <p className="flex-1 text-[0.88rem] font-semibold leading-snug">
-            <Gift size={14} className="mr-1 inline -mt-0.5" />Your friend invited you. Join early access and they move up 10 spots.
+            <Gift size={14} className="mr-1 inline -mt-0.5" />Your friend invited you. Join early access and they move up the list.
           </p>
           <button onClick={() => { setShow(false); onJoin(); }} className="pill-pink shrink-0 rounded-full px-4 py-2 text-[0.85rem] font-bold" data-testid="invite-banner-join">Join</button>
           <button onClick={() => setShow(false)} aria-label="Dismiss" className="grid h-8 w-8 shrink-0 place-items-center rounded-full text-white/70 hover:text-white" data-testid="invite-banner-close"><X size={15} /></button>
