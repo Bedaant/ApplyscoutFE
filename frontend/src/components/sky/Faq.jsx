@@ -44,6 +44,28 @@ const PhoneMock = () => (
   </div>
 );
 
+/** Fox that peeks up from the bottom edge of an opened answer. */
+const PeekFox = () => (
+  <span className="pointer-events-none absolute bottom-0 right-3 flex flex-col items-end" data-testid="faq-peek-fox">
+    <motion.span
+      initial={{ opacity: 0, scale: 0.6, x: 10 }}
+      animate={{ opacity: [0, 1, 1, 0], scale: [0.6, 1, 1, 0.9], x: [10, 0, 0, 0] }}
+      transition={{ duration: 2.6, times: [0, 0.15, 0.8, 1], delay: 0.45 }}
+      className="mb-0.5 whitespace-nowrap rounded-full rounded-br-[4px] bg-ink px-2.5 py-1 text-[0.64rem] font-bold text-white"
+    >
+      Good one!
+    </motion.span>
+    <motion.img
+      src="/art/fox-peek2.webp"
+      alt=""
+      initial={{ y: "100%" }}
+      animate={{ y: ["100%", "8%", "14%"], rotate: [0, -4, 0] }}
+      transition={{ duration: 0.7, delay: 0.25, ease: [0.34, 1.56, 0.64, 1] }}
+      className="h-[58px] w-auto sm:h-[66px]"
+    />
+  </span>
+);
+
 export const Faq = () => {
   const [open, setOpen] = useState(0);
   return (
@@ -57,7 +79,7 @@ export const Faq = () => {
 
           <ul className="mt-8 space-y-3">
             {QA.map(([q, a], i) => (
-              <li key={q} className={`white-card overflow-hidden ${open === i ? "ring-1 ring-[var(--accent-soft)]" : ""}`}>
+              <li key={q} className={`white-card relative overflow-hidden ${open === i ? "ring-1 ring-[var(--accent-soft)]" : ""}`}>
                 <button
                   onClick={() => setOpen(open === i ? -1 : i)}
                   aria-expanded={open === i}
@@ -79,7 +101,8 @@ export const Faq = () => {
                       transition={{ duration: 0.4, ease: EASE }}
                       className="overflow-hidden"
                     >
-                      <p className="px-5 pb-5 text-[0.95rem] leading-relaxed text-slate" data-testid={`faq-answer-${i}`}>{a}</p>
+                      <p className="min-h-[88px] px-5 pb-5 pr-[92px] text-[0.95rem] leading-relaxed text-slate sm:pr-[110px]" data-testid={`faq-answer-${i}`}>{a}</p>
+                      <PeekFox />
                     </motion.div>
                   )}
                 </AnimatePresence>
