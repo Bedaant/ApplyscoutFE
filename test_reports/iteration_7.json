@@ -1,0 +1,22 @@
+{
+  "summary": "Frontend-only test of iteration-7 features: the waving hero fox, the FAQ peek fox, and the signup share card. All 9 requested checks pass on desktop (1920) and on mobile (390).",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": []
+  },
+  "test_report_links": [],
+  "action_items": [],
+  "critical_code_review_comments": [
+    "ShareCard.share(): when the Web Share API is missing it calls download(), which runs setBusy(true/false) again inside the outer busy state. This is harmless, but the outer finally sets busy=false, so the two states are set twice.",
+    "The share PNG is about 967KB at 1080x1080. It is fine for sharing. Consider canvas.toBlob(..., 'image/jpeg', 0.9) or webp if size matters.",
+    "busy only changes the Share button label. The buttons are not disabled, so a user can double-click Image/Share and render the card twice. Minor."
+  ],
+  "updated_files": [],
+  "success_rate": {"backend": "N/A (skipped)", "frontend": "100%"},
+  "seed_data_creation": "Created footer signups test+<ts>@example.com (#9, #10) and test+m<ts>@example.com (#11).",
+  "retest_needed": false,
+  "should_main_agent_self_test": false,
+  "context_for_next_testing_agent": "Verified: hero-waving-fox is visible on desktop and on 390 (58x42 on mobile). /art/fox-wave.webp loads (naturalWidth 321). img.fox-wave runs animationName foxWave, 5s, infinite, with 1 running animation. On hover the animation switches to foxWaveNow and .fox-hi opacity is 1. In the FAQ, item 0 is open by default with 1 peek fox. Closing it gives 0 peek foxes. Opening item 1 or 3 shows exactly 1 faq-peek-fox inside that li (fox-peek2.webp naturalWidth 320). Closing removes it. The answer text does not overlap the fox image or the 'Good one!' bubble at 1920 or 390 (text right edge is at most 276px, fox left edge is at least 297px). For a new footer signup, the '#N' in the message matches share-card-position, and celebrate-fox is shown. share-download-btn downloads applyscout-N.png, a valid PNG of about 967KB. share-copy-btn shows 'Copied', puts 'I'm #N ... Join me: <origin>' on the clipboard, and goes back to 'Copy' after about 1.8s. The WhatsApp, X and LinkedIn links all have target=_blank and contain the encoded origin, and X opens a new tab. In headless Chromium navigator.share is missing, so share-native-btn falls back to the download. Signing up again with the same email after a reload shows 'already on the list — you keep place #N', the share card with the same #N, and 0 celebrate-fox. scrollWidth stays 390 on mobile. No console errors."
+}

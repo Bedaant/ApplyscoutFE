@@ -157,3 +157,10 @@ Tests: iteration_5 — frontend 100%.
   download arrow, sparkles, star) only while flipped; paused off-screen; off with reduced motion.
 - sky / sky-soft base gradients switched to peach (removed leftover blue band).
 Tests: iteration_6.
+
+## v2.6 — 21 Oct 2026
+- Fox reactions: hero WavingFox (Bits.jsx, /art/fox-wave.webp; 5s CSS wave + "Hi! 👋", waves on hover);
+  FAQ PeekFox (/art/fox-peek2.webp) pops up from the opened answer with a "Good one!" bubble.
+- Share card (ShareCard.jsx) after signup: cheering fox + list #; Share (Web Share w/ PNG), Image download
+  (canvas 1080²), Copy, WhatsApp, X, LinkedIn. No referral tracking.
+Tests: iteration_7.
