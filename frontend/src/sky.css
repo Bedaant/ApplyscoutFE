@@ -99,3 +99,58 @@ input.field:focus { outline: none; border-color: #9CC0FF; box-shadow: 0 0 0 4px 
 @media (prefers-reduced-motion: reduce) {
   .float-a, .float-b, .float-c, .drift, .drift-slow, .marquee-track, .sparkle, .tick-in { animation: none; }
 }
+
+/* ---------- palette swap: sky (default) vs peach ---------- */
+:root {
+  --page: #F2F7FF;
+  --accent: #3B6FE0;
+  --accent-soft: #DCE8FF;
+  --card-1: #DCC9F7; --card-2: #FFD5A8; --card-3: #BEEBC5; --card-4: #FFB7B0; --card-5: #A9E4F2;
+}
+html[data-palette="peach"] {
+  --page: #FFF6EE;
+  --accent: #D9603A;
+  --accent-soft: #FFE3D3;
+  --card-1: #FFD9C7; --card-2: #FFE7B8; --card-3: #F6D6E4; --card-4: #FFC9B5; --card-5: #E8E1C8;
+}
+html, body, .bg-page { transition: background-color .9s ease; }
+html[data-palette="peach"], html[data-palette="peach"] body { background: var(--page); }
+.bg-page { background-color: var(--page); }
+.text-accent { color: var(--accent); transition: color .9s ease; }
+.bg-accent-soft { background-color: var(--accent-soft); transition: background-color .9s ease; }
+.pcard { transition: background-color .9s ease; }
+
+.sky, .sky-soft { isolation: isolate; }
+.sky::before, .sky-soft::before {
+  content: ""; position: absolute; inset: 0; z-index: -1; opacity: 0;
+  transition: opacity .9s ease; pointer-events: none;
+}
+.sky::before { background: radial-gradient(120% 80% at 50% 0%, #FFCDB4 0%, #FFDCC8 36%, #FFEDE0 66%, #FFF8F1 100%); }
+.sky-soft::before { background: linear-gradient(180deg, #FFF8F1 0%, #FFEDE0 60%, #FFDCC8 100%); }
+html[data-palette="peach"] .sky::before, html[data-palette="peach"] .sky-soft::before { opacity: 1; }
+html[data-palette="peach"] .pill-pink { background: #FFB59A; color: #7A2E14; box-shadow: 0 10px 22px -12px rgba(232,110,70,.9); }
+html[data-palette="peach"] .pill-pink:hover { background: #FFA586; }
+html[data-palette="peach"] input.field:focus { border-color: #FFB59A; box-shadow: 0 0 0 4px rgba(255,181,154,.35); }
+
+/* shimmer skeleton */
+.shimmer { position: relative; overflow: hidden; }
+.shimmer::after {
+  content: ""; position: absolute; inset: 0; transform: translateX(-100%);
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,.55), transparent);
+  animation: shimmer 1.4s infinite;
+}
+@keyframes shimmer { to { transform: translateX(100%); } }
+
+/* flip cards */
+.flip { perspective: 1200px; }
+.flip-inner { position: relative; width: 100%; height: 100%; transform-style: preserve-3d; transition: transform .8s cubic-bezier(.22,1,.36,1); }
+.flip.is-flipped .flip-inner { transform: rotateY(180deg); }
+.flip-face { position: absolute; inset: 0; backface-visibility: hidden; -webkit-backface-visibility: hidden; }
+.flip-back { transform: rotateY(180deg); }
+
+.marquee-slow .marquee-track { animation-duration: 70s; }
+
+@media (prefers-reduced-motion: reduce) {
+  .shimmer::after { animation: none; }
+  .flip-inner { transition: none; }
+}

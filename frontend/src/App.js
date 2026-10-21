@@ -7,12 +7,11 @@ import { Loader } from "@/components/sky/Loader";
 import { Nav } from "@/components/sky/Nav";
 import { Hero } from "@/components/sky/Hero";
 import { JobCards } from "@/components/sky/JobCards";
-import { Sources } from "@/components/sky/Sources";
-import { Statement } from "@/components/sky/Statement";
-import { Features } from "@/components/sky/Features";
-import { Steps } from "@/components/sky/Steps";
-import { Truth } from "@/components/sky/Truth";
-import { Voices } from "@/components/sky/Voices";
+import { LogoMarquee } from "@/components/sky/LogoMarquee";
+import { MotionStory } from "@/components/sky/MotionStory";
+import { Compare } from "@/components/sky/Compare";
+import { Quotes } from "@/components/sky/Quotes";
+import { PaletteToggle } from "@/components/sky/Extras";
 import { Faq } from "@/components/sky/Faq";
 import { FinalCta, Footer } from "@/components/sky/FinalCta";
 import { PreviewDialog } from "@/components/sky/PreviewDialog";
@@ -30,6 +29,7 @@ function App() {
   useEffect(() => {
     const lenis = new Lenis({ lerp: 0.09, anchors: { offset: -90 } });
     lenisRef.current = lenis;
+    window.__lenis = lenis;
     let id;
     const raf = (time) => { lenis.raf(time); id = requestAnimationFrame(raf); };
     id = requestAnimationFrame(raf);
@@ -50,23 +50,22 @@ function App() {
 
   return (
     <MotionConfig reducedMotion="user">
-      <div className="min-h-screen bg-[#F2F7FF] text-ink" data-testid="landing-page">
+      <div className="min-h-screen bg-page text-ink" data-testid="landing-page">
         <AnimatePresence>{loading && <Loader key="loader" />}</AnimatePresence>
         <Nav onStart={onStart} />
         <main>
           <Hero onStart={onStart} onSample={onSample} />
           <JobCards />
-          <Sources />
-          <Statement />
-          <Features />
-          <Steps />
-          <Truth />
-          <Voices />
+          <LogoMarquee />
+          <MotionStory />
+          <Compare />
+          <Quotes />
           <Faq />
           <FinalCta onSample={onSample} />
         </main>
         <Footer />
         <PreviewDialog open={open} onOpenChange={setOpen} />
+        <PaletteToggle />
       </div>
     </MotionConfig>
   );

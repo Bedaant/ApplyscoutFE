@@ -9,3 +9,10 @@ export const AVATARS = [
   `${BASE}/39404d796feec69588408ad479970e0a253be08c8a3a7fb78218167167fa190d.jpeg`,
   `${BASE}/7904b653b68380653a3832b392947e1c576c516cfcfbd5ff639ec918107e6cdd.jpeg`,
 ];
+
+const GEN = "https://static.prod-images.emergentagent.com/jobs/b7bc64bd-cd0a-4284-b71b-498e11a6e911/images";
+// generated clay art (originals at GEN), background removed for any palette
+export const FOX_ART_SOURCE = GEN;
+export const FOX_MAGNIFIER = "/art/fox-magnifier.webp";
+export const FOX_SORTING = "/art/fox-sorting.webp";
+export const FOX_CALENDAR = "/art/fox-calendar.webp";

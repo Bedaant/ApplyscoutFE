@@ -6,15 +6,15 @@ import { EASE, Reveal } from "./Bits";
 
 const QA = [
   ["Is this auto-apply with a nicer name?",
-   "No. There is no setting that lets it apply without you. Approving each application is the only way anything is sent, and the button sits in one place so you always know where it is. Stop opening the queue and nothing goes out — annoying by design."],
+   "No. Nothing is sent until you press approve."],
   ["Will it write things about me that aren't true?",
-   "It can only write from the fact list you confirmed. When a posting asks for something that isn't on that list, it leaves the gap and tells you, instead of filling it. Each draft shows which resume line every sentence came from."],
+   "No. It writes only from facts you confirmed, and cites each one."],
   ["What happens to my resume and my email address?",
-   "The resume is stored so drafts can be built from it, and deleting it from the account page takes the extracted facts with it. We don't sell it, don't show it to companies you haven't approved, and don't train a public model on it. Sample runs on this page aren't kept at all."],
+   "Stored to build drafts, deletable any time, never sold, exportable whenever you like."],
   ["What does it cost?",
-   "Nothing is priced yet. There's no plan to show you and no card to enter, because the product isn't finished enough to charge for. When that changes, the list hears first and nobody is charged by surprise."],
+   "Nothing yet. No card, no paid boosts — the list hears first if that changes."],
   ["Does it work for my field?",
-   "Matching is strongest for operations, product, programme and analyst roles today. Engineering and design are usable. Nursing, trades, academia and licence-heavy fields aren't covered yet, and signing up won't change that this quarter."],
+   "Strongest for ops, product, programme and analyst roles. Engineering and design work too."],
 ];
 
 const PhoneMock = () => (
@@ -25,19 +25,19 @@ const PhoneMock = () => (
         <Bell size={15} className="text-slate" />
       </div>
       <p className="font-display mt-3 text-[1.05rem] leading-tight text-ink">Morning, Priya</p>
-      <p className="text-[0.78rem] font-semibold text-[#3B6FE0]">4 new matches, 3 drafts ready</p>
+      <p className="text-[0.78rem] font-semibold text-[#3B6FE0]">1 interview, 2 drafts ready</p>
       <div className="mt-3 flex h-8 items-center gap-2 rounded-full bg-white px-3 text-[10.5px] text-slate shadow-sm">
         <Search size={11} /> product ops · remote
       </div>
     </div>
     <div className="space-y-2 px-3 pb-4 pt-1">
-      {[["Northwind Labs", "Product Operations Lead", "bg-mint", "£62–71k"],
-        ["Halden & Co.", "Senior Operations Analyst", "bg-peach2", "£58–64k"],
-        ["Brightloom", "Programme Manager", "bg-lilac", "£70–80k"]].map(([co, role, bg, pay]) => (
-        <div key={co} className={`${bg} rounded-2xl p-3`}>
-          <p className="text-[9.5px] font-bold uppercase tracking-wider text-ink/60">{co} · {pay}</p>
+      {[["Interview · Tue 11:00", "Product Operations Lead", "var(--card-3)", "invite"],
+        ["Draft ready", "Senior Operations Analyst", "var(--card-2)", "waiting for you"],
+        ["Draft ready", "Programme Manager", "var(--card-1)", "waiting for you"]].map(([co, role, bg, pay]) => (
+        <div key={role} className="pcard rounded-2xl p-3" style={{ backgroundColor: bg }}>
+          <p className="text-[9.5px] font-bold uppercase tracking-wider text-ink/60">{co}</p>
           <p className="mt-1 text-[12px] font-bold leading-tight text-ink">{role}</p>
-          <p className="mt-1.5 font-mono text-[9.5px] text-ink/60">draft ready · waiting for you</p>
+          <p className="mt-1.5 font-mono text-[9.5px] text-ink/60">{pay}</p>
         </div>
       ))}
     </div>
@@ -50,9 +50,9 @@ export const Faq = () => {
     <section id="faq" className="scroll-mt-28 px-3 py-14 sm:px-5 md:py-20" data-testid="faq-section">
       <div className="mx-auto grid max-w-[1100px] items-start gap-8 lg:grid-cols-12 lg:gap-10">
         <Reveal className="lg:col-span-7">
-          <p className="text-[0.84rem] font-bold uppercase tracking-[0.18em] text-[#3B6FE0]">Straight answers</p>
+          <p className="text-[0.84rem] font-bold uppercase tracking-[0.18em] text-accent">FAQ</p>
           <h2 className="font-display mt-3 text-[2rem] leading-[1.08] text-ink sm:text-[2.5rem]">
-            The questions that stop people signing up.
+            Straight answers.
           </h2>
 
           <ul className="mt-8 space-y-3">

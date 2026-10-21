@@ -1,4 +1,5 @@
-from fastapi import FastAPI, APIRouter
+import asyncio
+from fastapi import FastAPI, APIRouter, Query, HTTPException
 from dotenv import load_dotenv
 from starlette.middleware.cors import CORSMiddleware
 from motor.motor_asyncio import AsyncIOMotorClient
@@ -15,6 +16,9 @@ load_dotenv(ROOT_DIR / '.env')
 
 client = AsyncIOMotorClient(os.environ['MONGO_URL'])
 db = client[os.environ['DB_NAME']]
+
+from jobs import JobFeed, fetch_logo, ALLOWED_DOMAINS  # noqa: E402
+from fastapi.responses import Response  # noqa: E402
 
 app = FastAPI()
 api_router = APIRouter(prefix="/api")
@@ -145,7 +149,65 @@ async def create_preview(req: PreviewRequest):
     return PreviewSession.from_mongo(doc)
 
 
+feed = JobFeed(db)
+REGIONS = {"all", "india", "remote", "us", "europe"}
+
+
+async def _refresh_quietly(force=False):
+    try:
+        await feed.refresh(force=force)
+    except Exception as e:  # noqa: BLE001
+        logging.getLogger("jobs").warning("feed refresh failed: %s", e)
+
+
+@api_router.get("/jobs/live")
+async def live_jobs(region: str = Query("all"), limit: int = Query(5, ge=1, le=12)):
+    region = region.lower()
+    if region not in REGIONS:
+        raise HTTPException(400, "region must be one of: all, india, remote, us, europe")
+    refreshed = await feed.refreshed_at()
+    if refreshed is None:
+        await _refresh_quietly()  # first ever load: wait for it
+        refreshed = await feed.refreshed_at()
+    else:
+        asyncio.create_task(_refresh_quietly())  # stale-while-revalidate, hourly
+    jobs = await feed.pick(region, limit)
+    return {
+        "region": region,
+        "jobs": jobs,
+        "refreshed_at": refreshed,
+        "fresh_days": 14,
+        "adzuna": JobFeed.adzuna_on(),
+    }
+
+
+@api_router.get("/jobs/logo/{domain}")
+async def company_logo(domain: str):
+    got = await fetch_logo(db, domain.lower())
+    if not got:
+        raise HTTPException(404, "No logo for that company")
+    return Response(content=got[1], media_type=got[0], headers={"Cache-Control": "public, max-age=86400"})
+
+
+@api_router.get("/jobs/companies")
+async def job_companies():
+    return {"companies": await feed.companies()}
+
+
 app.include_router(api_router)
+
+
+@app.on_event("startup")
+async def warm_feed():
+    asyncio.create_task(_refresh_quietly())
+
+    async def warm_logos():
+        for d in sorted(ALLOWED_DOMAINS):
+            try:
+                await fetch_logo(db, d)
+            except Exception:  # noqa: BLE001
+                pass
+    asyncio.create_task(warm_logos())
 
 app.add_middleware(
     CORSMiddleware,

@@ -26,16 +26,15 @@ export const Hero = ({ onStart, onSample }) => (
       <div className="relative mx-auto max-w-[1000px] text-center">
         <motion.h1 className="font-display text-ink" {...line(0.1)}>
           <span className="block text-[2.3rem] leading-[1.1] sm:text-[3.1rem] lg:text-[3.6rem]">
-            Fresh jobs <FoxChip className="mx-1 -mt-2" w={84} /> drafted for you,
+            Get interviews <FoxChip className="mx-1 -mt-2" w={84} />
           </span>
           <span className="mt-1.5 block text-[2.3rem] leading-[1.1] sm:text-[3.1rem] lg:text-[3.6rem]">
-            sent only when <AvatarCluster className="mx-1 -mt-1" size={44} /> you say yes.
+            not just <AvatarCluster className="mx-1 -mt-1" size={44} /> applications sent.
           </span>
         </motion.h1>
 
         <motion.p {...line(0.25)} className="mx-auto mt-6 max-w-[34rem] text-base leading-relaxed text-slate md:text-lg">
-          ApplyScout checks what went live this morning, writes the first draft from facts you confirmed
-          yourself, and parks it in a queue. Nothing is sent until you press approve.
+          Fewer, better-fit applications, written only from facts you confirmed.
         </motion.p>
 
         <motion.div {...line(0.4)} className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">

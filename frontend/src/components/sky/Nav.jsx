@@ -3,9 +3,9 @@ import { motion } from "framer-motion";
 import { Logo, EASE } from "./Bits";
 
 const LINKS = [
-  ["Find a job", "#jobs"],
+  ["Live jobs", "#jobs"],
   ["How it works", "#how"],
-  ["Honest limits", "#limits"],
+  ["Compare", "#compare"],
   ["FAQ", "#faq"],
 ];
 

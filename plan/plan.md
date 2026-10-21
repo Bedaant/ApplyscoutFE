@@ -1,98 +1,119 @@
-# ApplyScout — Landing Page Rebuild (Monochrome + Orange, Built to Look Hand-Made)
+# ApplyScout Landing Page v2: Interviews, Not Applications
 
-A single landing page that sells ApplyScout: it finds fresh, relevant jobs, drafts tailored application materials from facts the user confirms, and sends nothing until the user approves it.
-The whole page is replaced. The governing requirement is that a stranger reading it cannot tell it was generated — it has to read like a small team built it on purpose.
+ApplyScout's landing page, rebuilt around what job seekers actually want, which is interviews rather than more applications to fill in. The hero you liked stays. Everything below it moves from paragraphs to motion, real companies and a side-by-side comparison with the tools people complain about.
 
 ## Who it's for
-
-- Job seekers applying to many roles who are losing hours a day to rewriting the same resume and cover letter.
-- People who want the search and drafting automated, but refuse to let a bot blind-apply on their behalf.
-- Secondary: career switchers and recent graduates who need help targeting roles, not spamming them.
-
-## The trust problem, and how the page solves it
-
-A page reads as AI-generated because of a specific, recognisable set of tells. Each one is named below and each one is removed deliberately. This is the core of the work, not a finishing pass.
-
-**Tells being removed**
-
-1. Headings that sound like a content template — "Everything You Need to Know", "Powerful Features", "Why Choose Us", "Built For You". Every heading on this page is a sentence a person would say out loud.
-2. Perfectly centred, equally spaced, three-across card grids repeated down the page. Not one section on this page uses a symmetric three-card grid.
-3. Vague benefit copy — "seamless", "effortless", "intelligent", "revolutionise", "unlock". Banned outright from the page.
-4. Generic icon-plus-title-plus-two-lines feature blocks. Replaced with real interface fragments.
-5. Emoji used as icons, and stock-photo smiling professionals.
-6. Round numbers that no one measured — "10,000+ users", "99% accuracy", "save 10 hours a week".
-7. Visible "Lorem"/"placeholder" scaffolding that makes a page look half-finished.
-8. Uniform rhythm — every section the same height, same padding, same reveal animation.
-
-**Craft being added in their place**
-
-1. **Specific, dated, checkable copy.** Instead of "save hours", the page says what the product literally does: the number of fields it fills, the exact approval step, what it refuses to write. Sample jobs carry real-looking detail — posting age, team size, salary band, where it was found — because specificity is what generated copy never has.
-2. **A signed founder note**, set as a short letter with a real signature, stating plainly that this is early, what works today and what does not yet. Pre-launch honesty is a stronger trust signal than borrowed proof, and it is the single hardest thing for a generated page to fake.
-3. **Hand-drawn imperfection.** The connector arrows, the underline under the headline phrase, the checkmarks and the signature are drawn with uneven stroke weight and slight wobble — not geometric SVG strokes.
-4. **Deliberate asymmetry.** The hero text sits left of centre with the product stage breaking its right edge. Section widths vary. Some blocks run full-bleed, some are inset. Two sections intentionally break the grid.
-5. **Interface over illustration.** Every product claim is shown as a working or near-working piece of ApplyScout's actual UI, with dense realistic content — truncated strings, timestamps, scroll shadows, a disabled button, a count badge.
-6. **One opinionated type pairing** — a strong editorial display face set very large and very tight for headlines, a neutral grotesque for body. Mixed sizes within a single headline. Not Inter, not Roboto, not system default.
-7. **Texture.** A faint paper grain across the canvas, hairline rules, long soft shadows, and a 1px orange keyline used sparingly — so the page has a surface instead of reading flat.
-8. **Varied rhythm.** Section heights, reveal styles and background shades change down the page; there is no repeating cadence.
+- Job seekers in India, the US, Europe and remote roles worldwide who have tried mass-apply bots, paid job-portal boosts or resume tools and got few or no callbacks.
+- The ApplyScout team, who need the page to be honest now and easy to update with real quotes and logos later.
 
 ## Core features and experience
 
-Section order:
+**1. Hero (kept as is)**
+- The sky gradient, clouds, floating tiles, fox sticker, avatar cluster, pill buttons and entrance motion all stay exactly as they are now.
+- Only the headline and sub-line wording change. The current line ("Fresh jobs drafted for you, sent only when you say yes") describes a feature, not the user's goal. New direction: *"Get interviews 🦊 not just applications 👥 sent."* The sub-line is cut to one short line about fewer, better-fit applications written from your own facts.
 
-1. **Top bar** — wordmark, three links, a "Log in" that is present but inert this phase, and one orange pill.
-2. **Hero** — left-weighted. Headline set large and tight with one phrase underlined in a hand-drawn orange stroke. Email field with an orange "Get started" button as the primary action; "See a sample run" as a quiet secondary link beside it. One honest line beneath: no card, no auto-apply.
-3. **Product stage** — the centrepiece. A phone showing ApplyScout's match feed, with three floating interface cards around it — a matched job with its real detail, a confirmed-facts panel, and an approval card with a working Approve / Undo — joined to the phone by hand-drawn arrows. Cards settle on load; the approval card actually responds.
-4. **Where jobs come from** — a short honest strip naming how matching works and what it will not do, set as running text with hairline rules, not as cards.
-5. **How it works** — five steps as a continuous numbered sequence, each step carrying a real UI fragment rather than an icon, with the line between them drawn by hand. Vertical on mobile.
-6. **Blind auto-apply vs ApplyScout** — two columns, plain type, no colour tricks, written as sentences rather than ticks and crosses.
-7. **Only what you confirmed** — the truth-only argument shown as a live fact checklist: tick a fact and watch the draft sentence change.
-8. **Approval queue** — an interactive block where the visitor approves, edits or skips sample applications and the queue responds.
-9. **Follow-ups** — replies land in the visitor's own inbox and get tracked. Maggie appears once here, small, as a helper.
-10. **Founder note** — the signed letter described above, replacing the testimonial section entirely.
-11. **FAQ** — the questions that actually block signup, including: is this auto-apply, will it put things on my resume I did not say, what happens to my data, what does it cost, what does not work yet.
-12. **Final CTA + footer** — repeat email capture, Maggie once, compact footer.
+**2. Live job cards with real companies and logos**
+- The fanned card deck shows real, current postings with each company's real logo, role, city or remote tag, and how many days ago it was posted. Each card opens the original posting.
+- **Source A, active from day one:** public career pages of a fixed list of about 25 well-known companies hiring across India, the US, Europe and remote (for example Stripe, Figma, Notion, GitLab, Cloudflare, Razorpay, Postman, Canva). No account needed.
+- **Source B, a broad job search service:** adds wider roles and cities in about 19 countries, including India, the US, the UK and most of Europe. It needs a free app ID and app key from developer.adzuna.com. It stays switched off until those are supplied. When it's on, the cards show the small "Jobs by Adzuna" credit that the service requires.
+- A region switcher (All · India · Remote · US · Europe) re-deals the cards with a shuffle animation.
+- If a source is down, the cards quietly show the last saved postings. They never show invented companies.
+- The working Approve → "Queued, not sent" → Undo action on the centre card stays.
 
-**Functional behaviour this phase**
+**3. Logo strip: "Fresh roles from teams like"**
+- A slow, endless marquee of the real company logos the cards pull from. It pauses on hover. The wording makes clear these are sources of postings, not customers.
 
-- Email capture is real: addresses are validated, stored for the owner to read, duplicates handled gracefully, with a proper success state. No confirmation email is sent.
-- "See a sample run" opens the existing mock flow — resume/sample, scouting, sample matches, editable draft, approval — restyled to the new system and still ending on an explicit "nothing was sent" screen.
-- The hero approval card, the fact checklist and the approval queue are genuinely interactive.
-- "Log in" is presentational.
+**4. Story told in motion instead of text**
+A scroll-driven sequence replaces most of the current paragraphs. Each beat has a short caption of up to 8 words:
+1. A resume drops in and breaks into fact chips, which lock with a ✓.
+2. Job cards stream past and the poor fits get filtered out.
+3. A draft writes itself, and each sentence links back to the fact it came from.
+4. A big "Approve?" button gets pressed by a cursor.
+5. A calendar invite pops up: "Interview · Tue 11:00".
+
+Supporting custom visuals are generated in the same 3D clay style as the fox mascot: the fox sorting cards, the fox with a magnifier over a resume, and a calendar-invite scene.
+
+**5. "Why other tools don't get you interviews" comparison**
+- Competitors are described by type, never named: mass auto-apply bots, AI resume writers, paid job-portal boosts, resume-tailoring tools.
+- Each row is a user complaint shown as an animated card that flips from the problem to ApplyScout's answer:
+
+| What users complain about | How ApplyScout answers it |
+|---|---|
+| Blank or wrong form fields, applications that never submit | You see every field filled in before anything goes out |
+| AI makes up job titles, experience or personal details | Only uses facts you confirmed; every sentence links to its fact |
+| "1,000 applications, 0 callbacks" | Fewer, higher-fit applications aimed at interviews |
+| Support that never answers | A named person replies to early-access users |
+| Shutdowns that lock you out; platform bans on automation | Export your history any time; no logging into LinkedIn for you |
+| Paid "priority" boosts that bring no calls | No paid boosts, no fake "priority applicant" badges |
+| Cover letters that read as robotic | Written from your own words and tone |
+| Recruiters buried in AI spam | Every application is one a recruiter would want to read |
+
+- An animated "volume vs fit" visual sits beside it: a pile of 100 grey envelopes leading to one reply, next to a few chosen cards leading to interviews. It's labelled *illustrative, not measured data*.
+
+**6. Sliding quote carousel (two tracks, with dots)**
+- **"What job seekers say about other tools":** short public complaints, each with the place it was said, such as a review site or forum, and a link where one exists. Where no direct quote can be linked, the card is marked "summary of public reviews". Tools are not named.
+- **"What early users tell us":** sample quotes, each clearly tagged **SAMPLE**, ready to swap for real ones.
+- Auto-slides, pauses on hover, can be swiped on mobile, and has clickable dots.
+
+**7. Colour swap: Sky vs Peach**
+- A small floating toggle switches the whole page between the current sky-blue palette and a new warm peach-and-cream sky. The clouds, gradients, cards and buttons recolour with a smooth cross-fade, so both can be compared on the same page.
+
+**8. Kept from today, trimmed**
+- FAQ accordion with the phone mock, "See a sample run" dialog, final call-to-action with real email capture, and footer. Copy in each is cut to a headline plus at most one line.
 
 ## User flow
-
-1. Visitor lands on a left-weighted headline with the real product UI already visible beside it.
-2. They either drop an email or click "See a sample run".
-3. The sample run walks them through scouting, matches, a draft built only from confirmed facts, and the approval gate — ending on the explicit "nothing was sent" screen.
-4. Back on the page they scroll the proof of control: comparison, fact checklist, approval queue, follow-ups.
-5. The founder note tells them honestly how early this is; the FAQ clears the objections; the final CTA takes the email.
+1. A visitor lands on the unchanged hero, now promising interviews.
+2. They scroll and watch real job cards with real logos deal in. They can switch region, open a real posting, or try Approve and Undo.
+3. They pass the logo marquee.
+4. The motion story plays from resume to interview invite, with almost no reading needed.
+5. The comparison cards flip from each competitor complaint to the fix.
+6. The quote carousel slides by.
+7. In the FAQ they can open the sample run.
+8. They join early access with their email.
+9. At any point, the colour toggle switches between Sky and Peach.
 
 ## UI/UX feel
-
-- **Direction**: Reference 2's structure and restraint — off-white canvas, very large tight near-black headlines, heavy whitespace, real product UI floating in space with thin arrows — with ApplyScout orange as the single accent. Nothing from Reference 1's pastel palette, sky gradient or inline emoji headline carries over.
-- **Colour**: off-white page, near-black type, two greys, one orange. Orange appears only on the primary button, the hand-drawn underline, the arrows and active states.
-- **Motion**: cards settle with staggered delays, arrows draw themselves, reveals differ section to section, every interactive element has a hover state. All text is readable before animation runs, and motion is reduced when the visitor's OS asks for it.
-- **Mascot**: Maggie appears three times only — loader, follow-ups, final CTA. Never in the hero, never decorative.
-- **Responsive**: designed down to 390px. The product stage collapses to the phone plus two stacked cards, the step sequence goes vertical, nothing essential is hidden.
+- The playful Hirablee-inspired style stays the same: rounded panels, pastel cards, pill buttons and the fox mascot.
+- Motion should feel premium and calm:
+  - spring-based card dealing
+  - scroll-linked story beats
+  - flip cards
+  - magnetic buttons
+  - soft parallax on clouds and illustrations
+- Text-light: one idea per screen, captions over paragraphs.
+- Motion respects the "reduce motion" setting, and the page stays smooth on phones.
 
 ## Implementation phases
+**Phase 1, MVP (built now, landing page only)**
+- Hero headline and sub-line rewrite only
+- Live job cards from company career pages, with real logos and the region switcher
+- The broad search service wired in but switched off until its key is supplied
+- "Fresh roles from teams like" logo marquee
+- Scroll motion story with generated clay-style illustrations
+- Competitor-type comparison with flip cards and the illustrative volume-vs-fit visual
+- Two-track quote carousel with dots
+- Sky/Peach palette toggle
+- Copy trimmed across all remaining sections
 
-**Phase 1 — built now**
-The complete page as described: new visual system, left-weighted hero, interactive product stage, fact checklist, approval queue, founder note, FAQ, final CTA, restyled sample run, working email capture, hand-drawn artwork, favicon and wordmark, full mobile layout.
+**Phase 2**
+- Switch on the broad search service once the Adzuna ID and key are provided
+- Swap SAMPLE quotes for real early-user quotes
+- Keep one palette and remove the toggle
+- Move to a "trusted by" wording only if real customer companies exist
 
-**Phase 2 — later**
-Real resume upload and fact extraction, so the sample run becomes the visitor's own run. Live job sourcing behind the match feed. Real customer quotes and partner logos added once they exist. A first "here are your matches" email to the waitlist.
-
-**Phase 3 — later**
-Sign-in, the product app behind the landing page, paid plans and pricing, and measured statistics replacing the honest-claims strip.
+**Phase 3**
+- Region-specific versions of the page (India, US, Europe) with local roles and wording
+- Measured results, such as the real interview rate of early users, replacing the illustrative visuals
 
 ## Assumptions
-
-- **Changed from the previous plan:** the placeholder logo row and placeholder testimonial cards are dropped. Visible placeholders are one of the loudest signals that a page was assembled rather than built, and borrowed proof from unknown names does not earn trust anyway. The signed founder note takes their place, and real logos and quotes go in during Phase 2.
-- The existing orange and navy brand colours and the fox wordmark are kept; layout, type and composition change completely.
-- The founder note is written as placeholder prose with a generic signature, ready for the real text and name to be dropped in.
-- Captured emails are stored for the owner to read; no automated email goes out this phase and no email service is set up.
-- No pricing appears anywhere; the FAQ answers the cost question honestly as "not set yet".
-- Sample companies stay fictitious and are presented as samples.
-- Single scroll, no routed sub-pages. English only.
-- The earlier peach and dark versions are abandoned; their files stay in the repository untouched but unused.
+- "Don't change the hero" means the look, layout and motion stay identical. Only the headline and sub-line words change, to fix the "interviews, not applications" problem you raised.
+- The landing page is the whole scope. There's no sign-in, no product app and no real applying.
+- The company list for career-page postings is chosen for well-known brands with roles in India, the US, Europe and remote. It can be edited later.
+- Logos come from each company's own website. If one can't load, a lettered badge replaces it.
+- Job postings refresh about every hour. Only postings from the last 14 days are shown, which matches the existing freshness rule.
+- The broad search service is built but hidden until the key is supplied. The page works fully without it.
+- Competitors are never named, and public complaints are shown without tool names. The figures you shared ("5,000 applications, 5 interviews", "1 interview per 50 applications") appear only as attributed, illustrative examples.
+- The ApplyScout answers in the comparison, such as a named person replying, history export and no LinkedIn logins, are stated as commitments.
+- The "volume vs fit" visual is marked illustrative. No invented user counts or success rates appear anywhere.
+- Email capture stays as it is: addresses are stored, and no emails are sent.
+- Illustrations are newly generated to match the existing fox mascot style.
