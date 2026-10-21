@@ -150,3 +150,10 @@ Tests: iteration_4 — backend 100%, frontend 100%.
   all clay art + avatars served locally compressed (~3MB saved).
 - Logo: animated vector FoxMark (Bits.jsx) — blink on load, repeat blink ~5.5s, ear twitch + bounce on hover/tap.
 Tests: iteration_5 — frontend 100%.
+
+## v2.5 — 21 Oct 2026
+- Celebrating fox (Celebrate.jsx): new footer signups get a cheering clay fox + one-off confetti + "You're in! 🎉".
+- Comparison card backs: each fixed drawing loops (CSS: float/sway/write + overlays: checks, hearts, typing dots,
+  download arrow, sparkles, star) only while flipped; paused off-screen; off with reduced motion.
+- sky / sky-soft base gradients switched to peach (removed leftover blue band).
+Tests: iteration_6.

@@ -22,7 +22,9 @@ const Dot = ({ cls, style, children }) => (
 const LoopFx = ({ kind }) => {
   switch (kind) {
     case "pop":
-      return <Dot cls="loop-pop right-[10%] top-[8%] h-6 w-6 bg-[#2C8F6B] text-white"><Check size={13} strokeWidth={3} /></Dot>;
+      return [0, 1].map((k) => (
+        <span key={k} className="loop-twinkle absolute text-[#FFB020]" style={{ left: k ? "auto" : "10%", right: k ? "12%" : "auto", top: k ? "62%" : "12%", animationDelay: `${k * 0.7}s` }}><Sparkles size={14} /></span>
+      ));
     case "checks":
       return [0, 1, 2].map((k) => (
         <Dot key={k} cls="loop-pop right-[8%] h-4 w-4 bg-[#2C8F6B] text-white" style={{ top: `${18 + k * 24}%`, animationDelay: `${k * 0.35}s` }}><Check size={9} strokeWidth={3.5} /></Dot>

@@ -7,7 +7,7 @@ import { EmailForm } from "./EmailForm";
 export const FinalCta = ({ onSample }) => (
   <section className="px-3 pb-6 pt-10 sm:px-5" data-testid="final-cta">
     <div className="sky-soft relative overflow-hidden rounded-[2rem] px-5 py-16 sm:rounded-[2.5rem] sm:px-8 md:py-20">
-      <Clouds />
+      <div className="hidden sm:block"><Clouds /></div>
       <ParallaxArt src={FOX_CALENDAR} className="bottom-[-30px] right-[2%] hidden w-[190px] lg:block" />
       <Sparkles size={16} className="sparkle absolute left-[18%] top-[22%] hidden text-white md:block" />
       <Sparkles size={13} className="sparkle absolute right-[20%] top-[30%] hidden text-white md:block" />
