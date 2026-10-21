@@ -366,6 +366,16 @@ class JobFeed:
                 break
         return picked
 
+    async def stats(self, days: int = 7):
+        """Real counts for the proof strip: postings and distinct companies seen in the last `days`."""
+        cutoff = (datetime.now(timezone.utc) - timedelta(days=days)).isoformat()
+        q = {"posted_at": {"$gte": cutoff}}
+        if not self.adzuna_on():
+            q["source"] = {"$ne": "adzuna"}
+        roles = await self.col.count_documents(q)
+        companies = len(await self.col.distinct("company", q))
+        return {"roles": roles, "companies": companies, "days": days}
+
     async def companies(self):
         counts = {r["_id"]: r["n"] for r in await self.col.aggregate(
             [{"$match": {"source": {"$in": BOARDS}}}, {"$group": {"_id": "$company", "n": {"$sum": 1}}}]

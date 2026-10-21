@@ -10,16 +10,17 @@ import { JobCards } from "@/components/sky/JobCards";
 import { LogoMarquee } from "@/components/sky/LogoMarquee";
 import { MotionStory } from "@/components/sky/MotionStory";
 import { Compare } from "@/components/sky/Compare";
-import { Quotes } from "@/components/sky/Quotes";
+import { NeverDo } from "@/components/sky/NeverDo";
+import { StickyCta } from "@/components/sky/StickyCta";
+import { Funnel } from "@/components/sky/Funnel";
+import { track, trackOnce } from "@/components/sky/track";
 import { Faq } from "@/components/sky/Faq";
 import { FinalCta, Footer } from "@/components/sky/FinalCta";
-import { PreviewDialog } from "@/components/sky/PreviewDialog";
 import { FindFlow } from "@/components/sky/FindFlow";
 import { InviteBanner, getRef } from "@/components/sky/Invite";
 
 function Landing({ onFind }) {
   const [loading, setLoading] = useState(true);
-  const [open, setOpen] = useState(false);
   const lenisRef = useRef(null);
 
   useEffect(() => {
@@ -55,13 +56,8 @@ function Landing({ onFind }) {
     return () => { clearTimeout(id); io.disconnect(); };
   }, [loading]);
 
-  useEffect(() => {
-    const lenis = lenisRef.current;
-    if (!lenis) return;
-    if (open) lenis.stop(); else lenis.start();
-  }, [open]);
+  useEffect(() => { trackOnce("landing_view"); }, []);
 
-  const onSample = () => setOpen(true);
   const onStart = () => {
     if (lenisRef.current) lenisRef.current.scrollTo("#start", { offset: -140 });
     else document.getElementById("start")?.scrollIntoView({ behavior: "smooth", block: "center" });
@@ -72,20 +68,20 @@ function Landing({ onFind }) {
     <MotionConfig reducedMotion="user">
       <div className="min-h-screen bg-page text-ink" data-testid="landing-page">
         <AnimatePresence>{loading && <Loader key="loader" />}</AnimatePresence>
-        <Nav onStart={onStart} />
+        <Nav onFind={onFind} />
         <InviteBanner onJoin={onStart} />
         <main>
-          <Hero onStart={onFind} onSample={onSample} />
-          <JobCards />
+          <Hero onFind={onFind} />
+          <JobCards onFind={onFind} />
           <LogoMarquee />
           <MotionStory />
           <Compare />
-          <Quotes />
+          <NeverDo />
           <Faq />
-          <FinalCta onSample={onSample} />
+          <FinalCta onFind={onFind} />
         </main>
         <Footer />
-        <PreviewDialog open={open} onOpenChange={setOpen} />
+        <StickyCta onFind={onFind} />
       </div>
     </MotionConfig>
   );
@@ -93,8 +89,18 @@ function Landing({ onFind }) {
 
 function App() {
   const [path, setPath] = useState(window.location.pathname);
+  const [seed, setSeed] = useState(null);
   useEffect(() => {
-    const on = () => setPath(window.location.pathname);
+    const on = () => {
+      const next = window.location.pathname;
+      // leave protection: browser Back mid-flow asks first
+      if (!next.startsWith("/find") && typeof window.__flowGuard === "function") {
+        window.history.pushState({}, "", "/find");
+        window.__flowGuard();
+        return;
+      }
+      setPath(next);
+    };
     window.addEventListener("popstate", on);
     return () => window.removeEventListener("popstate", on);
   }, []);
@@ -104,10 +110,17 @@ function App() {
   const exitFlow = () => {
     if (fromLanding.current) { fromLanding.current = false; window.history.back(); } else go("/");
   };
+  if (path.startsWith("/funnel")) return <Funnel />;
   if (path.startsWith("/find")) {
-    return <MotionConfig reducedMotion="user"><FindFlow onExit={exitFlow} /></MotionConfig>;
+    return <MotionConfig reducedMotion="user"><FindFlow seed={seed} onExit={() => { setSeed(null); exitFlow(); }} /></MotionConfig>;
   }
-  return <Landing onFind={() => { fromLanding.current = true; go("/find"); }} />;
+  const onFind = (opts = {}) => {
+    track("cta_click", { src: opts.src || "unknown" });
+    setSeed(opts);
+    fromLanding.current = true;
+    go("/find");
+  };
+  return <Landing onFind={onFind} />;
 }
 
 export default App;

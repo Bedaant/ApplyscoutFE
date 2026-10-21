@@ -235,6 +235,15 @@ async def company_logo(domain: str):
     return Response(content=got[1], media_type=got[0], headers={"Cache-Control": "public, max-age=86400"})
 
 
+@api_router.get("/jobs/stats")
+async def job_stats():
+    if await feed.refreshed_at() is None:
+        await _refresh_quietly()
+    out = await feed.stats(7)
+    out["refreshed_at"] = await feed.refreshed_at()
+    return out
+
+
 @api_router.get("/jobs/companies")
 async def job_companies():
     return {"companies": await feed.companies()}
@@ -242,6 +251,8 @@ async def job_companies():
 
 from flow import build_router as build_flow_router  # noqa: E402
 api_router.include_router(build_flow_router(feed))
+from funnel import build_router as build_funnel_router  # noqa: E402
+api_router.include_router(build_funnel_router(db))
 app.include_router(api_router)
 
 
