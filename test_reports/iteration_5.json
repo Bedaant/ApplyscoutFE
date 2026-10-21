@@ -1,0 +1,23 @@
+{
+  "summary": "Frontend-only test of ApplyScout v2.4. Mobile was tested in a real touch context (390x844, has_touch, is_mobile), plus desktop 1920 for story captions and a regression pass. All requested items passed and there were 0 console errors. Mobile: html.native-scroll is set, window.__lenis is undefined, native scroll works, and scrollWidth is 390. Tapping compare cards 0/3/7 flips them (aria-pressed=true, fix art opacity 1 and loaded), and a second tap unflips them. Hero 'Get early access' scrolls to #start and focuses footer-email. Footer links how/compare/faq/jobs/start all land on the right section. All 6 mobile story beats render their scene when scrolled into view. Beat 05 shows Recruiter/Hiring manager/Team engineer tiles with avatar-2/3/4.webp loaded, the hiring manager check, Email/Chat chips and 'Sent after you said yes'. Tapping the nav fox-mark gives a mid-animation transform (scale 1.12, rotate) that settles to none, with no errors. No visible broken images. Desktop: story-caption-0..5 clicks each show story-scene-i with the caption active. Regression passed: search 'designer' (10 designer roles), Sales chip, clear, region switch (india pressed, Indian companies), approve/undo, FAQ open/close, sample dialog open/Escape close, footer signup success state. No visible broken images on desktop.",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {
+    "ui_bugs": [
+      {"component": "FinalCta #start anchor", "issue": "Footer 'Early access' link on mobile scrolls #start to top=0, under the fixed nav (other sections get scroll-mt-28 and land at 112px). The heading is partly hidden behind the nav. Add scroll-mt-28 to #start.", "selector": "[data-testid='footer-link-early-access']", "priority": "LOW"}
+    ],
+    "integration_issues": [],
+    "design_issues": []
+  },
+  "test_report_links": [],
+  "action_items": ["Optional: add scroll-mt-28 (or similar) to the #start element in FinalCta.jsx so anchor jumps are not covered by the fixed nav on mobile"],
+  "critical_code_review_comments": [
+    "Compare flip back still uses /logo-mark.png raster while the rest of the brand uses the animated FoxMark SVG (cosmetic consistency only).",
+    "MobileBeat mounts scene only when in view (once) - good for perf; desktop Stage also renders story-scene-0 in hidden md:block container on mobile (useLiveJobs/timers run while hidden) - minor perf cost."
+  ],
+  "updated_files": [],
+  "success_rate": {"backend": "N/A (skipped)", "frontend": "100%"},
+  "seed_data_creation": "One signup created: TEST_iter5_mobilecheck@example.com (source footer)",
+  "retest_needed": false,
+  "should_main_agent_self_test": false,
+  "context_for_next_testing_agent": "Mobile touch testing works by creating a new context via page.context.browser.new_context(viewport 390x844, has_touch=True, is_mobile=True) and using locator.tap(). On mobile, use window.scrollTo({behavior:'instant'}). On desktop, use window.__lenis.scrollTo(y,{immediate:true}). Region btn testids: region-all/india/remote/us/europe-btn."
+}

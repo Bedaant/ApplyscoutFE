@@ -142,3 +142,11 @@ Tests: iteration_4 — backend 100%, frontend 100%.
 - New logo: generated fox-in-speech-bubble app icon → /public/logo-mark.png (+ favicon.png, apple-touch-icon.png); Logo in Bits.jsx uses it.
 - Compare flip cards: flat 2D illustration on each front (/public/art/ill-*.webp); backs now peach brand gradient (`.brand-back`) instead of black.
 - Comparison table ApplyScout column: brand gradient header + soft peach cells (no black).
+
+## v2.4 — 21 Oct 2026
+- Compare flip backs show a "fixed" 2D drawing (/art/fix-*.webp) that pops in on flip.
+- Performance: Lenis only on desktop (touch/narrow/reduced-motion → native scroll, html.native-scroll); CSS animations
+  paused in off-screen sections (.offscreen via IntersectionObserver); lighter mobile shadows, no blur/drift on phones;
+  all clay art + avatars served locally compressed (~3MB saved).
+- Logo: animated vector FoxMark (Bits.jsx) — blink on load, repeat blink ~5.5s, ear twitch + bounce on hover/tap.
+Tests: iteration_5 — frontend 100%.

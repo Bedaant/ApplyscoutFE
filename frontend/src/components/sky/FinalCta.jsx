@@ -12,7 +12,7 @@ export const FinalCta = ({ onSample }) => (
       <Sparkles size={16} className="sparkle absolute left-[18%] top-[22%] hidden text-white md:block" />
       <Sparkles size={13} className="sparkle absolute right-[20%] top-[30%] hidden text-white md:block" />
 
-      <div className="relative mx-auto max-w-[44rem] text-center" id="start">
+      <div className="relative mx-auto max-w-[44rem] scroll-mt-28 text-center" id="start">
         <Reveal>
           <h2 className="font-display text-[2rem] leading-[1.08] text-ink sm:text-[2.8rem]">
             Less applying. <FoxChip w={66} className="mx-1 -mt-1" /> More interviews.
