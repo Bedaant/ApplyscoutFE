@@ -25,15 +25,33 @@ function App() {
     return () => clearTimeout(t);
   }, []);
 
+  // Smooth-scroll only on desktop with a mouse; phones keep native scrolling.
   useEffect(() => {
-    const lenis = new Lenis({ lerp: 0.09, anchors: { offset: -90 } });
+    const touch = window.matchMedia("(pointer: coarse)").matches || window.innerWidth < 768;
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (touch || reduce) {
+      document.documentElement.classList.add("native-scroll");
+      return undefined;
+    }
+    const lenis = new Lenis({ lerp: 0.1, anchors: { offset: -90 } });
     lenisRef.current = lenis;
     window.__lenis = lenis;
     let id;
     const raf = (time) => { lenis.raf(time); id = requestAnimationFrame(raf); };
     id = requestAnimationFrame(raf);
-    return () => { cancelAnimationFrame(id); lenis.destroy(); };
+    return () => { cancelAnimationFrame(id); lenis.destroy(); window.__lenis = undefined; };
   }, []);
+
+  // Pause every CSS animation inside a section while it is off-screen.
+  useEffect(() => {
+    if (loading) return undefined;
+    const io = new IntersectionObserver(
+      (entries) => entries.forEach((e) => e.target.classList.toggle("offscreen", !e.isIntersecting)),
+      { rootMargin: "120px 0px" }
+    );
+    const id = setTimeout(() => document.querySelectorAll("main section, footer, [data-pause-offscreen]").forEach((el) => io.observe(el)), 50);
+    return () => { clearTimeout(id); io.disconnect(); };
+  }, [loading]);
 
   useEffect(() => {
     const lenis = lenisRef.current;
@@ -43,7 +61,8 @@ function App() {
 
   const onSample = () => setOpen(true);
   const onStart = () => {
-    lenisRef.current?.scrollTo("#start", { offset: -140 });
+    if (lenisRef.current) lenisRef.current.scrollTo("#start", { offset: -140 });
+    else document.getElementById("start")?.scrollIntoView({ behavior: "smooth", block: "center" });
     setTimeout(() => document.getElementById("footer-email")?.focus(), 900);
   };
 

@@ -1,5 +1,5 @@
-import { useId } from "react";
-import { motion } from "framer-motion";
+import { useCallback } from "react";
+import { motion, useAnimationControls } from "framer-motion";
 import { AVATARS, FOX } from "./assets";
 
 export const EASE = [0.22, 1, 0.36, 1];
@@ -16,38 +16,58 @@ export const Reveal = ({ children, delay = 0, y = 26, className = "" }) => (
   </motion.div>
 );
 
-// Fox inside a speech bubble: we find the job, then reach the right person.
-export const BrandMark = ({ size = 40 }) => {
-  const id = `bm${useId().replace(/[^a-zA-Z0-9]/g, "")}`;
+// Animated fox-in-a-speech-bubble mark (vector copy of /public/logo-mark.png).
+// Blinks once on load, then gently every few seconds; ears twitch + bubble bounces on hover or tap.
+const EAR = { transformBox: "fill-box" };
+export const FoxMark = ({ size = 40 }) => {
+  const body = useAnimationControls();
+  const left = useAnimationControls();
+  const right = useAnimationControls();
+  const poke = useCallback(() => {
+    body.start({ scale: [1, 1.12, 0.96, 1], rotate: [0, -4, 2, 0], transition: { duration: 0.55, ease: "easeOut" } });
+    left.start({ rotate: [0, -16, 7, 0], transition: { duration: 0.5 } });
+    right.start({ rotate: [0, 16, -7, 0], transition: { duration: 0.5, delay: 0.05 } });
+  }, [body, left, right]);
   return (
-  <svg width={size} height={size} viewBox="0 0 100 100" aria-hidden="true" className="drop-shadow-[0_8px_12px_rgba(224,102,61,0.45)]">
-    <defs>
-      <linearGradient id={`${id}-g`} x1="0" y1="0" x2="1" y2="1">
-        <stop offset="0" stopColor="#FFA57E" />
-        <stop offset="1" stopColor="#E0623A" />
-      </linearGradient>
-    </defs>
-    <path
-      d="M32 6 H68 A26 26 0 0 1 94 32 V52 A26 26 0 0 1 68 78 H46 L22 95 Q26 86 26.5 76 A26 26 0 0 1 6 52 V32 A26 26 0 0 1 32 6 Z"
-      fill={`url(#${id}-g)`}
-    />
-    <path d="M26 19 L43 32 L23 41 Z" fill="#fff" />
-    <path d="M74 19 L77 41 L57 32 Z" fill="#fff" />
-    <path d="M29 25 L38 32 L27 36 Z" fill="#FFC9B3" />
-    <path d="M71 25 L73 36 L62 32 Z" fill="#FFC9B3" />
-    <path d="M22 37 Q50 26 78 37 Q74 56 50 69 Q26 56 22 37 Z" fill="#fff" />
-    <circle cx="39.5" cy="45" r="3.6" fill="#16213A" />
-    <circle cx="60.5" cy="45" r="3.6" fill="#16213A" />
-    <circle cx="40.6" cy="43.8" r="1.1" fill="#fff" />
-    <circle cx="61.6" cy="43.8" r="1.1" fill="#fff" />
-    <path d="M45.5 54 Q50 51.5 54.5 54 Q52.5 58.5 50 58.5 Q47.5 58.5 45.5 54 Z" fill="#16213A" />
-  </svg>
+    <motion.svg
+      width={size}
+      height={size}
+      viewBox="0 0 192 192"
+      aria-hidden="true"
+      onMouseEnter={poke}
+      onTouchStart={poke}
+      animate={body}
+      className="shrink-0 overflow-visible"
+      data-testid="fox-mark"
+    >
+      <path d="M50 8 H142 A40 40 0 0 1 182 48 V120 A40 40 0 0 1 142 160 H76 L40 186 Q44 172 44 159 A40 40 0 0 1 10 120 V48 A40 40 0 0 1 50 8 Z" fill="#FF6E4F" />
+      <motion.g style={{ ...EAR, originX: 0.7, originY: 1 }} animate={left}>
+        <path d="M40 92 L52 22 L94 60 Z" fill="#FFA872" />
+        <path d="M51 78 L57 38 L82 60 Z" fill="#FDF9E5" />
+      </motion.g>
+      <motion.g style={{ ...EAR, originX: 0.3, originY: 1 }} animate={right}>
+        <path d="M152 92 L140 22 L98 60 Z" fill="#FFA872" />
+        <path d="M141 78 L135 38 L110 60 Z" fill="#FDF9E5" />
+      </motion.g>
+      <path d="M38 70 Q96 46 154 70 L160 98 Q140 136 96 154 Q52 136 32 98 Z" fill="#FFA872" />
+      <path d="M32 98 Q58 84 82 98 L96 108 L110 98 Q134 84 160 98 Q140 136 96 154 Q52 136 32 98 Z" fill="#FDF9E5" />
+      <path d="M82 98 Q96 92 110 98 L101 124 L91 124 Z" fill="#FFA872" />
+      <g className="fox-blink">
+        <g className="fox-blink-once">
+          <ellipse cx="68" cy="104" rx="8" ry="9" fill="#3F4044" />
+          <ellipse cx="124" cy="104" rx="8" ry="9" fill="#3F4044" />
+          <circle cx="70.5" cy="100.5" r="2.4" fill="#fff" />
+          <circle cx="126.5" cy="100.5" r="2.4" fill="#fff" />
+        </g>
+      </g>
+      <path d="M85 123 Q96 118 107 123 Q101 135 96 135 Q91 135 85 123 Z" fill="#3F4044" />
+    </motion.svg>
   );
 };
 
 export const Logo = ({ size = 40 }) => (
   <span className="flex items-center gap-2" data-testid="brand-logo">
-    <img src="/logo-mark.png" alt="" width={size} height={size} className="shrink-0 drop-shadow-[0_6px_10px_rgba(224,102,61,0.35)]" style={{ width: size, height: size }} />
+    <FoxMark size={size} />
     <span className="font-display text-[1.25rem] tracking-[-0.035em] text-ink">
       Apply<span className="text-accent">Scout</span>
     </span>

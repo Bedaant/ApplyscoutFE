@@ -1,119 +1,83 @@
-# ApplyScout Landing Page v2: Interviews, Not Applications
+# ApplyScout Landing Page v2.4: Livelier Cards, Smoother Page, Animated Fox
 
-ApplyScout's landing page, rebuilt around what job seekers actually want, which is interviews rather than more applications to fill in. The hero you liked stays. Everything below it moves from paragraphs to motion, real companies and a side-by-side comparison with the tools people complain about.
+Three improvements to the existing peach landing page:
+- The answer side of each comparison card gets its own picture.
+- The whole page runs smoothly, especially on phones.
+- The fox in the logo comes alive.
 
 ## Who it's for
-- Job seekers in India, the US, Europe and remote roles worldwide who have tried mass-apply bots, paid job-portal boosts or resume tools and got few or no callbacks.
-- The ApplyScout team, who need the page to be honest now and easy to update with real quotes and logos later.
+- Job seekers visiting the ApplyScout landing page, many of them on phones.
+- The ApplyScout team, who want the page to feel premium, never laggy.
 
 ## Core features and experience
 
-**1. Hero (kept as is)**
-- The sky gradient, clouds, floating tiles, fox sticker, avatar cluster, pill buttons and entrance motion all stay exactly as they are now.
-- Only the headline and sub-line wording change. The current line ("Fresh jobs drafted for you, sent only when you say yes") describes a feature, not the user's goal. New direction: *"Get interviews 🦊 not just applications 👥 sent."* The sub-line is cut to one short line about fewer, better-fit applications written from your own facts.
+**1. Comparison cards: a picture on the answer side**
+- Each of the 8 cards keeps its current front: a drawing of the problem plus the complaint.
+- When the card flips to the orange answer side, it shows a **fixed version of the same drawing**:
 
-**2. Live job cards with real companies and logos**
-- The fanned card deck shows real, current postings with each company's real logo, role, city or remote tag, and how many days ago it was posted. Each card opens the original posting.
-- **Source A, active from day one:** public career pages of a fixed list of about 25 well-known companies hiring across India, the US, Europe and remote (for example Stripe, Figma, Notion, GitLab, Cloudflare, Razorpay, Postman, Canva). No account needed.
-- **Source B, a broad job search service:** adds wider roles and cities in about 19 countries, including India, the US, the UK and most of Europe. It needs a free app ID and app key from developer.adzuna.com. It stays switched off until those are supplied. When it's on, the cards show the small "Jobs by Adzuna" credit that the service requires.
-- A region switcher (All · India · Remote · US · Europe) re-deals the cards with a shuffle animation.
-- If a source is down, the cards quietly show the last saved postings. They never show invented companies.
-- The working Approve → "Queued, not sent" → Undo action on the centre card stays.
-
-**3. Logo strip: "Fresh roles from teams like"**
-- A slow, endless marquee of the real company logos the cards pull from. It pauses on hover. The wording makes clear these are sources of postings, not customers.
-
-**4. Story told in motion instead of text**
-A scroll-driven sequence replaces most of the current paragraphs. Each beat has a short caption of up to 8 words:
-1. A resume drops in and breaks into fact chips, which lock with a ✓.
-2. Job cards stream past and the poor fits get filtered out.
-3. A draft writes itself, and each sentence links back to the fact it came from.
-4. A big "Approve?" button gets pressed by a cursor.
-5. A calendar invite pops up: "Interview · Tue 11:00".
-
-Supporting custom visuals are generated in the same 3D clay style as the fox mascot: the fox sorting cards, the fox with a magnifier over a resume, and a calendar-invite scene.
-
-**5. "Why other tools don't get you interviews" comparison**
-- Competitors are described by type, never named: mass auto-apply bots, AI resume writers, paid job-portal boosts, resume-tailoring tools.
-- Each row is a user complaint shown as an animated card that flips from the problem to ApplyScout's answer:
-
-| What users complain about | How ApplyScout answers it |
+| Front (problem) | Back (fixed) |
 |---|---|
-| Blank or wrong form fields, applications that never submit | You see every field filled in before anything goes out |
-| AI makes up job titles, experience or personal details | Only uses facts you confirmed; every sentence links to its fact |
-| "1,000 applications, 0 callbacks" | Fewer, higher-fit applications aimed at interviews |
-| Support that never answers | A named person replies to early-access users |
-| Shutdowns that lock you out; platform bans on automation | Export your history any time; no logging into LinkedIn for you |
-| Paid "priority" boosts that bring no calls | No paid boosts, no fake "priority applicant" badges |
-| Cover letters that read as robotic | Written from your own words and tone |
-| Recruiters buried in AI spam | Every application is one a recruiter would want to read |
+| Broken form with blank fields | Neat, filled form with a green tick |
+| Resume with a question mark and mask | Resume with check-marked fact chips |
+| Pile of envelopes, empty mailbox | A few envelopes and a mailbox with a reply flag up |
+| Chat bubble with hourglass | Chat bubble with a reply and a smiling face |
+| Laptop with a padlock | Laptop with an export or download arrow, padlock open |
+| Crown with a price tag | Plain badge, price tag crossed out |
+| Robot at a typewriter | A person writing with a pen, warm and human |
+| Desk buried in papers | A tidy desk with one standout application |
 
-- An animated "volume vs fit" visual sits beside it: a pile of 100 grey envelopes leading to one reply, next to a few chosen cards leading to interviews. It's labelled *illustrative, not measured data*.
+- The new drawings use the same flat 2D peach, coral, cream and navy style.
+- The picture pops in with a small bounce as the card flips, so the flip feels like a reveal.
+- The answer text gets slightly less space, and the picture sits above it.
 
-**6. Sliding quote carousel (two tracks, with dots)**
-- **"What job seekers say about other tools":** short public complaints, each with the place it was said, such as a review site or forum, and a link where one exists. Where no direct quote can be linked, the card is marked "summary of public reviews". Tools are not named.
-- **"What early users tell us":** sample quotes, each clearly tagged **SAMPLE**, ready to swap for real ones.
-- Auto-slides, pauses on hover, can be swiped on mobile, and has clickable dots.
+**2. Smooth everywhere, especially on phones**
+- Scrolling should feel native and never stutter, on desktop and on mid-range phones.
+- **On phones, heavier effects are simplified, and on desktop they stay the same.** On phones:
+  - The phone's own normal scrolling replaces the custom smooth-scroll effect.
+  - The "How it works" story stays as stacked steps. Each one plays once when it scrolls into view, and they never all run at the same time.
+  - Blur, large soft shadows and parallax are softened or removed.
+  - The logo strip, floating hero tiles and clouds use lighter motion.
+- Animations pause when they are off-screen, including the logo marquee, floating tiles, carousel and pulsing buttons.
+- Images are compressed and sized for phones, and pictures below the fold load only when needed.
+- The "reduce motion" phone setting is still respected: it gives a calm, still version of the page.
 
-**7. Colour swap: Sky vs Peach**
-- A small floating toggle switches the whole page between the current sky-blue palette and a new warm peach-and-cream sky. The clouds, gradients, cards and buttons recolour with a smooth cross-fade, so both can be compared on the same page.
-
-**8. Kept from today, trimmed**
-- FAQ accordion with the phone mock, "See a sample run" dialog, final call-to-action with real email capture, and footer. Copy in each is cut to a headline plus at most one line.
+**3. Animated logo fox**
+- The logo is redrawn as a layered vector that closely matches the current fox-in-a-speech-bubble icon. This lets parts of it move.
+- **On page load,** the fox blinks once.
+- **While the page is open,** a gentle blink repeats every few seconds.
+- **On hover** (or a tap on phones), the ears twitch and the bubble gives a tiny bounce.
+- The same animated logo is used in the top bar and footer. The browser-tab icon stays still.
 
 ## User flow
-1. A visitor lands on the unchanged hero, now promising interviews.
-2. They scroll and watch real job cards with real logos deal in. They can switch region, open a real posting, or try Approve and Undo.
-3. They pass the logo marquee.
-4. The motion story plays from resume to interview invite, with almost no reading needed.
-5. The comparison cards flip from each competitor complaint to the fix.
-6. The quote carousel slides by.
-7. In the FAQ they can open the sample run.
-8. They join early access with their email.
-9. At any point, the colour toggle switches between Sky and Peach.
+1. A visitor opens the page and the fox in the logo blinks.
+2. They scroll smoothly through the hero, the live job cards and the rest of the page, with no stutter on phone or desktop.
+3. On the comparison cards, hovering on desktop or tapping on mobile flips each card from the problem drawing to its fixed drawing and ApplyScout's answer.
+4. Hovering or tapping the logo makes the fox twitch its ears.
 
 ## UI/UX feel
-- The playful Hirablee-inspired style stays the same: rounded panels, pastel cards, pill buttons and the fox mascot.
-- Motion should feel premium and calm:
-  - spring-based card dealing
-  - scroll-linked story beats
-  - flip cards
-  - magnetic buttons
-  - soft parallax on clouds and illustrations
-- Text-light: one idea per screen, captions over paragraphs.
-- Motion respects the "reduce motion" setting, and the page stays smooth on phones.
+- The look stays the same: warm peach, rounded cards, flat 2D drawings and the clay fox mascot.
+- Motion is calm and premium: small springs, short pop-ins, no long or jumpy effects.
+- Phones feel light and fast, and desktop keeps the richer motion.
 
 ## Implementation phases
-**Phase 1, MVP (built now, landing page only)**
-- Hero headline and sub-line rewrite only
-- Live job cards from company career pages, with real logos and the region switcher
-- The broad search service wired in but switched off until its key is supplied
-- "Fresh roles from teams like" logo marquee
-- Scroll motion story with generated clay-style illustrations
-- Competitor-type comparison with flip cards and the illustrative volume-vs-fit visual
-- Two-track quote carousel with dots
-- Sky/Peach palette toggle
-- Copy trimmed across all remaining sections
+**Phase 1, MVP (built now)**
+- 8 new "fixed" drawings on the answer side of the comparison cards, with a pop-in on flip
+- A performance pass across the whole page, with lighter motion on phones and off-screen animations paused
+- Animated logo: blink on load, a repeating gentle blink, ear twitch on hover or tap
 
 **Phase 2**
-- Switch on the broad search service once the Adzuna ID and key are provided
-- Swap SAMPLE quotes for real early-user quotes
-- Keep one palette and remove the toggle
-- Move to a "trusted by" wording only if real customer companies exist
+- The fox mascot appears in more places with small reactions, such as celebrating when someone joins early access
+- A per-device motion check with real phones, plus fine-tuning
 
 **Phase 3**
-- Region-specific versions of the page (India, US, Europe) with local roles and wording
-- Measured results, such as the real interview rate of early users, replacing the illustrative visuals
+- Animated drawings, where the fixed scene plays as a short loop instead of a still picture
+- A full animated brand kit, such as a loading screen fox and favicon variants
 
 ## Assumptions
-- "Don't change the hero" means the look, layout and motion stay identical. Only the headline and sub-line words change, to fix the "interviews, not applications" problem you raised.
-- The landing page is the whole scope. There's no sign-in, no product app and no real applying.
-- The company list for career-page postings is chosen for well-known brands with roles in India, the US, Europe and remote. It can be edited later.
-- Logos come from each company's own website. If one can't load, a lettered badge replaces it.
-- Job postings refresh about every hour. Only postings from the last 14 days are shown, which matches the existing freshness rule.
-- The broad search service is built but hidden until the key is supplied. The page works fully without it.
-- Competitors are never named, and public complaints are shown without tool names. The figures you shared ("5,000 applications, 5 interviews", "1 interview per 50 applications") appear only as attributed, illustrative examples.
-- The ApplyScout answers in the comparison, such as a named person replying, history export and no LinkedIn logins, are stated as commitments.
-- The "volume vs fit" visual is marked illustrative. No invented user counts or success rates appear anywhere.
-- Email capture stays as it is: addresses are stored, and no emails are sent.
-- Illustrations are newly generated to match the existing fox mascot style.
+- The phone question was skipped, so the default applies: effects that would stutter are simplified on phones and kept on desktop.
+- The logo question was skipped, so the default applies: blink on load, a repeating blink every few seconds, and an ear twitch on hover or tap.
+- The redrawn vector logo will look very close to the current icon, but small shape differences are possible.
+- The browser-tab icon stays the current still image.
+- The card fronts, all wording and every section's content stay as they are.
+- The "fixed" drawings are newly generated in the same flat style as the fronts.
+- "Smooth" means no visible stutter while scrolling on a typical mid-range phone. No measured speed targets are promised.

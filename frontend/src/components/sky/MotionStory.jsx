@@ -40,6 +40,7 @@ const FoxArt = ({ src, className = "" }) => (
     src={src}
     alt=""
     aria-hidden="true"
+    decoding="async"
     initial={{ opacity: 0, scale: 0.8, y: 20 }}
     animate={{ opacity: 1, scale: 1, y: 0 }}
     transition={{ type: "spring", stiffness: 140, damping: 16, delay: 0.25 }}
@@ -395,9 +396,7 @@ const SceneInvite = () => {
           <p className="font-display text-[1.35rem] leading-tight text-accent">Tue · 11:00</p>
           <p className="mt-1 text-[0.78rem] font-semibold text-slate">with the hiring team</p>
           <motion.div
-            animate={s >= 2 ? { scale: [1, 1.06, 1] } : {}}
-            transition={{ duration: 1.4, repeat: Infinity }}
-            className="mt-4 rounded-full bg-[#2C8F6B] py-2.5 text-center text-[0.88rem] font-bold text-white"
+            className={`${s >= 2 ? "pulse-soft" : ""} mt-4 rounded-full bg-[#2C8F6B] py-2.5 text-center text-[0.88rem] font-bold text-white`}
           >
             Accept
           </motion.div>
