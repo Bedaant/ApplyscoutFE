@@ -137,3 +137,8 @@ Tests: iteration_2 + iteration_3 — backend and frontend passing; `backend/test
 - Comparison table: new row "Reaches the person who decides".
 - SAMPLE quotes removed; add real ones to `frontend/src/components/sky/quotes.js` and the carousel appears.
 Tests: iteration_4 — backend 100%, frontend 100%.
+
+## v2.3 — visual edits
+- New logo: generated fox-in-speech-bubble app icon → /public/logo-mark.png (+ favicon.png, apple-touch-icon.png); Logo in Bits.jsx uses it.
+- Compare flip cards: flat 2D illustration on each front (/public/art/ill-*.webp); backs now peach brand gradient (`.brand-back`) instead of black.
+- Comparison table ApplyScout column: brand gradient header + soft peach cells (no black).

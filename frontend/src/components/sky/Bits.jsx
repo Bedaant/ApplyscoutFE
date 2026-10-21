@@ -47,7 +47,7 @@ export const BrandMark = ({ size = 40 }) => {
 
 export const Logo = ({ size = 40 }) => (
   <span className="flex items-center gap-2" data-testid="brand-logo">
-    <BrandMark size={size} />
+    <img src="/logo-mark.png" alt="" width={size} height={size} className="shrink-0 drop-shadow-[0_6px_10px_rgba(224,102,61,0.35)]" style={{ width: size, height: size }} />
     <span className="font-display text-[1.25rem] tracking-[-0.035em] text-ink">
       Apply<span className="text-accent">Scout</span>
     </span>

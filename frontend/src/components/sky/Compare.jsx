@@ -4,14 +4,14 @@ import { CalendarCheck, Check, Clock, Mail, MousePointerClick, RotateCw, X } fro
 import { EASE, Reveal } from "./Bits";
 
 const ROWS = [
-  { tool: "Auto-apply bots", pain: "Blank fields. Forms that never submit.", fix: "You see every field before it goes.", bg: "var(--card-1)" },
-  { tool: "AI resume writers", pain: "Made-up titles and experience.", fix: "Only facts you confirmed. Each one cited.", bg: "var(--card-2)" },
-  { tool: "Mass-apply tools", pain: "“1,000 applications, 0 callbacks.”", fix: "Fewer, high-fit applications. Aimed at interviews.", bg: "var(--card-3)" },
-  { tool: "Most of them", pain: "Support that never answers.", fix: "A named person replies to early users.", bg: "var(--card-4)" },
-  { tool: "Shut-down apps", pain: "Locked out. Accounts banned.", fix: "Export anytime. We never log into LinkedIn for you.", bg: "var(--card-5)" },
-  { tool: "Paid portal boosts", pain: "“Priority applicant” — still no calls.", fix: "No paid boosts. No fake badges.", bg: "var(--card-1)" },
-  { tool: "Cover-letter AI", pain: "Reads robotic.", fix: "Written from your own words and tone.", bg: "var(--card-2)" },
-  { tool: "Recruiters say", pain: "Buried in AI-written spam.", fix: "Every application is one worth reading.", bg: "var(--card-3)" },
+  { tool: "Auto-apply bots", pain: "Blank fields. Forms that never submit.", fix: "You see every field before it goes.", bg: "var(--card-1)", art: "/art/ill-form.webp" },
+  { tool: "AI resume writers", pain: "Made-up titles and experience.", fix: "Only facts you confirmed. Each one cited.", bg: "var(--card-2)", art: "/art/ill-fake.webp" },
+  { tool: "Mass-apply tools", pain: "“1,000 applications, 0 callbacks.”", fix: "Fewer, high-fit applications. Aimed at interviews.", bg: "var(--card-3)", art: "/art/ill-pile.webp" },
+  { tool: "Most of them", pain: "Support that never answers.", fix: "A named person replies to early users.", bg: "var(--card-4)", art: "/art/ill-support.webp" },
+  { tool: "Shut-down apps", pain: "Locked out. Accounts banned.", fix: "Export anytime. We never log into LinkedIn for you.", bg: "var(--card-5)", art: "/art/ill-locked.webp" },
+  { tool: "Paid portal boosts", pain: "“Priority applicant” — still no calls.", fix: "No paid boosts. No fake badges.", bg: "var(--card-1)", art: "/art/ill-boost.webp" },
+  { tool: "Cover-letter AI", pain: "Reads robotic.", fix: "Written from your own words and tone.", bg: "var(--card-2)", art: "/art/ill-robot.webp" },
+  { tool: "Recruiters say", pain: "Buried in AI-written spam.", fix: "Every application is one worth reading.", bg: "var(--card-3)", art: "/art/ill-buried.webp" },
 ];
 
 const FlipCard = ({ r, i }) => {
@@ -25,22 +25,28 @@ const FlipCard = ({ r, i }) => {
         onPointerLeave={(e) => e.pointerType === "mouse" && setFlipped(false)}
         aria-pressed={flipped}
         data-testid={`compare-card-${i}`}
-        className={`flip block h-[210px] w-full text-left ${flipped ? "is-flipped" : ""}`}
+        className={`flip block h-[268px] w-full text-left ${flipped ? "is-flipped" : ""}`}
       >
         <span className="flip-inner block">
           <span className="flip-face pcard soft-card flex flex-col p-5" style={{ backgroundColor: r.bg }}>
             <span className="w-fit rounded-full bg-white/80 px-3 py-1 text-[0.72rem] font-bold uppercase tracking-[0.1em] text-ink/60">{r.tool}</span>
+            <img src={r.art} alt="" aria-hidden="true" loading="lazy" className="pointer-events-none mx-auto mt-2 h-[92px] w-auto max-w-[70%] object-contain drop-shadow-[0_10px_12px_rgba(22,33,58,0.12)]" />
             <span className="mt-auto flex items-start gap-2">
               <span className="mt-1 grid h-6 w-6 shrink-0 place-items-center rounded-full bg-[#E1457B] text-white"><X size={13} strokeWidth={3} /></span>
               <span className="font-display text-[1.25rem] leading-[1.15] text-ink" data-testid={`compare-pain-${i}`}>{r.pain}</span>
             </span>
             <span className="mt-3 flex items-center gap-1 text-[0.74rem] font-bold text-ink/45"><RotateCw size={11} /> flip for our answer</span>
           </span>
-          <span className="flip-face flip-back soft-card flex flex-col bg-ink p-5 text-white">
-            <span className="w-fit rounded-full bg-white/15 px-3 py-1 text-[0.72rem] font-bold uppercase tracking-[0.1em]">ApplyScout</span>
-            <span className="mt-auto flex items-start gap-2">
-              <span className="mt-1 grid h-6 w-6 shrink-0 place-items-center rounded-full bg-[#2C8F6B]"><Check size={13} strokeWidth={3} /></span>
-              <span className="font-display text-[1.25rem] leading-[1.15]" data-testid={`compare-fix-${i}`}>{r.fix}</span>
+          <span className="flip-face flip-back soft-card brand-back flex flex-col overflow-hidden p-5 text-white">
+            <span className="flex items-center gap-2">
+              <img src="/logo-mark.png" alt="" className="h-7 w-7 rounded-[8px] bg-white/90 p-0.5" />
+              <span className="text-[0.74rem] font-extrabold uppercase tracking-[0.12em]">ApplyScout fix</span>
+            </span>
+            <span className="pointer-events-none absolute -right-6 -top-6 h-28 w-28 rounded-full bg-white/15" />
+            <span className="pointer-events-none absolute -bottom-10 -left-8 h-32 w-32 rounded-full bg-white/10" />
+            <span className="relative mt-auto flex items-start gap-2.5">
+              <span className="mt-1 grid h-7 w-7 shrink-0 place-items-center rounded-full bg-white text-[#2C8F6B]"><Check size={15} strokeWidth={3} /></span>
+              <span className="font-display text-[1.35rem] leading-[1.15]" data-testid={`compare-fix-${i}`}>{r.fix}</span>
             </span>
           </span>
         </span>

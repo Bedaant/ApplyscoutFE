@@ -133,8 +133,8 @@ const ProblemTable = () => (
       <div className="grid grid-cols-[1.5fr_repeat(3,0.8fr)_1.7fr] items-end gap-2 px-4 pb-3 pt-4">
         <p className="text-[0.74rem] font-bold uppercase tracking-[0.14em] text-slate">What you need</p>
         {TOOLS.map((t) => <p key={t} className="text-center text-[0.74rem] font-bold uppercase leading-tight tracking-[0.1em] text-slate">{t}</p>)}
-        <p className="flex items-center gap-2 rounded-t-[16px] bg-ink px-4 py-2.5 text-[0.8rem] font-extrabold uppercase tracking-[0.12em] text-white">
-          <Check size={14} strokeWidth={3} /> ApplyScout
+        <p className="brand-back flex items-center gap-2 rounded-t-[16px] px-4 py-2.5 text-[0.8rem] font-extrabold uppercase tracking-[0.12em] text-white">
+          <img src="/logo-mark.png" alt="" className="h-6 w-6 rounded-[7px] bg-white/90 p-0.5" /> ApplyScout
         </p>
       </div>
       {TABLE.map((r, i) => (
@@ -149,7 +149,7 @@ const ProblemTable = () => (
         >
           <p className="py-3.5 text-[0.95rem] font-bold text-ink">{r.need}</p>
           {r.cells.map((c, k) => <div key={k} className="py-3.5"><Mark v={c} /></div>)}
-          <p className={`flex h-full items-center gap-2 bg-ink px-4 py-3.5 text-[0.9rem] font-semibold text-white ${i === TABLE.length - 1 ? "rounded-b-[16px]" : ""}`}>
+          <p className={`flex h-full items-center gap-2 bg-accent-soft px-4 py-3.5 text-[0.9rem] font-bold text-[#7A2E14] ${i === TABLE.length - 1 ? "rounded-b-[16px]" : ""}`}>
             <span className="grid h-5 w-5 shrink-0 place-items-center rounded-full bg-[#2C8F6B]"><Check size={11} strokeWidth={3} /></span>
             {r.fix}
           </p>
@@ -171,7 +171,7 @@ const ProblemTable = () => (
                 </div>
               ))}
             </div>
-            <p className="mt-3 flex items-center gap-2 rounded-[12px] bg-ink px-3 py-2.5 text-[0.86rem] font-semibold text-white">
+            <p className="mt-3 flex items-center gap-2 rounded-[12px] bg-accent-soft px-3 py-2.5 text-[0.86rem] font-bold text-[#7A2E14]">
               <span className="grid h-5 w-5 shrink-0 place-items-center rounded-full bg-[#2C8F6B]"><Check size={11} strokeWidth={3} /></span>
               ApplyScout: {r.fix}
             </p>
