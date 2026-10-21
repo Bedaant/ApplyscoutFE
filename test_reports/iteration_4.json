@@ -1,0 +1,28 @@
+{
+  "summary": "Iteration 4: role search, free aggregators (Remotive, Arbeitnow), 43 companies, new logo, hero company logos, story beat 05 and the 9-row table. Backend: 36/36 pytest pass after 1 fix. Asana's logo returned 404. RCA: fetch_logo only tried urls[:6]. asana.com lists 15 icon links, and the top 6 (brand.asana.biz) all return 401, so the apple-touch and Google favicon fallbacks were never tried. Fixed in jobs.py: keep the top 4 page icons, then always add the 2 fallbacks. Asana now returns 200 image/png. Verified q filter: 'designer' works in all 5 regions, 'data engineer' needs both words, matching ignores case, 60 chars returns 200 and 61 returns 422, and regex characters are safe and return empty jobs and sources. One posting per company. sources[] matches the sources of the jobs shown. Boards come before aggregators in Europe for 4 queries. Aggregator jobs have domain null. Logos work for cursor.com, perplexity.ai and pinterest.com. Frontend desktop 1920: data-palette=peach, palette-toggle count 0, favicon updated. There are 6 hero-company-logo images and all load. Brand logo in nav and footer has an SVG and the 'ApplyScout' wordmark, with Scout in the accent colour. Typing 'designer' re-deals the deck with only designer titles. Clear empties the input and hides the clear button. All 6 chips fill the input and every card title matches. 'entwickler' plus Europe shows Arbeitnow cards and arbeitnow-credit. The credit is hidden when no Arbeitnow cards show, and on the empty result. A no-match query shows jobs-empty with the query. There are 6 captions. Scene 4 shows Recruiter, Hiring manager and Team engineer, the Hiring manager ring and check, the Email/Chat note, and 'Sent after you said yes'. problem-row-3 is 'Reaches the person who decides'. There are 9 rows and 9 cards. early-user-quotes is not rendered. Approve and undo work. Mobile 390: scrollWidth is 390. There are 6 story-beat-mobile entries and beat 4 renders fully. 9 problem cards are visible. The Sales chip works. A touch tap flips the compare card on, then off. FAQ opens. Invalid email shows an error and a valid one shows success. No console errors. remotive-credit did not show: only 4 Remotive postings are in the cache and none made a deck (expected).",
+  "backend_issues": {
+    "critical": [],
+    "minor": [{"endpoint": "/api/jobs/logo/asana.com", "issue": "Returned 404 because the fallbacks were cut off by urls[:6]. FIXED by the testing agent in jobs.py fetch_logo."}]
+  },
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": [
+      {"screen": "Mobile 390 story beat 05 (story-beat-mobile-4)", "issues": ["The dark Email/Chat note overlaps the bottom of the three person tiles. The 'Hiring manager' label is partly covered. Cosmetic: add top margin or lower the note's position on small screens."]},
+      {"screen": "Desktop scene 4", "issues": ["The 'Who decides at …?' chip sits on the top edge of the stage card and looks a little detached. Minor."]}
+    ]
+  },
+  "test_report_links": ["/app/backend/tests/test_jobs_api.py", "/app/test_reports/pytest/pytest_results.xml"],
+  "action_items": ["Optional: fix the mobile overlap in beat 05 between the note card and the person tiles.", "Optional: the Hero 'Data' search also matches 'Database' and similar titles because matching is substring-based. Acceptable, just noting it."],
+  "critical_code_review_comments": [
+    "jobs.py pick(): loads up to 3000 docs per request and sorts in Python. Fine at the current ~2.1k docs, but consider a $limit, or a compound index on regions/source/posted_at, if more aggregators are added.",
+    "Remotive and Arbeitnow company names can match a known board name (e.g. 'Stripe'). Dedupe by name keeps the board posting because boards sort first, which is good.",
+    "Remotive logo is a hotlinked external URL (company_logo). If it fails to load, make sure CompanyLogo falls back to an initial (onError)."
+  ],
+  "updated_files": ["/app/backend/jobs.py", "/app/backend/tests/test_jobs_api.py"],
+  "success_rate": {"backend": "100% (after fix)", "frontend": "100%"},
+  "seed_data_creation": "None. The test_ signups were deleted.",
+  "retest_needed": false,
+  "should_main_agent_self_test": false,
+  "context_for_next_testing_agent": "Run REACT_APP_BACKEND_URL=<frontend/.env> pytest /app/backend/tests/test_jobs_api.py (36 tests; iteration 4 tests at the bottom cover the q search and aggregator ordering). Use 'entwickler' + region europe to get Arbeitnow cards. Scroll with window.__lenis.scrollTo; plain scroll_into_view_if_needed can leave compare cards unflipped. Desktop and mobile decks are both in the DOM, so titles appear twice unless you scope to job-cards-mobile."
+}

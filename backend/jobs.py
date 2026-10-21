@@ -412,9 +412,10 @@ async def fetch_logo(db, domain: str):
                 urls = _icon_candidates(r.text[:300000], str(r.url))
         except httpx.HTTPError:
             pass
-        urls += [f"https://{domain}/apple-touch-icon.png",
-                 f"https://www.google.com/s2/favicons?domain={domain}&sz=128"]
-        for u in urls[:6]:
+        # keep the fallbacks reachable even when the page lists many (broken) icons
+        urls = urls[:4] + [f"https://{domain}/apple-touch-icon.png",
+                           f"https://www.google.com/s2/favicons?domain={domain}&sz=128"]
+        for u in urls:
             try:
                 r = await c.get(u)
             except httpx.HTTPError:

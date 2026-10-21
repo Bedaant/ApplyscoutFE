@@ -319,12 +319,12 @@ const SceneReach = () => {
   return (
     <div className="relative h-full w-full overflow-hidden" data-testid="story-scene-4">
       <motion.div initial={{ opacity: 0, y: -12 }} animate={{ opacity: 1, y: 0 }}
-        className="absolute inset-x-0 top-[6%] mx-auto flex w-fit items-center gap-2 rounded-full bg-white py-1.5 pl-1.5 pr-4 shadow-[0_8px_18px_-12px_rgba(22,33,58,0.6)]">
+        className="absolute inset-x-0 top-[5%] mx-auto flex w-fit items-center gap-2 rounded-full bg-white py-1.5 pl-1.5 pr-4 shadow-[0_8px_18px_-12px_rgba(22,33,58,0.6)]">
         <CompanyLogo name={j?.company || "Company"} domain={j?.domain} src={j?.logo} size={28} />
         <span className="max-w-[220px] truncate text-[0.8rem] font-bold text-ink">Who decides at {j?.company || "the company"}?</span>
       </motion.div>
 
-      <div className="absolute inset-x-0 top-[22%] flex justify-center gap-3 px-4">
+      <div className="absolute inset-x-0 top-[18%] flex justify-center gap-3 px-4 sm:top-[22%]">
         {PEOPLE.map((p, i) => {
           const lit = found ? p.pick : scan === i;
           return (
@@ -333,9 +333,9 @@ const SceneReach = () => {
               initial={{ opacity: 0, y: 24 }}
               animate={{ opacity: found && !p.pick ? 0.4 : 1, y: 0, scale: found && p.pick ? 1.08 : 1 }}
               transition={{ type: "spring", stiffness: 170, damping: 16, delay: i * 0.1 }}
-              className={`relative flex w-[30%] max-w-[120px] flex-col items-center rounded-[18px] bg-white px-2 pb-3 pt-4 shadow-[0_12px_24px_-16px_rgba(22,33,58,0.6)] ring-2 transition-colors duration-300 ${lit ? "ring-[var(--accent)]" : "ring-transparent"}`}
+              className={`relative flex w-[30%] max-w-[120px] flex-col items-center rounded-[18px] bg-white px-2 pb-2 pt-3 sm:pb-3 sm:pt-4 shadow-[0_12px_24px_-16px_rgba(22,33,58,0.6)] ring-2 transition-colors duration-300 ${lit ? "ring-[var(--accent)]" : "ring-transparent"}`}
             >
-              <img src={AVATARS[p.av % AVATARS.length]} alt="" className="h-11 w-11 rounded-full object-cover" />
+              <img src={AVATARS[p.av % AVATARS.length]} alt="" className="h-9 w-9 rounded-full object-cover sm:h-11 sm:w-11" />
               <p className="mt-2 text-center text-[0.72rem] font-bold leading-tight text-ink">{p.role}</p>
               {found && p.pick && (
                 <motion.span initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: "spring", stiffness: 400, damping: 14 }}
@@ -353,14 +353,14 @@ const SceneReach = () => {
           initial={{ opacity: 0, y: 50, scale: 0.9 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}
           transition={{ type: "spring", stiffness: 150, damping: 16 }}
-          className="absolute inset-x-0 bottom-[7%] mx-auto w-[84%] max-w-[380px] rounded-[20px] rounded-bl-[6px] bg-ink p-4 text-white shadow-[0_24px_40px_-20px_rgba(22,33,58,0.8)]"
+          className="absolute inset-x-0 bottom-[4%] mx-auto w-[88%] max-w-[380px] rounded-[20px] rounded-bl-[6px] bg-ink p-3 sm:bottom-[7%] sm:p-4 text-white shadow-[0_24px_40px_-20px_rgba(22,33,58,0.8)]"
         >
           <div className="flex items-center gap-1.5">
             <span className="flex items-center gap-1 rounded-full bg-white/15 px-2.5 py-1 text-[0.68rem] font-bold"><Mail size={11} /> Email</span>
             <span className="flex items-center gap-1 rounded-full bg-white/15 px-2.5 py-1 text-[0.68rem] font-bold"><MessageCircle size={11} /> Chat</span>
             <span className="ml-auto text-[0.66rem] font-bold uppercase tracking-[0.12em] text-white/50">to hiring manager</span>
           </div>
-          <p className="mt-2.5 text-[0.86rem] leading-snug">Hi — I just applied for {j?.title ? <b>{j.title}</b> : "the role"}. Two lines on why I fit…</p>
+          <p className="mt-2 line-clamp-2 text-[0.8rem] leading-snug sm:mt-2.5 sm:text-[0.86rem]">Hi — I just applied for {j?.title ? <b>{j.title}</b> : "the role"}. Two lines on why I fit…</p>
           {s >= 6 && (
             <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="mt-2 flex items-center gap-1.5 text-[0.74rem] font-bold text-[#BEEBC5]">
               <Check size={13} strokeWidth={3} /> Sent after you said yes

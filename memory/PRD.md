@@ -124,3 +124,16 @@ Tests: iteration_2 + iteration_3 — backend and frontend passing; `backend/test
 - Quotes section: negative competitor quotes removed. Now a side-by-side table (#table, `problem-table`):
   what you need × tool types (✓/~/✗, typical by type, not named) × ApplyScout fix; stacked cards on mobile.
   Below it, the SAMPLE early-user carousel only.
+
+## v2.2 — 21 Oct 2026
+- Adzuna declined (paid). Coverage widened for free: 43 company boards (Greenhouse/Ashby/Lever) + Remotive
+  (remote; credited; refreshed ≤ every 6h) + Arbeitnow (Europe; credited). Boards shown before aggregators.
+- `GET /api/jobs/live` gains `q` (title words, case-insensitive) and returns `sources`.
+- Role search box (`role-search-input`, suggestion chips) re-deals the live deck.
+- Peach is the only palette (toggle removed; `<html data-palette="peach">`).
+- New brand mark: fox inside a speech bubble (`BrandMark` in Bits.jsx) + "Apply**Scout**" wordmark; favicon updated.
+- Hero floating tiles are now real company logos (Stripe, Notion, Figma, OpenAI, Spotify, Airbnb).
+- Motion story beat 05 "We reach the right person, with your OK." (DEMO animation only — nothing is sent).
+- Comparison table: new row "Reaches the person who decides".
+- SAMPLE quotes removed; add real ones to `frontend/src/components/sky/quotes.js` and the carousel appears.
+Tests: iteration_4 — backend 100%, frontend 100%.
